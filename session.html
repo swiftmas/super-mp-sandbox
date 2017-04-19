@@ -1,0 +1,93 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>jscripttest</title>
+  <meta name="description" content="jscripttest">
+  <meta name="author" content="SitePoint">
+  <script src="/socket.io/socket.io.js"></script>
+
+<style>
+canvas, img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+    width: 512px;
+    height: auto;
+}
+
+body {
+	margin: 0px;
+  text-align: center;
+}
+
+#chooseteam {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 10%;
+}
+
+h1 {
+  font-size: 500%;
+}
+
+</style>
+
+
+</head>
+<body>
+
+<!-- IMAGE LOADER -->
+
+
+
+
+<!-- BOTTOM TO TOP IS THE ORDER -->
+
+<!-- canvas layer -->
+<canvas id='map' width="32" height="32">
+</canvas>
+
+<!-- anim layer -->
+
+
+<!-- top layer -->
+
+<!-- Player Hud -->
+
+<div id="tophud" style="position: fixed; top:0;">
+
+</div>
+
+<div id="bothud" style="position: fixed; bottom: 20px;">
+
+</div>
+
+
+
+<!-- selector hud -->
+<div id="chooseteam">
+	<div id="selBlue" class="sels" style="display: inline-block; background-color:Blue"></div>
+	<div id="selGreen" class="sels" style="display: inline-block; background-color:Green"></div>
+	<br>
+	<div id="selRed" class="sels" style="display: inline-block; background-color:Red"></div>
+	<div id="selGold" class="sels" style="display: inline-block; background-color:Gold"></div>
+	<br> <p style="text-align:center;"><h1>Select Your Team</h1></p>
+</div>
+
+<br>
+<button id="attack" style="border-color: red;"><h1>ATTACK</h1></button>
+<p id='coor'></p> Use WASD to move and n to attack.
+<p id="logger"></p>
+
+
+  <script src="main.js"></script>
+
+</body>
+</html>

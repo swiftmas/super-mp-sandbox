@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <script>
+	var socket = io.connect();
+	socket.on('date', function(data){
+		console.log(data.date);
+	});
+  $(document).ready(function(){
+    $('#text').keypress(function(e){
+      socket.emit('client_data', {'letter': String.fromCharCode(e.charCode)});
+    });
+  });
+    </script>
+    <div>This is our socket.html file</div>
+  </body>
+</html>
