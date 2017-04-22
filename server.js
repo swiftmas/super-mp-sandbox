@@ -84,6 +84,20 @@ var server = http.createServer(function(request, response){
                 }
             });
             break;
+  case '/client-modules.js':
+            fs.readFile(__dirname + path, function(error, data){
+                if (error){
+                    response.writeHead(404);
+                    response.write("opps this doesn't exist - 404");
+                    response.end();
+                }
+                else{
+                    response.writeHead(200, {"Content-Type": "text/html"});
+                    response.write(data, "utf8");
+                    response.end();
+                }
+            });
+            break;
 	case '/40x40collmap.jpg':
             fs.readFile(__dirname + path, function(error, data){
                 if (error){
@@ -133,8 +147,10 @@ setInterval(function(){
   var dp = coredata.players;
   for ( var player in dp){
     var code = dp[player].team;
-    var pos = dp[player].pos
-    datas.push(code + "." + pos);
+    var pos = dp[player].pos;
+    var state = dp[player].state;
+    var dir = dp[player].dir
+    datas.push(code + "." + dir + "." + state + "." + pos);
   }
   //Bombs
   var db = coredata.bombs;
@@ -146,7 +162,7 @@ setInterval(function(){
       code = 12;
     };
     var pos = db[bomb].pos
-    datas.push(code + "." + pos);
+    datas.push(code + "." + "00" + "." + "00" + "." + pos);
   }
   datas.push.apply(datas, coredata.effects);
   listener.sockets.emit('getdata', datas);
@@ -162,22 +178,22 @@ listener.sockets.on('connection', function(socket){
   socket.on('movement', function(data){
     var playername = data[0]
     var dir = data[1]
-    if (dir == "up"){
+    if (dir == "2"){
   		var x = parseInt(coredata.players[playername].pos.split(".")[0])
   		var y = parseInt(coredata.players[playername].pos.split(".")[1]) - 1
   		cellname = ''+x+'.'+y+''
   	};
-  	if (dir == "down"){
+  	if (dir == "6"){
   		var x = parseInt(coredata.players[playername].pos.split(".")[0])
   		var y = parseInt(coredata.players[playername].pos.split(".")[1]) + 1
   		cellname = ''+x+'.'+y+''
   	};
-  	if (dir == "left"){
+  	if (dir == "8"){
   		var x = parseInt(coredata.players[playername].pos.split(".")[0]) - 1
   		var y = parseInt(coredata.players[playername].pos.split(".")[1])
   		cellname = ''+x+'.'+y+''
   	};
-  	if (dir == "right"){
+  	if (dir == "4"){
   		var x = parseInt(coredata.players[playername].pos.split(".")[0]) + 1
   		var y = parseInt(coredata.players[playername].pos.split(".")[1])
   		cellname = ''+x+'.'+y+''

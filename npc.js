@@ -81,16 +81,16 @@ function alertrange(npc, dist) {
     var dist = parseInt(dist) / 2;
     // in this function we are offsetting the view to the front of the player.
     var trueorig = [parseInt(origin.split(".")[0]), parseInt(origin.split(".")[1])];
-    if (coredata.npcs[npc].dir == "up") {
+    if (coredata.npcs[npc].dir == "2") {
         var orig = [trueorig[0], trueorig[1] - dist + 1]
     };
-    if (coredata.npcs[npc].dir == "down") {
+    if (coredata.npcs[npc].dir == "6") {
         var orig = [trueorig[0], trueorig[1] + dist - 1]
     };
-    if (coredata.npcs[npc].dir == "left") {
+    if (coredata.npcs[npc].dir == "8") {
         var orig = [trueorig[0] - dist + 1, trueorig[1]]
     };
-    if (coredata.npcs[npc].dir == "right") {
+    if (coredata.npcs[npc].dir == "4") {
         var orig = [trueorig[0] + dist - 1, trueorig[1]]
     };
     var gp = coredata.players
@@ -287,25 +287,25 @@ function moveNpcTo(npc, tarx, tary) {
     if (npcx > tarx) {
         var newcoord = (parseInt(npcx) - 1) + "." + npcy;
         if (collmap[newcoord] == 0) {
-            newcoords[newcoords.length] = new Array(newcoord, "left");
+            newcoords[newcoords.length] = new Array(newcoord, "8");
         };
     }
     else if (npcx < tarx) {
         var newcoord = (parseInt(npcx) + 1) + "." + npcy;
         if (collmap[newcoord] == 0) {
-            newcoords[newcoords.length] = new Array(newcoord, "right");
+            newcoords[newcoords.length] = new Array(newcoord, "4");
         };
     };
     if (npcy > tary) {
         var newcoord = npcx + "." + (parseInt(npcy) - 1);
         if (collmap[newcoord] == 0) {
-            newcoords[newcoords.length] = new Array(newcoord, "up");
+            newcoords[newcoords.length] = new Array(newcoord, "2");
         };
     }
     else if (npcy < tary) {
         var newcoord = npcx + "." + (parseInt(npcy) + 1);
         if (collmap[newcoord] == 0) {
-            newcoords[newcoords.length] = new Array(newcoord, "down");
+            newcoords[newcoords.length] = new Array(newcoord, "6");
         };
     };
     if (newcoords.length > 0) {
@@ -320,18 +320,18 @@ function dirToTarget(npc, tarx, tary) {
     var npcx = npcpos[0];
     var npcy = npcpos[1];
     if (npcx > tarx) {
-        return "left";
+        return "8";
     }
     else if (npcx < tarx) {
-        return "right";
+        return "4";
     }
     else if (npcy > tary) {
-        return "up";
+        return "2";
     }
     else if (npcy < tary) {
-        return "down";
+        return "6";
     }
     else {
-        return "up";
+        return "2";
     };
 };

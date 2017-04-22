@@ -2,6 +2,9 @@
 var json = {};
 var map = document.getElementById("map");
 var ctx = map.getContext("2d");
+var client-modules = require('./globals.js');
+var spritesheet = client-modules.spritesheet;
+var sprites = client-modules.charsprites;
 var socket = io.connect();
 var xwin = window.innerWidth / 2;
 var ywin = window.innerHeight / 2;
@@ -10,6 +13,7 @@ var coredata = {};
 var mapdata = {};
 var touchdir = ["none", 0];
 var touchtimer = 0;
+
 
 
 //Utility Functoins //////////////////////////////////////////
@@ -44,7 +48,7 @@ function resize(){
 function add_player(team){
 	playername = "p" + socket.io.engine.id;
 	newplayerdata = {};
-	newplayerdata[playername] = {"pos":"2.2", "dir": "up", "state":"normal", "health": 100, "alerttimer": 0, "team": team, "origin": "2.2"};
+	newplayerdata[playername] = {"pos":"2.2", "dir": "2", "state":"000", "health": 100, "alerttimer": 0, "team": team, "origin": "2.2"};
 	console.log(newplayerdata);
 	userplayer = playername;
 	elem = document.getElementById("chooseteam");
@@ -83,31 +87,31 @@ function draw(){
 			blk = db[code].split(".");
 			if (blk[0] == "01"){
 				ctx.fillStyle = "blue";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "02"){
 				ctx.fillStyle = "green";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "03"){
 				ctx.fillStyle = "red";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "04"){
 				ctx.fillStyle = "gold";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "11"){
 				ctx.fillStyle = "black";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "12"){
 				ctx.fillStyle = "yellow";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "13"){
 				ctx.fillStyle = "orange";
-				ctx.fillRect(blk[1] -1, blk[2] -1, 1, 1);
+				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 		};
 	};
@@ -122,7 +126,7 @@ function getinput(e) {
     e = e || window.event;
 
     if (e.keyCode == '87') {
-        move('up', userplayer)
+        move('2', userplayer)
     }
     else if (e.keyCode == '78') {
 			socket.emit('attack', userplayer);
@@ -131,13 +135,13 @@ function getinput(e) {
     	console.log(JSON.stringify(coredata));
     }
     else if (e.keyCode == '83') {
-        move('down', userplayer)
+        move('6', userplayer)
     }
     else if (e.keyCode == '65') {
-       move('left', userplayer)
+       move('8', userplayer)
     }
     else if (e.keyCode == '68') {
-       move('right', userplayer)
+       move('4', userplayer)
     }
 
 };
@@ -226,19 +230,19 @@ function getswipedir(x, y) {
 	var dirlength = [];
     if (y > tstary + 2){
     	var ddist = y - tstary;
-    	dirlength.push(["down", ddist])
+    	dirlength.push(["6", ddist])
     };
     if (y < tstary - 2){
     	var udist = tstary - y;
-    	dirlength.push(["up", udist])
+    	dirlength.push(["2", udist])
     };
     if (x > tstarx + 2){
     	var rdist = x - tstarx;
-    	dirlength.push(["right", rdist])
+    	dirlength.push(["4", rdist])
     };
     if (x < tstarx - 2){
     	var ldist = tstarx - x;
-    	dirlength.push(["left", ldist])
+    	dirlength.push(["8", ldist])
     };
     var top = ["none", 0];
     if (dirlength.length > 1){

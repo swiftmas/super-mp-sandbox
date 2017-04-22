@@ -52,19 +52,19 @@ function attack(attacker, npcsORplayers){
     //coredata.attacks["a" + attacker] = at[attacker].pos;
     atdir = at[attacker].dir;
     atorig = at[attacker].pos.split(".");
-    if (atdir == "up"){
+    if (atdir == "2"){
     	nx = parseInt(atorig[0])
     	ny = parseInt(atorig[1]) - 1
     	atpos = nx + "." + ny
-    } else if (atdir == "down") {
+    } else if (atdir == "6") {
 		nx = parseInt(atorig[0])
     	ny = parseInt(atorig[1]) + 1
     	atpos = nx + "." + ny
-    } else if (atdir == "left") {
+    } else if (atdir == "8") {
     	nx = parseInt(atorig[0]) - 1
     	ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
-    } else if (atdir == "right") {
+    } else if (atdir == "4") {
     	nx = parseInt(atorig[0]) + 1
     	ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
@@ -104,8 +104,8 @@ function explode(bomb) {
             dodamage(atpos);
           };
           if (lx !== posx - 3){
-            coredata.effects.push("12" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + atpos);};
+            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
+          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
         } else {
           break;
         };
@@ -122,8 +122,8 @@ function explode(bomb) {
             dodamage(atpos);
           };
           if (rx !== posx + 3){
-            coredata.effects.push("12" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + atpos);};
+            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
+          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
         } else {
           break;
         };
@@ -141,8 +141,8 @@ function explode(bomb) {
             dodamage(atpos);
           };
           if (uy !== posy - 3){
-            coredata.effects.push("12" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + atpos);};
+            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
+          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
         } else {
           break;
         };
@@ -159,8 +159,8 @@ function explode(bomb) {
             dodamage(atpos);
           };
           if (dy !== posy + 3){
-            coredata.effects.push("12" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + atpos);};
+            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
+          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
         } else {
           break;
         };
