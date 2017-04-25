@@ -6,6 +6,7 @@ var io = require('socket.io');
 var npcs = require('./npc.js');
 var globals = require('./globals.js');
 var combat = require('./combat.js');
+var general = require('./general.js');
 
 
 var server = http.createServer(function(request, response){
@@ -132,11 +133,13 @@ server.listen(8080);
 coredata = globals.coredata;
 collmap = globals.collmap;
 attackQueue = globals.attackQueue;
+moveQueue = globals.moveQueue;
 var listener = io.listen(server);
 
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
   coredata.effects = []
+  general.ProcessMovements();
   combat.processBombs();
   combat.bombcontroller();
 
@@ -178,37 +181,7 @@ listener.sockets.on('connection', function(socket){
 
 // For every Client data event (this is where we recieve movement)////////////
   socket.on('movement', function(data){
-    var playername = data[0]
-    var dir = data[1]
-    if (dir == "2"){
-  		var x = parseInt(coredata.players[playername].pos.split(".")[0])
-  		var y = parseInt(coredata.players[playername].pos.split(".")[1]) - 1
-  		cellname = ''+x+'.'+y+''
-  	};
-  	if (dir == "6"){
-  		var x = parseInt(coredata.players[playername].pos.split(".")[0])
-  		var y = parseInt(coredata.players[playername].pos.split(".")[1]) + 1
-  		cellname = ''+x+'.'+y+''
-  	};
-  	if (dir == "8"){
-  		var x = parseInt(coredata.players[playername].pos.split(".")[0]) - 1
-  		var y = parseInt(coredata.players[playername].pos.split(".")[1])
-  		cellname = ''+x+'.'+y+''
-  	};
-  	if (dir == "4"){
-  		var x = parseInt(coredata.players[playername].pos.split(".")[0]) + 1
-  		var y = parseInt(coredata.players[playername].pos.split(".")[1])
-  		cellname = ''+x+'.'+y+''
-  	};
-
-
-
-  	if (coredata.players[playername].state !== "dead" && collmap[cellname] == 0){
-    //process.stdout.write(data[1]+" commit to ->");
-		//console.log(data[0], coredata.players[data[0]].pos);
-		coredata.players[playername].pos = cellname;
-		coredata.players[playername].dir = dir;
-    	};
+    moveQueue[data[0]] = data;
   });
 
 // This listens for new players ////////

@@ -68,7 +68,6 @@ function draw(){
 			blk = db[code].split(".");
 			if (blk[0] == "01"){
 				image2draw = chars.t01["d" + blk[1]].slice()
-				console.log(blk[3],blk[4], campos)
 				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
 				ctx.drawImage.apply(ctx, image2draw);
 				ctx.fillStyle = "blue";
@@ -104,38 +103,6 @@ function draw(){
 
 
 
-//mOVEMENT /////////////////////////////////////////
-
-function getinput(e) {
-
-    e = e || window.event;
-
-    if (e.keyCode == '87') {
-        move('2', userplayer)
-    }
-    else if (e.keyCode == '78') {
-			socket.emit('attack', userplayer);
-    }
-    else if (e.keyCode == '192') {
-    	console.log(JSON.stringify(coredata));
-    }
-    else if (e.keyCode == '83') {
-        move('6', userplayer)
-    }
-    else if (e.keyCode == '65') {
-       move('8', userplayer)
-    }
-    else if (e.keyCode == '68') {
-       move('4', userplayer)
-    }
-
-};
-
-function move(dir, playername) {
-	socket.emit('movement', [playername, dir]);
-};
-
-
 
 ///// GET PLAYER TEAM AND STUFF ////
 document.getElementById("selBlue").addEventListener("click", function(event) { add_player("01"); });
@@ -144,17 +111,73 @@ document.getElementById("selRed").addEventListener("click", function(event) { ad
 document.getElementById("selGold").addEventListener("click", function(event) { add_player("04"); });
 
 
+
+
 resize();
 window.addEventListener("resize", function() {
 	resize();
 });
 
 ///// USER INPUT for player movement  ////////////////////////////
-document.body.addEventListener("keydown", function(event) {
-	if (userplayer !== null){
-		getinput(event);
+
+
+KeyboardController({
+    87: function() { move(userplayer, '2'); },
+		68: function() { move(userplayer, '4'); },
+		83: function() { move(userplayer, '6'); },
+		65: function() { move(userplayer, '8'); },
+    192: function() { console.log(JSON.stringify(coredata)); },
+    78: function() { socket.emit(attack, userplayer); }
+}, 50);
+
+
+function KeyboardController(keys, repeat) {
+	var timers= {};
+
+	// When key is pressed and we don't already think it's pressed, call the
+	// key action callback and set a timer to generate another one after a delay
+	//
+	document.onkeydown= function(event) {
+			var key= (event || window.event).keyCode;
+			console.log(key)
+			if (!(key in keys))
+					return true;
+			if (!(key in timers)) {
+					timers[key]= null;
+					keys[key]();
+					if (repeat!==0)
+							timers[key]= setInterval(keys[key], repeat);
+			}
+			return false;
 	};
-});
+
+
+	document.onkeyup= function(event) {
+			var key= (event || window.event).keyCode;
+			if (key in timers) {
+					if (timers[key]!==null)
+							clearInterval(timers[key]);
+					delete timers[key];
+			}
+	};
+
+
+	window.onblur= function() {
+			for (key in timers)
+					if (timers[key]!==null)
+							clearInterval(timers[key]);
+			timers= {};
+	};
+
+};
+
+
+//mOVEMENT /////////////////////////////////////////
+
+function move(playername, dir) {
+	socket.emit('movement', [playername, dir]);
+};
+
 
 ////// GET data //////////////
 socket.on('getmap', function(data) {

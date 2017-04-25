@@ -22,7 +22,7 @@ module.exports = {
 
 function bombcontroller(){
     var db = coredata.bombs;
-    removes = [];
+    var removes = [];
     for (var bomb = coredata.bombs.length -1; bomb >= 0; bomb--){
       console.log(JSON.stringify(db[bomb]));
       if (db[bomb].state <= 3){ removes.push(bomb); break};
