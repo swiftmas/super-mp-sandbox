@@ -1,15 +1,15 @@
-exports = module.exports = {};
-
-
 //// IMG /////////////////////////////////////////////////////////////
-var charsprites = new Image();
-charsprites.src = '/static/charsprites.png';
-var chars = {};
+map1 = new Image();
+map1.src = '/static/zeldaProt.png';
+///////////////////////////////////////////
+charsprites = new Image();
+charsprites.src = '/static/pixels.png';
+chars = {};
 chars.t01 = {};
-chars.t01.d2 = [charsprites, 0, 16, 16, 16];
-chars.t01.d6 = [charsprites, 16, 16, 16, 16];
-chars.t01.d8 = [charsprites, 32, 16, 16, 16];
-chars.t01.d4 = [charsprites, 48, 16, 16, 16];
+chars.t01.d2 = [charsprites, 0, 0, 8, 8];
+chars.t01.d4 = [charsprites, 8, 0, 8, 8];
+chars.t01.d6 = [charsprites, 16, 0, 8, 8];
+chars.t01.d8 = [charsprites, 24, 0, 8, 8];
 chars.t03 = {};
 chars.t03.d2 = [charsprites, 0, 0, 16, 16];
 chars.t03.d6 = [charsprites, 16, 0, 16, 16];
@@ -31,5 +31,3 @@ chars.duane.d6 = [charsprites, 16, 64, 16, 16];
 chars.duane.d8 = [charsprites, 32, 64, 16, 16];
 chars.duane.d4 = [charsprites, 48, 64, 16, 16];
 ////////////////////////////////////////////////////////////////////////////
-exports.spritesheet = charsprites;
-exports.charsprites = chars;

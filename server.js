@@ -150,6 +150,7 @@ setInterval(function(){
     var pos = dp[player].pos;
     var state = dp[player].state;
     var dir = dp[player].dir
+    listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
   //Bombs
@@ -172,7 +173,8 @@ setInterval(function(){
 listener.sockets.on('connection', function(socket){
 
 ////// INIT ////////////
-  socket.emit('getmap', collmap);
+  var mapname = "This is to take away the coll map sending. it can be used to define which background image to use."
+  socket.emit('getmap', mapname);
 
 // For every Client data event (this is where we recieve movement)////////////
   socket.on('movement', function(data){

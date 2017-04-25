@@ -2,9 +2,6 @@
 var json = {};
 var map = document.getElementById("map");
 var ctx = map.getContext("2d");
-var client-modules = require('./globals.js');
-var spritesheet = client-modules.spritesheet;
-var sprites = client-modules.charsprites;
 var socket = io.connect();
 var xwin = window.innerWidth / 2;
 var ywin = window.innerHeight / 2;
@@ -48,46 +45,34 @@ function resize(){
 function add_player(team){
 	playername = "p" + socket.io.engine.id;
 	newplayerdata = {};
-	newplayerdata[playername] = {"pos":"2.2", "dir": "2", "state":"000", "health": 100, "alerttimer": 0, "team": team, "origin": "2.2"};
+	newplayerdata[playername] = {"pos":"40.40", "dir": "2", "state":"000", "health": 100, "alerttimer": 0, "team": team, "origin": "40.40"};
 	console.log(newplayerdata);
 	userplayer = playername;
 	elem = document.getElementById("chooseteam");
 	elem.parentNode.removeChild(elem);
         socket.emit('add_player', newplayerdata);
-
 };
 
 function draw(){
 	if ( userplayer !== null ){
 
-
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-		//MAP CREATE////////////////////
-		collElements = [];
-		collDestElem = [];
-		for (var key in mapdata) {
-			if (mapdata[key] == 1){
-				collElements.push(key);
-			} else if (mapdata[key] == 2) {
-				collDestElem.push(key);
-			};
-		};
-		for (var i = 0; i < collElements.length; i++) {
-			ctx.fillStyle = "#e3e3e3";
-			ctx.fillRect(collElements[i].split('.')[0] -1, collElements[i].split('.')[1] -1, 1, 1);
-		};
-		for (var i = 0; i < collDestElem.length; i++) {
-			ctx.fillStyle = "#c9c9c9";
-			ctx.fillRect(collDestElem[i].split('.')[0] -1, collDestElem[i].split('.')[1] -1, 1, 1);
-		};
 		// DRAW Blocks ///////////////////////////////////
+		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
+
+//////////////////////////////////////
+
 		db = coredata;
 		for (var code in db){
 			blk = db[code].split(".");
 			if (blk[0] == "01"){
+				image2draw = chars.t01["d" + blk[1]].slice()
+				console.log(blk[3],blk[4], campos)
+				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
+				ctx.drawImage.apply(ctx, image2draw);
 				ctx.fillStyle = "blue";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
+				ctx.fillRect(campos[0] - blk[3], campos[1] - blk[4], 1, 1);
 			};
 			if (blk[0] == "02"){
 				ctx.fillStyle = "green";
@@ -175,6 +160,10 @@ document.body.addEventListener("keydown", function(event) {
 socket.on('getmap', function(data) {
 	mapdata = data;
 	console.log("map was loaded:", mapdata);
+});
+
+socket.on('camera', function(data) {
+		campos = data.split(".");
 });
 
 socket.on('getdata', function(data){

@@ -1,0 +1,38 @@
+
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>jscripttest</title>
+
+</head>
+
+<style>
+body{
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+#map {
+  background-image: url("../static/zeldaProt.png");
+  background-size: 100%;
+}
+
+</style>
+<body>
+<h3> Dimensions: <input placeholder="4x4" id='input'><br> output: <i id="out"></i></h3>
+<button id='start'>Start/Restart</button>
+
+<canvas id='map' width="64" height="64">
+</canvas>
+
+<p id='coor'></p>
+<script src="make.js"></script>
+
+</body>
+</html>
