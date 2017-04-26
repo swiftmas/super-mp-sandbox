@@ -53,7 +53,7 @@ setInterval(function(){
       drawmap();
   	};
   };
-}, 40);
+}, 5);
 
 
 document.getElementById("input").addEventListener('keyup', function(event) { setdim() });

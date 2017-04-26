@@ -74,16 +74,25 @@ function draw(){
 				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
 			};
 			if (blk[0] == "02"){
+				image2draw = chars.t02["d" + blk[1]].slice()
+				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
+				ctx.drawImage.apply(ctx, image2draw);
 				ctx.fillStyle = "green";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
+				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
 			};
 			if (blk[0] == "03"){
+				image2draw = chars.t03["d" + blk[1]].slice()
+				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
+				ctx.drawImage.apply(ctx, image2draw);
 				ctx.fillStyle = "red";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
+				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
 			};
 			if (blk[0] == "04"){
+				image2draw = chars.t04["d" + blk[1]].slice()
+				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
+				ctx.drawImage.apply(ctx, image2draw);
 				ctx.fillStyle = "gold";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
+				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
 			};
 			if (blk[0] == "11"){
 				image2draw = chars.t11["d" + blk[1]].slice()
