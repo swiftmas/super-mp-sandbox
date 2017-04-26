@@ -8,8 +8,8 @@ module.exports = {
   getDist: function (origin, destination, callback) {
     getDist(origin, destination, callback);
   },
-  DoMovement: function (playername, dir) {
-    DoMovement(playername, dir);
+  DoMovement: function (playername, dir, rate, maintainFacingDirection) {
+    DoMovement(playername, dir, rate, maintainFacingDirection);
   },
   ProcessMovements: function () {
     ProcessMovements();
@@ -39,7 +39,7 @@ function ProcessMovements(){
   }
 };
 
-function DoMovement(playername, dir, rate) {
+function DoMovement(playername, dir, rate, maintainFacingDirection) {
   if (dir == "2"){
     var x = parseInt(coredata.players[playername].pos.split(".")[0])
     var y = parseInt(coredata.players[playername].pos.split(".")[1]) - rate
@@ -61,7 +61,9 @@ function DoMovement(playername, dir, rate) {
     cellname = ''+x+'.'+y+''
   };
 
-
+  if (maintainFacingDirection == true){
+    dir = coredata.players[playername].dir;
+  };
 
   if (coredata.players[playername].state !== "dead" ){
     if (collmap[cellname] == 0) {
