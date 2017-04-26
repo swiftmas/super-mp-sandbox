@@ -5,12 +5,31 @@ moveQueue = globals.moveQueue;
 mapchange = globals.mapchange;
 
 module.exports = {
+  getDist: function (origin, destination, callback) {
+    getDist(origin, destination, callback);
+  },
   DoMovement: function (playername, dir) {
     DoMovement(playername, dir);
   },
   ProcessMovements: function () {
     ProcessMovements();
   },
+};
+
+// All the goods in one. probably needs to be tuned. but should be fast enough.
+function getDist(origin, destination, callback) {
+  var xo = origin.split('.')[0];
+  var yo = origin.split('.')[1];
+  var xd = destination.split('.')[0];
+  var yd = destination.split('.')[1];
+  var distx = xd - xo;
+  var disty = yd - yo;
+  var xdir, ydir, greaterDir
+  var trueDist = Math.sqrt(Math.pow(Math.abs(distx), 2) + Math.pow(Math.abs(disty), 2));
+  if ( distx > 0 ) { xdir = "4" } else { xdir = "8"};
+  if ( disty > 0 ) { ydir = "2" } else { ydir = "6"};
+  if (Math.abs(distx) > Math.abs(disty)){ greaterDir = xdir } else { greaterDir = ydir };
+  callback([trueDist, distx, disty, xdir, ydir, greaterDir]);
 };
 
 function ProcessMovements(){
@@ -44,10 +63,14 @@ function DoMovement(playername, dir, rate) {
 
 
 
-  if (coredata.players[playername].state !== "dead" && collmap[cellname] == 0){
-  //process.stdout.write(data[1]+" commit to ->");
-  //console.log(data[0], coredata.players[data[0]].pos);
-  coredata.players[playername].pos = cellname;
-  coredata.players[playername].dir = dir;
-    };
+  if (coredata.players[playername].state !== "dead" ){
+    if (collmap[cellname] == 0) {
+      coredata.players[playername].pos = cellname;
+      coredata.players[playername].dir = dir;
+
+    } else {
+      coredata.players[playername].dir = dir;
+    }
+
+  };
 };

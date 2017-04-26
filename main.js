@@ -45,7 +45,7 @@ function resize(){
 function add_player(team){
 	playername = "p" + socket.io.engine.id;
 	newplayerdata = {};
-	newplayerdata[playername] = {"pos":"40.40", "dir": "2", "state":"000", "health": 100, "alerttimer": 0, "team": team, "origin": "40.40"};
+	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"000", "health": 100, "alerttimer": 0, "team": team, "origin": "40.50"};
 	console.log(newplayerdata);
 	userplayer = playername;
 	elem = document.getElementById("chooseteam");
@@ -71,7 +71,7 @@ function draw(){
 				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
 				ctx.drawImage.apply(ctx, image2draw);
 				ctx.fillStyle = "blue";
-				ctx.fillRect(campos[0] - blk[3], campos[1] - blk[4], 1, 1);
+				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
 			};
 			if (blk[0] == "02"){
 				ctx.fillStyle = "green";
@@ -86,16 +86,9 @@ function draw(){
 				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
 			};
 			if (blk[0] == "11"){
-				ctx.fillStyle = "black";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
-			};
-			if (blk[0] == "12"){
-				ctx.fillStyle = "yellow";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
-			};
-			if (blk[0] == "13"){
-				ctx.fillStyle = "orange";
-				ctx.fillRect(blk[3] -1, blk[4] -1, 1, 1);
+				image2draw = chars.t11["d" + blk[1]].slice()
+				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
+				ctx.drawImage.apply(ctx, image2draw);
 			};
 		};
 	};
@@ -126,9 +119,10 @@ KeyboardController({
 		68: function() { move(userplayer, '4'); },
 		83: function() { move(userplayer, '6'); },
 		65: function() { move(userplayer, '8'); },
-    192: function() { console.log(JSON.stringify(coredata)); },
-    78: function() { socket.emit(attack, userplayer); }
+    192: function() { console.log(JSON.stringify(coredata)); }
 }, 50);
+
+
 
 
 function KeyboardController(keys, repeat) {
@@ -139,6 +133,7 @@ function KeyboardController(keys, repeat) {
 	//
 	document.onkeydown= function(event) {
 			var key= (event || window.event).keyCode;
+			if (key == 78){ socket.emit('attack', userplayer); console.log('attack') };
 			console.log(key)
 			if (!(key in keys))
 					return true;
@@ -206,7 +201,7 @@ socket.on('getdata', function(data){
 
 
 ///// Touch device controlls ///////////////////////
-document.getElementById("attack").addEventListener("touchstart", function(event) {
+document.getElementById("attack").addEventListener("click", function(event) {
 	socket.emit('attack', userplayer);
 });
 

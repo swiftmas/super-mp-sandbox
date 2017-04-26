@@ -140,8 +140,8 @@ var listener = io.listen(server);
 setInterval(function(){
   coredata.effects = []
   general.ProcessMovements();
-  combat.processBombs();
-  combat.bombcontroller();
+  combat.processAttackQueue();
+  combat.processAttacks();
 
 
   ///////////////
@@ -157,16 +157,12 @@ setInterval(function(){
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
   //Bombs
-  var db = coredata.bombs;
-  for (var bomb in db){
-    var code = db[bomb].state;
-    if (code >= 16 || code <= 10 && code >= 6 ){
-      code = 11;
-    } else {
-      code = 12;
-    };
-    var pos = db[bomb].pos
-    datas.push(code + "." + "00" + "." + "00" + "." + pos);
+  var db = coredata.attacks;
+  for (var attack in db){
+    var code = 11;
+    var pos = db[attack].pos
+    var dir = db[attack].dir
+    datas.push(code + "." + dir + "." + state + "." + pos);
   }
   datas.push.apply(datas, coredata.effects);
   listener.sockets.emit('getdata', datas);

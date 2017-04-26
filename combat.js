@@ -1,4 +1,5 @@
 globals = require('./globals.js');
+general = require('./general.js');
 coredata = globals.coredata;
 collmap = globals.collmap;
 mapchange = globals.mapchange;
@@ -6,166 +7,79 @@ attackQueue = globals.attackQueue;
 
 ///// Exports ///////////////////////////
 module.exports = {
-  bombcontroller: function () {
-    bombcontroller();
-  },
   attack: function (attacker, dir) {
     attack(attacker, dir);
   },
-  explode: function (bombNumber) {
-    explode(bombNumber);
+  processAttacks: function () {
+    processAttacks();
   },
-  processBombs: function () {
-    processBombs();
+  processAttackQueue: function () {
+    processAttackQueue();
   },
 };
 
-function bombcontroller(){
-    var db = coredata.bombs;
-    var removes = [];
-    for (var bomb = coredata.bombs.length -1; bomb >= 0; bomb--){
-      console.log(JSON.stringify(db[bomb]));
-      if (db[bomb].state <= 3){ removes.push(bomb); break};
-      if (db[bomb].state < 6){
-        explode(bomb);
-      };
-      if (db[bomb].state > 0){
-        db[bomb].state -= 1;
-      };
-    };
-    for (var rem in removes){
-      db.splice(rem, 1)
-    };
-}
 
-function processBombs(){
+
+function processAttackQueue(){
   for (var inst in attackQueue){
     attack(attackQueue[inst][0], attackQueue[inst][1])
     delete attackQueue[inst];
   }
-  //attackQueue = {};
-}
+};
+
+function processAttacks(){
+  var db = coredata.attacks;
+  var removes = [];
+  for (var attack = coredata.attacks.length -1; attack >= 0; attack--){
+    console.log(JSON.stringify(db[attack]));
+    if (db[attack].state <= 0){ removes.push(attack); break};
+
+    if (db[attack].state > 0){
+      db[attack].state -= 1;
+      dodamage(db[attack].pos);
+    };
+  };
+  for (var rem in removes){
+    db.splice(rem, 1)
+  };
+};
 
 function attack(attacker, npcsORplayers){
     // second argument, npc or player is the attribute of the attacker, not whats being attacked.
-    at = coredata[npcsORplayers];
+    var at = coredata[npcsORplayers];
     //coredata.attacks["a" + attacker] = at[attacker].pos;
-    atdir = at[attacker].dir;
-    atorig = at[attacker].pos.split(".");
+    var atdir = at[attacker].dir;
+    var atorig = at[attacker].pos.split(".");
+    var atpos = "";
     if (atdir == "2"){
-    	nx = parseInt(atorig[0])
-    	ny = parseInt(atorig[1]) - 1
+    	var nx = parseInt(atorig[0])
+    	var ny = parseInt(atorig[1]) - 5
     	atpos = nx + "." + ny
     } else if (atdir == "6") {
-		nx = parseInt(atorig[0])
-    	ny = parseInt(atorig[1]) + 1
+		  var nx = parseInt(atorig[0])
+    	var ny = parseInt(atorig[1]) + 5
     	atpos = nx + "." + ny
     } else if (atdir == "8") {
-    	nx = parseInt(atorig[0]) - 1
-    	ny = parseInt(atorig[1])
+    	var nx = parseInt(atorig[0]) - 5
+    	var ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
     } else if (atdir == "4") {
-    	nx = parseInt(atorig[0]) + 1
-    	ny = parseInt(atorig[1])
+    	var nx = parseInt(atorig[0]) + 5
+    	var ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
     };
     if (collmap[atpos] == 0) {
-      for (var bomb = coredata.bombs.length -1; bomb >= 0; bomb--){
-        if (coredata.bombs[bomb].pos == atpos){
-          return;
-        }
-      };
-
-      coredata.bombs.push({"pos": atpos, "state": "20", "owner": attacker});
-      console.log(attacker + " placed bomb");
+      general.getDist(at[attacker].pos, atpos, function(result) {
+        console.log(result);
+      });
+      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "4", "owner": attacker, "type": "11"});
+      console.log(attacker + " placed attack");
 
     };
 
 };
 
-function explode(bomb) {
-    var radius = 4;
-    dbomb = coredata.bombs[bomb];
-    posx = parseInt(dbomb.pos.split(".")[0]);
-    posy = parseInt(dbomb.pos.split(".")[1]);
-    console.log("boom @ " + dbomb.pos, posx, posy)
-    dodamage(dbomb.pos);
-    bombAffect = [];
-    //x
-      //left
-      for (var lx = posx -1; lx >= posx-radius; lx--){
-        var atpos = lx + "." + posy
-        if (collmap[atpos] !== 1){
-          if (collmap[atpos] > 1){
-            collmap[atpos] = 0;
-            mapchange = true;
-            break;
-          } else {
-            dodamage(atpos);
-          };
-          if (lx !== posx - 3){
-            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
-        } else {
-          break;
-        };
-      };
-      //right
-      for (var rx = posx + 1 ; rx <= posx + radius; rx++) {
-        atpos = rx + "." + posy
-        if (collmap[atpos] !== 1){
-          if (collmap[atpos] == 2){
-            collmap[atpos] = 0;
-            mapchange = true;
-            break;
-          } else {
-            dodamage(atpos);
-          };
-          if (rx !== posx + 3){
-            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
-        } else {
-          break;
-        };
-      };
-    //y
-      //up
-      for (var uy = posy -1; uy >= posy-radius; uy--){
-        var atpos = posx + "." + uy
-        if (collmap[atpos] !== 1){
-          if (collmap[atpos] == 2){
-            collmap[atpos] = 0;
-            mapchange = true;
-            break;
-          } else {
-            dodamage(atpos);
-          };
-          if (uy !== posy - 3){
-            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
-        } else {
-          break;
-        };
-      };
-      //down
-      for (var dy = posy + 1 ; dy <= posy + radius; dy++) {
-        atpos = posx + "." + dy
-        if (collmap[atpos] !== 1){
-          if (collmap[atpos] == 2){
-            collmap[atpos] = 0;
-            mapchange = true;
-            break;
-          } else {
-            dodamage(atpos);
-          };
-          if (dy !== posy + 3){
-            coredata.effects.push("12" + "." + "00" + "." + "00" + "." + atpos);
-          } else {coredata.effects.push("13" + "." + "00" + "." + "00" + "." + atpos);};
-        } else {
-          break;
-        };
-      };
-};
+
 
 function dodamage(atpos){
   dp = coredata.players;
