@@ -34,6 +34,16 @@ document.getElementById("map").addEventListener("mousemove", function(event) {
   document.getElementById("coor").innerHTML = coor;;
 });
 
+window.onkeyup = function(e) {
+   var key = e.keyCode ? e.keyCode : e.which;
+
+   if (key == 70) {
+       draw = "draw";
+   }else if (key == 68) {
+       draw == "delete";
+   }
+}
+
 document.getElementById("map").addEventListener("mousedown", function(event) {
   mouse = "down";
 });
@@ -45,10 +55,10 @@ document.getElementById("map").addEventListener("mouseup", function(event) {
 setInterval(function(){
   if (mouse == "down" && coor != oldloc){
     oldloc = coor;
-  	if (json[coor] == 1){
-  		json[coor] = 0;
+  	if (draw == "delete"){
+  		delete json[coor];
   		drawmap();
-    } else if (json[coor] == 0) {
+    } else if (draw == "draw") {
   		json[coor] = 1;
       drawmap();
   	};
@@ -64,20 +74,11 @@ function setdim() {
   if (theIn.split('x').length > 1 && theIn.split('x')[1].length > 0) {
     for (var x = 1; x <= theIn.split('x')[0]; x++) {
 			for (var y = 1; y <= theIn.split('x')[1]; y++) {
-				if (x == 1){ var coll = 1;}
-				else if (y == 1 ){ var coll = 1;}
-				else if (x == theIn.split('x')[0]){ var coll = 1;}
-				else if (y == theIn.split('x')[1]){ var coll = 1;}
-				else {
-					if ( x > 2 && y > 2 && x < theIn.split('x')[0] - 1 && y < theIn.split('x')[1] - 1) {
-
-						var coll = 0;
-					} else {
-					var coll = 0
-					};
-				};
 				coor = x + "." + y
-				json[coor] = coll
+				if (x == 1){ json[coor] = 1;}
+				else if (y == 1 ){ json[coor] = 1;}
+				else if (x == theIn.split('x')[0]){ json[coor] = 1;}
+				else if (y == theIn.split('x')[1]){ json[coor] = 1;}
 			}
 		};
 		document.querySelector("#map").width = parseInt(theIn.split('x')[0]*16);

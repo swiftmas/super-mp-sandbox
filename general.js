@@ -66,7 +66,7 @@ function DoMovement(playername, dir, rate, maintainFacingDirection) {
   };
 
   if (coredata.players[playername].state !== "dead" ){
-    if (collmap[cellname] == 0) {
+    if (!(collmap.hasOwnProperty(cellname))) {
       coredata.players[playername].pos = cellname;
       coredata.players[playername].dir = dir;
 
