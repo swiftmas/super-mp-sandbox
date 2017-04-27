@@ -34,7 +34,7 @@ function processAttacks(){
     //console.log(JSON.stringify(db[attack]));
     if (db[attack].state <= 0){ removes.push(attack); break};
 
-    if (db[attack].state == 4){
+    if (db[attack].state == 3){
       dodamage(db[attack].pos, db[attack].owner, db[attack].dir, false);
     }
 
@@ -72,7 +72,7 @@ function attack(attacker, npcsORplayers){
     	atpos = nx + "." + ny
     };
     if (!(collmap.hasOwnProperty(atpos))) {
-      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "4", "owner": attacker, "type": "11"});
+      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "3", "owner": attacker, "type": "11"});
       console.log(attacker + " placed attack");
 
     };
