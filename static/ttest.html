@@ -1,0 +1,14 @@
+
+
+function startHandler (e) {
+    document.getElementById("note").innerHTML =   'Start:' + e.originalEvent.touches[0].pageX ;
+}
+
+function endHandler (e) {
+    document.getElementById("note").innerHTML =   'End:' + e.originalEvent.changedTouches[0].pageX ;
+}
+
+
+
+$(document).on('touchstart', '#menu', startHandler);
+$(document).on('touchend', '#menu', endHandler);
