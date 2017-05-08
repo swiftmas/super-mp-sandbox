@@ -1,4 +1,12 @@
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+ 
+<div id='menu' style='width: 500px; height: 400px; background-color: red;'>
+</div>
+<div id='note'>
+</div>
+
+<script type="text/javascript"> 
 
 function startHandler (e) {
     document.getElementById("note").innerHTML =   'Start:' + e.originalEvent.touches[0].pageX ;
@@ -12,3 +20,5 @@ function endHandler (e) {
 
 $(document).on('touchstart', '#menu', startHandler);
 $(document).on('touchend', '#menu', endHandler);
+
+</script>  
