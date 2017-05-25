@@ -14,29 +14,30 @@ module.exports = {
 ///// Controllers ///////
 function npccontroller() {
     var cdn = coredata.npcs
-        //// Dead Cleanup 
+        //// Dead Cleanup
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
             if (cdn[npc].state == "dead") {
                 console.log("dead at ", cdn[npc].pos)
                 cdn[npc].pos = cdn[npc].origin;
                 console.log("spawn at ", cdn[npc].pos)
-                cdn[npc].state = "normal";
+                cdn[npc].state = "000";
                 cdn[npc].health = 100;
             };
         };
     };
-    //// Normal Living 
+    //// Normal Living
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
             /////////////////////////////IF NORMAL///////////////
-            if (cdn[npc].state == "normal") {
-                alertrange(npc, 10);
-                var closetarget = getSurroundings(npc, 10);
-                if (closetarget.length > 0 && closetarget[1] > 1) {
+            if (cdn[npc].state == "000") {
+                alertrange(npc, 25);
+                var closetarget = getSurroundings(npc, 25);
+                if (closetarget.length > 1 && closetarget[1] > 8) {
+                    console.log(closetarget)
                     moveNpcTo(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
-                else if (closetarget[1] <= 1) {
+                else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace) {
                         combat.attack(npc, "npcs");
@@ -45,7 +46,8 @@ function npccontroller() {
                         cdn[npc].dir = dirToFace;
                     };
                 } else if (cdn[npc].pos !== cdn[npc].origin){
-                    headhome();
+                    //headhome(npc);
+                    var none="none";
                 };
             };
         };
@@ -100,7 +102,7 @@ function alertrange(npc, dist) {
             if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state !== "dead") {
                 var cansee = isLineOfSight(trueorig, ppos)
                 if (cansee == true){
-                    gp[player].alerttimer = 15;
+                    gp[player].alerttimer = 35;
                 };
             };
         };
@@ -110,14 +112,16 @@ function alertrange(npc, dist) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
             if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state !== "dead") {
-                gn[npctar].alerttimer = 15;
+                gn[npctar].alerttimer = 35;
             };
         };
     };
 };
 
-function headhome(){
+function headhome(npc){
     console.log("HEAD HOME!")
+    tar = coredata.npcs[npc].pos.split(".")
+    moveNpcTo(npc, tar[0], tar[1])
 };
 
 function isLineOfSight(orig, target) {
@@ -213,7 +217,7 @@ function isLineOfSight(orig, target) {
     else {
         return false;
     };
-    
+
 };
 
 
@@ -280,36 +284,39 @@ function isspaceclear(coord) {
 };
 
 function moveNpcTo(npc, tarx, tary) {
+    var rate = 1;
     var npcpos = coredata.npcs[npc].pos.split(".");
     var npcx = npcpos[0];
     var npcy = npcpos[1];
     var newcoords = [];
     if (npcx > tarx) {
-        var newcoord = (parseInt(npcx) - 1) + "." + npcy;
-        if (collmap[newcoord] == 0) {
+        var newcoord = (parseInt(npcx) - rate) + "." + npcy;
+        if (!(collmap.hasOwnProperty(cellname))) {
             newcoords[newcoords.length] = new Array(newcoord, "8");
         };
     }
     else if (npcx < tarx) {
-        var newcoord = (parseInt(npcx) + 1) + "." + npcy;
-        if (collmap[newcoord] == 0) {
+        var newcoord = (parseInt(npcx) + rate) + "." + npcy;
+        if (!(collmap.hasOwnProperty(cellname))) {
             newcoords[newcoords.length] = new Array(newcoord, "4");
         };
     };
     if (npcy > tary) {
-        var newcoord = npcx + "." + (parseInt(npcy) - 1);
-        if (collmap[newcoord] == 0) {
+        var newcoord = npcx + "." + (parseInt(npcy) - rate);
+        if (!(collmap.hasOwnProperty(cellname))) {
             newcoords[newcoords.length] = new Array(newcoord, "2");
         };
     }
     else if (npcy < tary) {
-        var newcoord = npcx + "." + (parseInt(npcy) + 1);
-        if (collmap[newcoord] == 0) {
+        var newcoord = npcx + "." + (parseInt(npcy) + rate);
+        if (!(collmap.hasOwnProperty(cellname))) {
             newcoords[newcoords.length] = new Array(newcoord, "6");
         };
     };
+    console.log(newcoords)
     if (newcoords.length > 0) {
         var tar = newcoords[Math.floor(Math.random() * newcoords.length)];
+        console.log(tar)
         coredata.npcs[npc].pos = tar[0];
         coredata.npcs[npc].dir = tar[1];
     };
