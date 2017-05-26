@@ -139,12 +139,14 @@ var listener = io.listen(server);
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
   coredata.effects = []
+  npcs.npccontroller();
+  npcs.alerttimedown();
   general.ProcessMovements();
   combat.processAttackQueue();
   combat.processAttacks();
 
 
-  ///////////////
+  /////Convert Catagories to Packets//////////
   var datas = [];
   //PLAYERS
   var dp = coredata.players;
@@ -153,7 +155,19 @@ setInterval(function(){
     var pos = dp[player].pos;
     var state = dp[player].state;
     var dir = dp[player].dir
+    //position player camera!
     listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
+    datas.push(code + "." + dir + "." + state + "." + pos);
+  }
+
+  var dp = coredata.npcs;
+  for ( var player in dp){
+    var code = dp[player].team;
+    var pos = dp[player].pos;
+    var state = dp[player].state;
+    var dir = dp[player].dir
+    //position player camera!
+    //listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
   //Bombs

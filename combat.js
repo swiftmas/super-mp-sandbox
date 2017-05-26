@@ -82,8 +82,8 @@ function attack(attacker, npcsORplayers){
 
 
 function dodamage(atpos, owner, direction, friendlyFire){
-  var dp = coredata.players;
   var damage = 25;
+  var dp = coredata.players;
   for (var key in dp){
     if (dp.hasOwnProperty(key) && key != owner) {
       general.getDist(atpos, dp[key].pos, function(result) {
@@ -104,14 +104,19 @@ function dodamage(atpos, owner, direction, friendlyFire){
 
   var dn = coredata.npcs;
   for (var key in dn){
-    if (dn.hasOwnProperty(key)) {
-      if (dn[key].pos == atpos){
-        dn[key].health = dn[key].health - damage;
-        if (dn[key].health <= 0){
-          dn[key].state = "dead";
-          console.log(dn[key], ' killed at ', atpos)
+    if (dn.hasOwnProperty(key) && key != owner) {
+      general.getDist(atpos, dn[key].pos, function(result) {
+        if (result[0] <= 5){
+          console.log(result, damage, dn[key].health);
+          dn[key].health = dn[key].health - damage;
+          general.DoMovement(key, direction, 4, true);
+          if (dn[key].health <= 0){
+            dn[key].pos = dn[key].origin;
+            dn[key].health = 100;
+            console.log(dn[key], ' killed at ', atpos)
+          };
         };
-      }
+      });
     };
   };
 };

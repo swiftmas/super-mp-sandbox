@@ -8,8 +8,8 @@ module.exports = {
   getDist: function (origin, destination, callback) {
     getDist(origin, destination, callback);
   },
-  DoMovement: function (playername, dir, rate, maintainFacingDirection) {
-    DoMovement(playername, dir, rate, maintainFacingDirection);
+  DoMovement: function (name, dir, rate, maintainFacingDirection) {
+    DoMovement(name, dir, rate, maintainFacingDirection);
   },
   ProcessMovements: function () {
     ProcessMovements();
@@ -39,39 +39,50 @@ function ProcessMovements(){
   }
 };
 
-function DoMovement(playername, dir, rate, maintainFacingDirection) {
+function DoMovement(name, dir, rate, maintainFacingDirection) {
+  //Only objects with a letter before thier id can be moved
+  nameType = ""
+  switch(name[0]){
+    case "n":
+      nameType = "npcs"
+      break;
+    case "p":
+      nameType = "players"
+      break;
+  }
+
   if (dir == "2"){
-    var x = parseInt(coredata.players[playername].pos.split(".")[0])
-    var y = parseInt(coredata.players[playername].pos.split(".")[1]) - rate
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0])
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1]) - rate
     cellname = ''+x+'.'+y+''
   };
   if (dir == "6"){
-    var x = parseInt(coredata.players[playername].pos.split(".")[0])
-    var y = parseInt(coredata.players[playername].pos.split(".")[1]) + rate
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0])
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1]) + rate
     cellname = ''+x+'.'+y+''
   };
   if (dir == "8"){
-    var x = parseInt(coredata.players[playername].pos.split(".")[0]) - rate
-    var y = parseInt(coredata.players[playername].pos.split(".")[1])
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0]) - rate
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1])
     cellname = ''+x+'.'+y+''
   };
   if (dir == "4"){
-    var x = parseInt(coredata.players[playername].pos.split(".")[0]) + rate
-    var y = parseInt(coredata.players[playername].pos.split(".")[1])
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0]) + rate
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1])
     cellname = ''+x+'.'+y+''
   };
 
   if (maintainFacingDirection == true){
-    dir = coredata.players[playername].dir;
+    dir = coredata[nameType][name].dir;
   };
 
-  if (coredata.players[playername].state !== "dead" ){
+  if (coredata[nameType][name].state !== "dead" ){
     if (!(collmap.hasOwnProperty(cellname))) {
-      coredata.players[playername].pos = cellname;
-      coredata.players[playername].dir = dir;
+      coredata[nameType][name].pos = cellname;
+      coredata[nameType][name].dir = dir;
 
     } else {
-      coredata.players[playername].dir = dir;
+      coredata[nameType][name].dir = dir;
     }
 
   };
