@@ -8,6 +8,9 @@ module.exports = {
   getDist: function (origin, destination, callback) {
     getDist(origin, destination, callback);
   },
+  StateController: function () {
+    StateController();
+  },
   DoMovement: function (name, dir, rate, maintainFacingDirection) {
     DoMovement(name, dir, rate, maintainFacingDirection);
   },
@@ -15,6 +18,21 @@ module.exports = {
     ProcessMovements();
   },
 };
+
+function StateController(){
+  entities = ["npcs","players","attacks"]
+  for (entity in entities){
+    db = coredata[entities[entity]]
+    for(item in db){
+      if (db[item].state > 0){
+        db[item].state -= 1;
+      }
+      if (db[item].state % 10 == 0){
+        db[item].state = 0;
+      }
+    }
+  }
+}
 
 // All the goods in one. probably needs to be tuned. but should be fast enough.
 function getDist(origin, destination, callback) {
