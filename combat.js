@@ -37,10 +37,6 @@ function processAttacks(){
     if (db[attack].state == 2){
       dodamage(db[attack].pos, db[attack].owner, db[attack].dir, false);
     }
-
-    if (db[attack].state > 0){
-      db[attack].state -= 1;
-    };
   };
   for (var rem in removes){
     db.splice(rem, 1)

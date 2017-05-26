@@ -138,7 +138,7 @@ var listener = io.listen(server);
 
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
-  coredata.effects = []
+  general.StateController();
   npcs.npccontroller();
   npcs.alerttimedown();
   general.ProcessMovements();
@@ -170,15 +170,14 @@ setInterval(function(){
     //listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
-  //Bombs
+  //Attacks
   var db = coredata.attacks;
   for (var attack in db){
-    var code = 11;
+    var code = 5;
     var pos = db[attack].pos
     var dir = db[attack].dir
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
-  datas.push.apply(datas, coredata.effects);
   listener.sockets.emit('getdata', datas);
 }, 100);
 

@@ -53,12 +53,26 @@ function add_player(team){
         socket.emit('add_player', newplayerdata);
 };
 
+function charAlg(code){
+	block = code.split(".");
+	yvalue = ((block[0] -1) * 32) + (((block[1]/2) - 1) * 8);
+	anims = [0, 24, 48, 72, 96]
+	if (block[2] < 10){
+		xvalue = anims[0] + (block[2] * 8);
+	}
+	if (block[2] < 100 && block[2] > 9 ){
+		prts=block[2].split("")
+		xvalue = anims[prts[0]] + (prts[1] * 8);
+	}
+	return [charsprites,xvalue,yvalue,8,8];
+}
+
 function draw(){
 	if ( userplayer !== null ){
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-		// DRAW Blocks ///////////////////////////////////
+		// DRAW map ///////////////////////////////////
 		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
 
 //////////////////////////////////////
@@ -66,36 +80,8 @@ function draw(){
 		db = coredata;
 		for (var code in db){
 			blk = db[code].split(".");
-			if (blk[0] == "01"){
-				image2draw = chars.t01["d" + blk[1]].slice()
-				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
-				ctx.drawImage.apply(ctx, image2draw);
-				ctx.fillStyle = "blue";
-				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
-			};
-			if (blk[0] == "02"){
-				image2draw = chars.t02["d" + blk[1]].slice()
-				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
-				ctx.drawImage.apply(ctx, image2draw);
-				ctx.fillStyle = "green";
-				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
-			};
-			if (blk[0] == "03"){
-				image2draw = chars.t03["d" + blk[1]].slice()
-				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
-				ctx.drawImage.apply(ctx, image2draw);
-				ctx.fillStyle = "red";
-				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
-			};
-			if (blk[0] == "04"){
-				image2draw = chars.t04["d" + blk[1]].slice()
-				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
-				ctx.drawImage.apply(ctx, image2draw);
-				ctx.fillStyle = "gold";
-				ctx.fillRect(blk[3] - campos[0] + 32, blk[4] - campos[1] + 32, 1, 1);
-			};
-			if (blk[0] == "11"){
-				image2draw = chars.t11["d" + blk[1]].slice()
+			if (db[code].length > 0){
+				image2draw = charAlg(db[code]);
 				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
 				ctx.drawImage.apply(ctx, image2draw);
 			};
@@ -107,10 +93,10 @@ function draw(){
 
 
 ///// GET PLAYER TEAM AND STUFF ////
-document.getElementById("selBlue").addEventListener("click", function(event) { add_player("01"); });
-document.getElementById("selGreen").addEventListener("click", function(event) { add_player("02"); });
-document.getElementById("selRed").addEventListener("click", function(event) { add_player("03"); });
-document.getElementById("selGold").addEventListener("click", function(event) { add_player("04"); });
+document.getElementById("selBlue").addEventListener("click", function(event) { add_player(1); });
+document.getElementById("selGreen").addEventListener("click", function(event) { add_player(2); });
+document.getElementById("selRed").addEventListener("click", function(event) { add_player(3); });
+document.getElementById("selGold").addEventListener("click", function(event) { add_player(4); });
 
 
 
