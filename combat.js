@@ -46,6 +46,7 @@ function processAttacks(){
 function attack(attacker, npcsORplayers){
     // second argument, npc or player is the attribute of the attacker, not whats being attacked.
     var at = coredata[npcsORplayers];
+    if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; return; };
     //coredata.attacks["a" + attacker] = at[attacker].pos;
     var atdir = at[attacker].dir;
     var atorig = at[attacker].pos.split(".");
@@ -84,12 +85,12 @@ function dodamage(atpos, owner, direction, friendlyFire){
   for (var key in dp){
     if (dp.hasOwnProperty(key) && key != owner) {
       general.getDist(atpos, dp[key].pos, function(result) {
-        if (result[0] <= 5){
+        if (result[0] <= 4){
           console.log(result, damage, dp[key].health);
           dp[key].health = dp[key].health - damage;
           general.DoMovement(key, direction, 4, true);
           if (dp[key].health <= 0){
-            dp[key].pos = dp[key].origin;
+            dp[key].state = 63;
             dp[key].health = 100;
             console.log(dp[key], ' killed at ', atpos)
           };
@@ -103,12 +104,12 @@ function dodamage(atpos, owner, direction, friendlyFire){
   for (var key in dn){
     if (dn.hasOwnProperty(key) && key != owner) {
       general.getDist(atpos, dn[key].pos, function(result) {
-        if (result[0] <= 5){
+        if (result[0] <= 4){
           console.log(result, damage, dn[key].health);
           dn[key].health = dn[key].health - damage;
           general.DoMovement(key, direction, 4, true);
           if (dn[key].health <= 0){
-            dn[key].pos = dn[key].origin;
+            dn[key].state = 63;
             dn[key].health = 100;
             console.log(dn[key], ' killed at ', atpos)
           };

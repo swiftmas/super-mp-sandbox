@@ -27,6 +27,9 @@ function StateController(){
       if (db[item].state > 0){
         db[item].state -= 1;
       }
+      if (db[item].state == 60){
+        db[item].state = 63
+      }
       if (db[item].state % 10 == 0){
         db[item].state = 0;
       }
@@ -52,7 +55,9 @@ function getDist(origin, destination, callback) {
 
 function ProcessMovements(){
   for (var inst in moveQueue){
-    DoMovement(moveQueue[inst][0], moveQueue[inst][1], 2);
+    if (coredata.players[moveQueue[inst][0]].state < 10){
+      DoMovement(moveQueue[inst][0], moveQueue[inst][1], 2);
+    }
     delete moveQueue[inst];
   }
 };
@@ -69,42 +74,42 @@ function DoMovement(name, dir, rate, maintainFacingDirection) {
       break;
   }
 
-  if (coredata[nameType][name].state < 10){
-    if (coredata[nameType][name].state == 0){coredata[nameType][name].state = 3}
-    if (dir == "2"){
-      var x = parseInt(coredata[nameType][name].pos.split(".")[0])
-      var y = parseInt(coredata[nameType][name].pos.split(".")[1]) - rate
-      cellname = ''+x+'.'+y+''
-    };
-    if (dir == "6"){
-      var x = parseInt(coredata[nameType][name].pos.split(".")[0])
-      var y = parseInt(coredata[nameType][name].pos.split(".")[1]) + rate
-      cellname = ''+x+'.'+y+''
-    };
-    if (dir == "8"){
-      var x = parseInt(coredata[nameType][name].pos.split(".")[0]) - rate
-      var y = parseInt(coredata[nameType][name].pos.split(".")[1])
-      cellname = ''+x+'.'+y+''
-    };
-    if (dir == "4"){
-      var x = parseInt(coredata[nameType][name].pos.split(".")[0]) + rate
-      var y = parseInt(coredata[nameType][name].pos.split(".")[1])
-      cellname = ''+x+'.'+y+''
-    };
 
-    if (maintainFacingDirection == true){
-      dir = coredata[nameType][name].dir;
-    };
+  if (coredata[nameType][name].state == 0){coredata[nameType][name].state = 3}
+  if (dir == "2"){
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0])
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1]) - rate
+    cellname = ''+x+'.'+y+''
+  };
+  if (dir == "6"){
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0])
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1]) + rate
+    cellname = ''+x+'.'+y+''
+  };
+  if (dir == "8"){
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0]) - rate
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1])
+    cellname = ''+x+'.'+y+''
+  };
+  if (dir == "4"){
+    var x = parseInt(coredata[nameType][name].pos.split(".")[0]) + rate
+    var y = parseInt(coredata[nameType][name].pos.split(".")[1])
+    cellname = ''+x+'.'+y+''
+  };
 
-    if (coredata[nameType][name].state !== "dead" ){
-      if (!(collmap.hasOwnProperty(cellname))) {
-        coredata[nameType][name].pos = cellname;
-        coredata[nameType][name].dir = dir;
+  if (maintainFacingDirection == true){
+    dir = coredata[nameType][name].dir;
+  };
 
-      } else {
-        coredata[nameType][name].dir = dir;
-      }
+  if (coredata[nameType][name].state !== "dead" ){
+    if (!(collmap.hasOwnProperty(cellname))) {
+      coredata[nameType][name].pos = cellname;
+      coredata[nameType][name].dir = dir;
 
-    };
-  }
+    } else {
+      coredata[nameType][name].dir = dir;
+    }
+
+  };
+
 };
