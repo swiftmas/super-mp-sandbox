@@ -34,7 +34,7 @@ function processAttacks(){
     //console.log(JSON.stringify(db[attack]));
     if (db[attack].state <= 0){ removes.push(attack); break};
 
-    if (db[attack].state == 2){
+    if (db[attack].state == 3){
       dodamage(db[attack].pos, db[attack].owner, db[attack].dir, false);
     }
   };
@@ -69,8 +69,8 @@ function attack(attacker, npcsORplayers){
     	atpos = nx + "." + ny
     };
     if (!(collmap.hasOwnProperty(atpos)) && at[attacker].state < 10) {
-      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "2", "owner": attacker, "type": "5"});
-      at[attacker].state = 12
+      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "3", "owner": attacker, "type": "5"});
+      at[attacker].state = 13
       console.log(attacker + " placed attack");
 
     };
@@ -88,7 +88,7 @@ function dodamage(atpos, owner, direction, friendlyFire){
         if (result[0] <= 4){
           console.log(result, damage, dp[key].health);
           dp[key].health = dp[key].health - damage;
-          general.DoMovement(key, direction, 4, true);
+          general.DoMovement(key, direction, 6, true);
           if (dp[key].health <= 0){
             dp[key].state = 63;
             dp[key].health = 100;
@@ -107,7 +107,7 @@ function dodamage(atpos, owner, direction, friendlyFire){
         if (result[0] <= 4){
           console.log(result, damage, dn[key].health);
           dn[key].health = dn[key].health - damage;
-          general.DoMovement(key, direction, 4, true);
+          general.DoMovement(key, direction, 6, true);
           if (dn[key].health <= 0){
             dn[key].state = 63;
             dn[key].health = 100;

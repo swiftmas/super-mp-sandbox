@@ -37,11 +37,11 @@ function npccontroller() {
             if (cdn[npc].state == "000") {
                 alertrange(npc, 25);
                 var closetarget = getSurroundings(npc, 25);
-                if (closetarget.length > 1 && closetarget[1] > 8) {
+                if (closetarget.length > 1 && closetarget[1] > 7) {
                     console.log(closetarget)
                     moveNpcTo(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
-                else if (closetarget[1] <= 8) {
+                else if (closetarget[1] <= 7) {
                     dirToFace = dirToTarget(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace) {
                         combat.attack(npc, "npcs");
