@@ -115,6 +115,10 @@ KeyboardController({
 		68: function() { move(userplayer, '4'); },
 		83: function() { move(userplayer, '6'); },
 		65: function() { move(userplayer, '8'); },
+		37: function() { move(userplayer, '8'); },
+		38: function() { move(userplayer, '2'); },
+		39: function() { move(userplayer, '4'); },
+		40: function() { move(userplayer, '6'); },
     192: function() { console.log(JSON.stringify(coredata)); }
 }, 50);
 
