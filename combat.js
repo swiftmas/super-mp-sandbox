@@ -67,8 +67,9 @@ function attack(attacker, npcsORplayers){
     	var ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
     };
-    if (!(collmap.hasOwnProperty(atpos))) {
-      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "2", "owner": attacker, "type": "11"});
+    if (!(collmap.hasOwnProperty(atpos)) && at[attacker].state < 10) {
+      coredata.attacks.push({"pos": atpos, "dir": atdir, "state": "2", "owner": attacker, "type": "5"});
+      at[attacker].state = 12
       console.log(attacker + " placed attack");
 
     };

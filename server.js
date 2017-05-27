@@ -173,9 +173,10 @@ setInterval(function(){
   //Attacks
   var db = coredata.attacks;
   for (var attack in db){
-    var code = 5;
+    var code = db[attack].type
     var pos = db[attack].pos
     var dir = db[attack].dir
+    var state = db[attack].state
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
   listener.sockets.emit('getdata', datas);

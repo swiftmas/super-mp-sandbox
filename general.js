@@ -69,39 +69,42 @@ function DoMovement(name, dir, rate, maintainFacingDirection) {
       break;
   }
 
-  if (dir == "2"){
-    var x = parseInt(coredata[nameType][name].pos.split(".")[0])
-    var y = parseInt(coredata[nameType][name].pos.split(".")[1]) - rate
-    cellname = ''+x+'.'+y+''
-  };
-  if (dir == "6"){
-    var x = parseInt(coredata[nameType][name].pos.split(".")[0])
-    var y = parseInt(coredata[nameType][name].pos.split(".")[1]) + rate
-    cellname = ''+x+'.'+y+''
-  };
-  if (dir == "8"){
-    var x = parseInt(coredata[nameType][name].pos.split(".")[0]) - rate
-    var y = parseInt(coredata[nameType][name].pos.split(".")[1])
-    cellname = ''+x+'.'+y+''
-  };
-  if (dir == "4"){
-    var x = parseInt(coredata[nameType][name].pos.split(".")[0]) + rate
-    var y = parseInt(coredata[nameType][name].pos.split(".")[1])
-    cellname = ''+x+'.'+y+''
-  };
+  if (coredata[nameType][name].state < 10){
+    if (coredata[nameType][name].state == 0){coredata[nameType][name].state = 3}
+    if (dir == "2"){
+      var x = parseInt(coredata[nameType][name].pos.split(".")[0])
+      var y = parseInt(coredata[nameType][name].pos.split(".")[1]) - rate
+      cellname = ''+x+'.'+y+''
+    };
+    if (dir == "6"){
+      var x = parseInt(coredata[nameType][name].pos.split(".")[0])
+      var y = parseInt(coredata[nameType][name].pos.split(".")[1]) + rate
+      cellname = ''+x+'.'+y+''
+    };
+    if (dir == "8"){
+      var x = parseInt(coredata[nameType][name].pos.split(".")[0]) - rate
+      var y = parseInt(coredata[nameType][name].pos.split(".")[1])
+      cellname = ''+x+'.'+y+''
+    };
+    if (dir == "4"){
+      var x = parseInt(coredata[nameType][name].pos.split(".")[0]) + rate
+      var y = parseInt(coredata[nameType][name].pos.split(".")[1])
+      cellname = ''+x+'.'+y+''
+    };
 
-  if (maintainFacingDirection == true){
-    dir = coredata[nameType][name].dir;
-  };
+    if (maintainFacingDirection == true){
+      dir = coredata[nameType][name].dir;
+    };
 
-  if (coredata[nameType][name].state !== "dead" ){
-    if (!(collmap.hasOwnProperty(cellname))) {
-      coredata[nameType][name].pos = cellname;
-      coredata[nameType][name].dir = dir;
+    if (coredata[nameType][name].state !== "dead" ){
+      if (!(collmap.hasOwnProperty(cellname))) {
+        coredata[nameType][name].pos = cellname;
+        coredata[nameType][name].dir = dir;
 
-    } else {
-      coredata[nameType][name].dir = dir;
-    }
+      } else {
+        coredata[nameType][name].dir = dir;
+      }
 
-  };
+    };
+  }
 };
