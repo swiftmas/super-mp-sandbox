@@ -64,6 +64,7 @@ function charAlg(code){
 		prts=block[2].split("")
 		xvalue = anims[prts[0]] + (prts[1] * 8);
 	}
+	console.log(xvalue);
 	return [charsprites,xvalue,yvalue,8,8];
 }
 
@@ -129,7 +130,6 @@ function KeyboardController(keys, repeat) {
 	document.onkeydown= function(event) {
 			var key= (event || window.event).keyCode;
 			if (key == 78){ socket.emit('attack', userplayer); console.log('attack') };
-			console.log(key)
 			if (!(key in keys))
 					return true;
 			if (!(key in timers)) {
