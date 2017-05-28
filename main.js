@@ -258,11 +258,11 @@ function getswipedir(x, y) {
     			touchdir = top[0];
     		};
     	};
-    	move(top[0], userplayer);
+    	move(userplayer, top[0]);
     } else if (dirlength.length == 1) {
     	top = dirlength[0];
     	touchdir = top[0]
-    	move(top[0], userplayer);
+    	move(userplayer, top[0]);
     };
 
   	//var coor = "Coordinates: (" + top[0] + ")";
