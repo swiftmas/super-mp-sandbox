@@ -8,6 +8,9 @@ module.exports = {
   getDist: function (origin, destination, callback) {
     getDist(origin, destination, callback);
   },
+  StateController: function () {
+    StateController();
+  },
   DoMovement: function (name, dir, rate, maintainFacingDirection) {
     DoMovement(name, dir, rate, maintainFacingDirection);
   },
@@ -15,6 +18,24 @@ module.exports = {
     ProcessMovements();
   },
 };
+
+function StateController(){
+  entities = ["npcs","players","attacks"]
+  for (entity in entities){
+    db = coredata[entities[entity]]
+    for(item in db){
+      if (db[item].state > 0){
+        db[item].state -= 1;
+      }
+      if (db[item].state == 60){
+        db[item].state = 63
+      }
+      if (db[item].state % 10 == 0){
+        db[item].state = 0;
+      }
+    }
+  }
+}
 
 // All the goods in one. probably needs to be tuned. but should be fast enough.
 function getDist(origin, destination, callback) {
@@ -34,7 +55,9 @@ function getDist(origin, destination, callback) {
 
 function ProcessMovements(){
   for (var inst in moveQueue){
-    DoMovement(moveQueue[inst][0], moveQueue[inst][1], 2);
+    if (coredata.players[moveQueue[inst][0]].state < 10){
+      DoMovement(moveQueue[inst][0], moveQueue[inst][1], 2);
+    }
     delete moveQueue[inst];
   }
 };
@@ -51,6 +74,8 @@ function DoMovement(name, dir, rate, maintainFacingDirection) {
       break;
   }
 
+
+  if (coredata[nameType][name].state == 0){coredata[nameType][name].state = 3}
   if (dir == "2"){
     var x = parseInt(coredata[nameType][name].pos.split(".")[0])
     var y = parseInt(coredata[nameType][name].pos.split(".")[1]) - rate
@@ -86,4 +111,5 @@ function DoMovement(name, dir, rate, maintainFacingDirection) {
     }
 
   };
+
 };

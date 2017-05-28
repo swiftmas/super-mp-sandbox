@@ -2,6 +2,8 @@ var globals = require('./globals.js');
 var combat = require('./combat.js');
 var coredata = globals.coredata;
 var collmap = globals.collmap;
+var general = require('./general.js');
+
 ///// Exports ///////////////////////////
 module.exports = {
     npccontroller: function () {
@@ -17,12 +19,16 @@ function npccontroller() {
         //// Dead Cleanup
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
-            if (cdn[npc].state == "dead") {
+            if (cdn[npc].state > 60) {
+              if (cdn[npc].respawn <= 0){
                 console.log("dead at ", cdn[npc].pos)
                 cdn[npc].pos = cdn[npc].origin;
                 console.log("spawn at ", cdn[npc].pos)
                 cdn[npc].state = "000";
                 cdn[npc].health = 100;
+                cdn[npc].respawn = 200;
+              }
+              cdn[npc].respawn -= 1;
             };
         };
     };
@@ -99,7 +105,7 @@ function alertrange(npc, dist) {
     for (var player in coredata.players) {
         if (gp.hasOwnProperty(player)) {
             var ppos = [gp[player].pos.split(".")[0], gp[player].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state !== "dead") {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state < 60) {
                 var cansee = isLineOfSight(trueorig, ppos)
                 if (cansee == true){
                     gp[player].alerttimer = 35;
@@ -111,7 +117,7 @@ function alertrange(npc, dist) {
     for (var npctar in gn) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state !== "dead") {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state < 60) {
                 gn[npctar].alerttimer = 35;
             };
         };
@@ -230,7 +236,7 @@ function getSurroundings(npc, dist) {
     for (var player in coredata.players) {
         if (gp.hasOwnProperty(player)) {
             var ppos = [gp[player].pos.split(".")[0], gp[player].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state !== "dead" && gp[player].alerttimer > 0) {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state < 60 && gp[player].alerttimer > 0) {
                 var aa = Math.abs(ppos[0] - orig[0]);
                 var bb = Math.abs(ppos[1] - orig[1]);
                 var hypot = Math.sqrt(aa * aa + bb * bb);
@@ -248,7 +254,7 @@ function getSurroundings(npc, dist) {
     for (var npctar in gn) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state !== "dead" && gn[npctar].alerttimer > 0) {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state < 60 && gn[npctar].alerttimer > 0) {
                 var aa = Math.abs(ppos[0] - orig[0]);
                 var bb = Math.abs(ppos[1] - orig[1]);
                 var hypot = Math.sqrt(aa * aa + bb * bb);
@@ -318,7 +324,7 @@ function moveNpcTo(npc, tarx, tary) {
         var tar = newcoords[Math.floor(Math.random() * newcoords.length)];
         console.log(tar)
         coredata.npcs[npc].pos = tar[0];
-        coredata.npcs[npc].dir = tar[1];
+        general.DoMovement(npc, tar[1], 1);
     };
 };
 
