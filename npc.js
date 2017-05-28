@@ -2,6 +2,8 @@ var globals = require('./globals.js');
 var combat = require('./combat.js');
 var coredata = globals.coredata;
 var collmap = globals.collmap;
+var general = require('./general.js');
+
 ///// Exports ///////////////////////////
 module.exports = {
     npccontroller: function () {
@@ -37,11 +39,11 @@ function npccontroller() {
             if (cdn[npc].state == "000") {
                 alertrange(npc, 25);
                 var closetarget = getSurroundings(npc, 25);
-                if (closetarget.length > 1 && closetarget[1] > 7) {
+                if (closetarget.length > 1 && closetarget[1] > 8) {
                     console.log(closetarget)
                     moveNpcTo(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
-                else if (closetarget[1] <= 7) {
+                else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace) {
                         combat.attack(npc, "npcs");
@@ -322,7 +324,7 @@ function moveNpcTo(npc, tarx, tary) {
         var tar = newcoords[Math.floor(Math.random() * newcoords.length)];
         console.log(tar)
         coredata.npcs[npc].pos = tar[0];
-        coredata.npcs[npc].dir = tar[1];
+        general.DoMovement(npc, tar[1], 1);
     };
 };
 
