@@ -138,6 +138,7 @@ var listener = io.listen(server);
 
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
+  var tickstart = new Date().getTime()
   general.StateController();
   npcs.npccontroller();
   npcs.alerttimedown();
@@ -180,6 +181,8 @@ setInterval(function(){
     datas.push(code + "." + dir + "." + state + "." + pos);
   }
   listener.sockets.emit('getdata', datas);
+  ticklength = (new Date().getTime()) - tickstart
+  if ( ticklength > 5){console.log(ticklength)}
 }, 100);
 
 ///// Per Connectoin /////////////////////////////////////////////////////////////////////////////////////////////////

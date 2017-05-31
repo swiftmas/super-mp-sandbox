@@ -1,6 +1,6 @@
 //// IMG /////////////////////////////////////////////////////////////
 map1 = new Image();
-map1.src = '/static/zeldaProt.png';
+map1.src = '/static/zeldaProt2.png';
 ///////////////////////////////////////////
 charsprites = new Image();
 charsprites.src = '/static/pixels.png';

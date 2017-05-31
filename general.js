@@ -8,6 +8,9 @@ module.exports = {
   getDist: function (origin, destination, callback) {
     getDist(origin, destination, callback);
   },
+  Collission: function (item) {
+    Collission(item);
+  },
   StateController: function () {
     StateController();
   },
@@ -17,6 +20,10 @@ module.exports = {
   ProcessMovements: function () {
     ProcessMovements();
   },
+};
+
+function Collission(item){
+  console.log(item)
 };
 
 function StateController(){
