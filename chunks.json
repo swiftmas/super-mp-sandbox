@@ -26,12 +26,12 @@
     "entities": {
       "e001": {
         "pos": "70.70",
-        "w": 5,
-        "h": 3,
+        "w": 6,
+        "h": 6,
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "06",
         "skin": "redKnight",
         "dir": "2",
         "origin": "70.70",
@@ -59,12 +59,12 @@
     "entities": {
       "e001": {
         "pos": "20.20",
-        "w": 5,
-        "h": 3,
+        "w": 6,
+        "h": 6,
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "06",
         "skin": "redKnight",
         "dir": "2",
         "origin": "20.20",
@@ -98,16 +98,16 @@
     },
     "entities": {
       "e001": {
-        "pos": "70.70",
-        "w": 5,
-        "h": 3,
+        "pos": "50.50",
+        "w": 6,
+        "h": 6,
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "06",
         "skin": "redKnight",
         "dir": "2",
-        "origin": "70.70",
+        "origin": "50.50",
         "respawn": 200
       }
     },
@@ -139,15 +139,15 @@
     "entities": {
       "e001": {
         "pos": "80.20",
-        "w": 5,
-        "h": 3,
+        "w": 6,
+        "h": 6,
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "06",
         "skin": "redKnight",
         "dir": "2",
-        "origin": "70.70",
+        "origin": "80.20",
         "respawn": 200
       }
     },

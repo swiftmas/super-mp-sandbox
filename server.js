@@ -177,9 +177,18 @@ setInterval(function(){
         datas.push(code + "." + dir + "." + state + "." + pos);
       }
       //Attacks
-      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;;
+      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;
       for (var attack in db){
         var code = db[attack].type
+        var pos = db[attack].pos
+        var dir = db[attack].dir
+        var state = db[attack].state
+        datas.push(code + "." + dir + "." + state + "." + pos);
+      }
+      //entities
+      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].entities;
+      for (var attack in db){
+        var code = db[attack].team
         var pos = db[attack].pos
         var dir = db[attack].dir
         var state = db[attack].state
