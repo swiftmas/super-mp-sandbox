@@ -45,7 +45,7 @@ function resize(){
 function add_player(team){
 	playername = "p" + socket.io.engine.id;
 	newplayerdata = {};
-	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"000", "health": 100, "alerttimer": 0, "team": team, "origin": "40.50"};
+	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"0", "health": 100, "alerttimer": 0, "team": team, "origin": "40.50", "closeChunks": [], "h": 3, "w": 3};
 	console.log(newplayerdata);
 	userplayer = playername;
 	elem = document.getElementById("chooseteam");
@@ -64,7 +64,6 @@ function charAlg(code){
 		prts=block[2].split("")
 		xvalue = anims[prts[0]] + (prts[1] * 8);
 	}
-	console.log(xvalue);
 	return [charsprites,xvalue,yvalue,8,8];
 }
 
@@ -76,17 +75,16 @@ function draw(){
 		// DRAW map ///////////////////////////////////
 		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
 
-//////////////////////////////////////
-
 		db = coredata;
 		for (var code in db){
 			blk = db[code].split(".");
 			if (db[code].length > 0){
 				image2draw = charAlg(db[code]);
-				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 28, 8, 8);
+				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 26, 8, 8);
 				ctx.drawImage.apply(ctx, image2draw);
 			};
 		};
+		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
 	};
 };
 

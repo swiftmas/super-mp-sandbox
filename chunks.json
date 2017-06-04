@@ -1,0 +1,162 @@
+{
+  "96.96": {
+    "attacks": [],
+    "npcs": {
+      "n001": {
+        "pos": "96.96",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "96.96",
+        "respawn": 200
+      }
+    },
+    "colliders": {
+      "001": {
+        "pos": "76.88",
+        "w": 8,
+        "h": 32
+      }
+    },
+    "entities": {
+      "e001": {
+        "pos": "70.70",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "70.70",
+        "respawn": 200
+      }
+    }
+  },
+  "32.32": {
+    "attacks": [],
+    "npcs": {
+      "n001": {
+        "pos": "32.32",
+        "w": 5,
+        "h": 3,
+        "state": "63",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "32.32",
+        "respawn": 200
+      }
+    },
+    "entities": {
+      "e001": {
+        "pos": "20.20",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "20.20",
+        "respawn": 200
+      }
+    },
+    "colliders": {
+      "001": {
+        "pos": "76.88",
+        "w": 8,
+        "h": 32
+      }
+    }
+  },
+  "32.96": {
+    "attacks": [],
+    "npcs": {
+      "n001": {
+        "pos": "32.96",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "32.96",
+        "respawn": 200
+      }
+    },
+    "entities": {
+      "e001": {
+        "pos": "70.70",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "70.70",
+        "respawn": 200
+      }
+    },
+    "colliders": {
+      "001": {
+        "pos": "76.88",
+        "w": 8,
+        "h": 32
+      }
+    }
+  },
+  "96.32": {
+    "attacks": [],
+    "npcs": {
+      "n001": {
+        "pos": "96.32",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "96.32",
+        "respawn": 200
+      }
+    },
+    "entities": {
+      "e001": {
+        "pos": "80.20",
+        "w": 5,
+        "h": 3,
+        "state": "000",
+        "health": 100,
+        "alerttimer": 0,
+        "team": "04",
+        "skin": "redKnight",
+        "dir": "2",
+        "origin": "70.70",
+        "respawn": 200
+      }
+    },
+    "colliders": {
+      "001": {
+        "pos": "76.88",
+        "w": 8,
+        "h": 32
+      }
+    }
+  }
+}

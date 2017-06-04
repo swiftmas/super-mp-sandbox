@@ -139,16 +139,17 @@ var listener = io.listen(server);
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
   var tickstart = new Date().getTime()
+  general.ProcessChunks();
   general.StateController();
-  npcs.npccontroller();
-  npcs.alerttimedown();
+  //npcs.npccontroller();
+  //npcs.alerttimedown();
   general.ProcessMovements();
   combat.processAttackQueue();
   combat.processAttacks();
 
 
   /////Convert Catagories to Packets//////////
-  var datas = [];
+  var playerDatas = [];
   //PLAYERS
   var dp = coredata.players;
   for ( var player in dp){
@@ -158,29 +159,38 @@ setInterval(function(){
     var dir = dp[player].dir
     //position player camera!
     listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
-    datas.push(code + "." + dir + "." + state + "." + pos);
+    playerDatas.push(code + "." + dir + "." + state + "." + pos);
   }
 
-  var dp = coredata.npcs;
-  for ( var player in dp){
-    var code = dp[player].team;
-    var pos = dp[player].pos;
-    var state = dp[player].state;
-    var dir = dp[player].dir
-    //position player camera!
-    //listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
-    datas.push(code + "." + dir + "." + state + "." + pos);
+  for (var player in coredata.players){
+    var datas = [];
+    for (var chunk in coredata.players[player].closeChunks){
+      //console.log(JSON.stringify(coredata.players[player].closeChunks), coredata.players[player].closeChunks[chunk], coredata.chunks);
+      var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
+      for ( var npc in dp){
+        var code = dp[npc].team;
+        var pos = dp[npc].pos;
+        var state = dp[npc].state;
+        var dir = dp[npc].dir
+        //position player camera!
+        //listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
+        datas.push(code + "." + dir + "." + state + "." + pos);
+      }
+      //Attacks
+      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;;
+      for (var attack in db){
+        var code = db[attack].type
+        var pos = db[attack].pos
+        var dir = db[attack].dir
+        var state = db[attack].state
+        datas.push(code + "." + dir + "." + state + "." + pos);
+      }
+    }
+    playerspecificData = datas.concat(playerDatas)
+    listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
+
   }
-  //Attacks
-  var db = coredata.attacks;
-  for (var attack in db){
-    var code = db[attack].type
-    var pos = db[attack].pos
-    var dir = db[attack].dir
-    var state = db[attack].state
-    datas.push(code + "." + dir + "." + state + "." + pos);
-  }
-  listener.sockets.emit('getdata', datas);
+
   ticklength = (new Date().getTime()) - tickstart
   if ( ticklength > 5){console.log(ticklength)}
 }, 100);
@@ -203,7 +213,6 @@ listener.sockets.on('connection', function(socket){
     for (var key in data){
       if (data.hasOwnProperty(key)) {
         coredata.players[key] = data[key];
-        console.log(coredata.players[key])
       };
     };
   });

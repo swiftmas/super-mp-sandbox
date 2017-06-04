@@ -1,0 +1,56 @@
+{ "height":48,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eJztmNENwyAMRNmETtFOkS2yJ6s1P0gIBftcDJjUHyc+em24Z9eIxBDC61JsrCfxWV6PhZ73pQ+xHoDnXOjh8u7OfyVbCf9jM+V9l7ko5e9xvlnK+0b51zlWS4P\/Xb6d+LeyWOOfBPx7apIqIfzLLK2s5W9x\/LXqkQBPrLJQXKj\/xN2+e3qbY1\/WAOn\/Fgtt\/ol4Vk\/\/S9TDH+X+y\/xBpcEfqcMo\/rM0iv8sOX\/nr8G\/zLLjHazMYvF+xXl25Z5Xi0wlHi6z9Vpwma1wbnl8\/vv5+8\/8\/fxd6\/H+1xdyD0b4S+6jWkKfJeUveTfQy12Lf12DWexHvH+Ywf8J\/f+E+YPIz18bHj9\/1\/a\/8\/f50+OxPFsQzxc56J5z",
+         "encoding":"base64",
+         "height":48,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":48,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":48,
+         "name":"Object Layer 1",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":48,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "renderorder":"right-down",
+ "tileheight":8,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"mapsprites.png",
+         "imageheight":101,
+         "imagewidth":191,
+         "margin":0,
+         "name":"mapsprites",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":276,
+         "tileheight":8,
+         "tilewidth":8
+        }],
+ "tilewidth":8,
+ "version":1,
+ "width":48
+}

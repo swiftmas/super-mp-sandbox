@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="48" height="48" tilewidth="8" tileheight="8" nextobjectid="12">
+ <tileset firstgid="1" name="mapsprites" tilewidth="8" tileheight="8" tilecount="360">
+  <image source="mapsprites.png" width="240" height="101"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="48" height="48">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBADAIA7DKxQPmZ2NAjvypJAUAC/UHB/+5pv8BAAAAAAC44wGfHah6
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" visible="0">
+  <object id="6" name="76.88" x="72" y="72" width="8" height="32"/>
+  <object id="10" name="npc" x="28" y="42.3333" width="4" height="5.66667"/>
+ </objectgroup>
+ <layer name="Tile Layer 2" width="48" height="48" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt02EKgDAIgFGvsi5S9z9VBQ2GuK3WDxW+B2NZDUytiMh2rfLsVS9u7+t3POzXOpq95tSL6y7q2ouu6+w7rDOefbDqKpNYn/Hsw2ieR/WNUPvbaJ57/4b1zNubOkbJ1bKSm/fs/BW5H5llmwudb7a5WM03Yp++5BSxTxFzAgAAAAAAAAAAyOQE2a0VOQ==
+  </data>
+ </layer>
+ <layer name="Tile Layer 3" width="48" height="48" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt02EKgDAIgFFvsi5S9z9WBQ2GuK3WDxW+B2NZDUytiMh2rfLsVS9u7+t3POzXOpq95tSL6y7q2ouu6+w7rDOefbDqKpNYn/Hsw2ieR/WNUPvbaJ57/4b1zNubOkbJ1bKSm/fs/BW5H5llmwudb7a5WM03Yp++5BSxTxFzAgAAAAAAAAAAyOQEOYkUWQ==
+  </data>
+ </layer>
+</map>
