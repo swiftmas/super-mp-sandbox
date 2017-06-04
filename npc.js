@@ -19,8 +19,24 @@ function npccontroller() {
     var cdn = coredata.chunks[chunk].npcs
 
         //// Dead Cleanup
+    npcLoop:
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
+            for (var nearbyChunk in coredata.chunks){
+              var surroundings = [chunk, 64];
+              general.getDist(cdn[npc].pos, nearbyChunk, function(result){
+                if (result[0] < surroundings[1]) {
+                  surroundings = [nearbyChunk, result[0]];
+                }
+              });
+
+            }
+            if (surroundings[0] !== chunk){
+              coredata.chunks[surroundings[0]].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
+              delete cdn[npc];
+              break npcLoop;
+            }
+
             if (cdn[npc].state > 60) {
               if (cdn[npc].respawn <= 0){
                 console.log("dead at ", cdn[npc].pos)
@@ -29,6 +45,12 @@ function npccontroller() {
                 cdn[npc].state = "000";
                 cdn[npc].health = 100;
                 cdn[npc].respawn = 200;
+                if (cdn[npc].chunk !== chunk){
+                  console.log(cdn[npc])
+                  coredata.chunks[cdn[npc].chunk].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
+                  delete cdn[npc];
+                  break npcLoop;
+                }
               }
               cdn[npc].respawn -= 1;
             };
