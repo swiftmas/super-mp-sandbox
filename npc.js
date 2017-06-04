@@ -321,7 +321,7 @@ function moveNpcTo(npc, chunk, tarx, tary) {
     if (newcoords.length > 0) {
         var tar = newcoords[Math.floor(Math.random() * newcoords.length)];
         //coredata.npcs[npc].pos = tar[0];
-        general.DoMovement(npc, chunk, tar[1], rate);
+        general.DoMovement(npc, chunk, tar[1], rate, true);
     };
 };
 

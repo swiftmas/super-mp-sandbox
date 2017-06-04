@@ -140,7 +140,8 @@ function ProcessMovements(){
   }
 };
 
-function DoMovement(name, chunk, dir, rate, maintainFacingDirection) {
+function DoMovement(name, chunk, dir, rate, faceDir) {
+if (rate == 6){faceDir = false}
   //Only objects with a letter before thier id can be moved
   var db, nameType
   switch(name[0]){
@@ -156,7 +157,6 @@ function DoMovement(name, chunk, dir, rate, maintainFacingDirection) {
   }
   // Chunk with none is a player, all other moveable objects belong to a chunk.
   if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
-
 
   if (db[nameType][name].state == 0){db[nameType][name].state = 3}
   if (dir == "2"){
@@ -180,8 +180,7 @@ function DoMovement(name, chunk, dir, rate, maintainFacingDirection) {
     cellname = ''+x+'.'+y+''
   };
 
-  if (maintainFacingDirection == 1){
-    console.log("FACE SAME!")
+  if (faceDir == false){
     dir = db[nameType][name].dir;
   };
 

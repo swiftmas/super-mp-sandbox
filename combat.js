@@ -116,7 +116,7 @@ function dodamage(atpos, owner, chunk, direction, friendlyFire){
       if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){break;};
       db[nameType][name].health = db[nameType][name].health - damage
-      general.DoMovement(name, chunk, direction, 6, 1);
+      general.DoMovement(name, chunk, direction, 6);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
         db[nameType][name].health = 100;
