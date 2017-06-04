@@ -15,7 +15,9 @@ module.exports = {
 };
 ///// Controllers ///////
 function npccontroller() {
-    var cdn = coredata.npcs
+  for (var chunk in coredata.chunks){
+    var cdn = coredata.chunks[chunk].npcs
+
         //// Dead Cleanup
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
@@ -37,16 +39,15 @@ function npccontroller() {
         if (cdn.hasOwnProperty(npc)) {
             /////////////////////////////IF NORMAL///////////////
             if (cdn[npc].state == "000") {
-                alertrange(npc, 25);
-                var closetarget = getSurroundings(npc, 25);
+                alertrange(npc, chunk, 25);
+                var closetarget = getSurroundings(npc, chunk, 25);
                 if (closetarget.length > 1 && closetarget[1] > 8) {
-                    console.log(closetarget)
-                    moveNpcTo(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
+                    moveNpcTo(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
                 else if (closetarget[1] <= 8) {
-                    dirToFace = dirToTarget(npc, parseInt(closetarget[2]), parseInt(closetarget[3]));
+                    dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace) {
-                        combat.attack(npc, "npcs");
+                        combat.attack(npc, chunk);
                     }
                     else {
                         cdn[npc].dir = dirToFace;
@@ -58,6 +59,7 @@ function npccontroller() {
             };
         };
     };
+  }
 };
 
 
@@ -73,51 +75,55 @@ function alerttimedown() {
             };
         };
     };
-    var gn = coredata.npcs;
-    for (var npc in gn) {
-        if (gn.hasOwnProperty(npc) > 0) {
-            if (gn[npc].alerttimer) {
-                gn[npc].alerttimer = parseInt(gn[npc].alerttimer) - 1
-            };
-        };
+    for (var chunk in coredata.chunks){
+      var gn = coredata.chunks[chunk].npcs;
+      for (var npc in gn) {
+          if (gn.hasOwnProperty(npc) > 0) {
+              if (gn[npc].alerttimer) {
+                  gn[npc].alerttimer = parseInt(gn[npc].alerttimer) - 1
+              };
+          };
+      };
     };
 };
 
 
-function alertrange(npc, dist) {
-    var origin = coredata.npcs[npc].pos;
+function alertrange(npc, chunk, dist) {
+    cdn = coredata.chunks[chunk].npcs[npc]
+    var origin = cdn.pos;
     var dist = parseInt(dist) / 2;
     // in this function we are offsetting the view to the front of the player.
     var trueorig = [parseInt(origin.split(".")[0]), parseInt(origin.split(".")[1])];
-    if (coredata.npcs[npc].dir == "2") {
+    if (cdn.dir == "2") {
         var orig = [trueorig[0], trueorig[1] - dist + 1]
     };
-    if (coredata.npcs[npc].dir == "6") {
+    if (cdn.dir == "6") {
         var orig = [trueorig[0], trueorig[1] + dist - 1]
     };
-    if (coredata.npcs[npc].dir == "8") {
+    if (cdn.dir == "8") {
         var orig = [trueorig[0] - dist + 1, trueorig[1]]
     };
-    if (coredata.npcs[npc].dir == "4") {
+    if (cdn.dir == "4") {
         var orig = [trueorig[0] + dist - 1, trueorig[1]]
     };
     var gp = coredata.players
     for (var player in coredata.players) {
         if (gp.hasOwnProperty(player)) {
             var ppos = [gp[player].pos.split(".")[0], gp[player].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state < 60) {
-                var cansee = isLineOfSight(trueorig, ppos)
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== cdn.team && gp[player].state < 59) {
+                //var cansee = isLineOfSight(trueorig, ppos)
+                var cansee = true;
                 if (cansee == true){
                     gp[player].alerttimer = 35;
                 };
             };
         };
     };
-    var gn = coredata.npcs;
+    var gn = coredata.chunks[chunk].npcs;
     for (var npctar in gn) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state < 60) {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59) {
                 gn[npctar].alerttimer = 35;
             };
         };
@@ -227,45 +233,38 @@ function isLineOfSight(orig, target) {
 };
 
 
-function getSurroundings(npc, dist) {
-    var origin = coredata.npcs[npc].pos;
+function getSurroundings(npc, chunk, dist) {
+    var origin = coredata.chunks[chunk].npcs[npc].pos;
     var dist = parseInt(dist);
     var surroundings = ["none", dist];
     var orig = [origin.split(".")[0], origin.split(".")[1]];
     var gp = coredata.players
     for (var player in coredata.players) {
-        if (gp.hasOwnProperty(player)) {
-            var ppos = [gp[player].pos.split(".")[0], gp[player].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== coredata.npcs[npc].team && gp[player].state < 60 && gp[player].alerttimer > 0) {
-                var aa = Math.abs(ppos[0] - orig[0]);
-                var bb = Math.abs(ppos[1] - orig[1]);
-                var hypot = Math.sqrt(aa * aa + bb * bb);
-                //console.log(hypot);
-                if (hypot < surroundings[1]) {
-                    surroundings = [player, hypot, ppos[0], ppos[1]];
-                }
-                else if (hypot == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
-                    surroundings = [player, hypot, ppos[0], ppos[1]];
-                };
-            };
+        if (gp.hasOwnProperty(player) && gp[player].alerttimer > 0 ) {
+            var ppos = gp[player].pos;
+            var ppsspl = gp[player].pos.split(".")
+            general.getDist(origin, ppos, function(result){
+              if (result[0] < surroundings[1]) {
+                surroundings = [player, result[0], ppsspl[0], ppsspl[1]];
+              }
+              else if (result[0] == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [player, result[0], ppsspl[0], ppsspl[1]];
+              };
+            });
         };
     };
-    var gn = coredata.npcs;
+    var gn = coredata.chunks[chunk].npcs;
     for (var npctar in gn) {
-        if (gn.hasOwnProperty(npctar)) {
-            var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== coredata.npcs[npc].team && gn[npctar].state < 60 && gn[npctar].alerttimer > 0) {
-                var aa = Math.abs(ppos[0] - orig[0]);
-                var bb = Math.abs(ppos[1] - orig[1]);
-                var hypot = Math.sqrt(aa * aa + bb * bb);
-                //console.log(hypot);
-                if (hypot < surroundings[1]) {
-                    surroundings = [npc, hypot, ppos[0], ppos[1]];
-                }
-                else if (hypot == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
-                    surroundings = [npc, hypot, ppos[0], ppos[1]];
-                };
-            };
+        if (gn.hasOwnProperty(npctar) && npctar !== npc && gn[npctar].alerttimer > 0) {
+            var ppos = gn[npctar].pos;
+            general.getDist(origin, ppos, function(result){
+              if (result[0] < surroundings[1]) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
+              }
+              else if (result[0] == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
+              };
+            });
         };
     };
     if (surroundings[0] == "none") {
@@ -289,47 +288,45 @@ function isspaceclear(coord) {
     };
 };
 
-function moveNpcTo(npc, tarx, tary) {
-    var rate = 1;
-    var npcpos = coredata.npcs[npc].pos.split(".");
+function moveNpcTo(npc, chunk, tarx, tary) {
+    var rate = 2;
+    var npcpos = coredata.chunks[chunk].npcs[npc].pos.split(".");
     var npcx = npcpos[0];
     var npcy = npcpos[1];
     var newcoords = [];
     if (npcx > tarx) {
         var newcoord = (parseInt(npcx) - rate) + "." + npcy;
-        if (!(collmap.hasOwnProperty(cellname))) {
+        if ("true" == "true") {
             newcoords[newcoords.length] = new Array(newcoord, "8");
         };
     }
     else if (npcx < tarx) {
         var newcoord = (parseInt(npcx) + rate) + "." + npcy;
-        if (!(collmap.hasOwnProperty(cellname))) {
+        if ("true" == "true") {
             newcoords[newcoords.length] = new Array(newcoord, "4");
         };
     };
     if (npcy > tary) {
         var newcoord = npcx + "." + (parseInt(npcy) - rate);
-        if (!(collmap.hasOwnProperty(cellname))) {
+        if ("true" == "true") {
             newcoords[newcoords.length] = new Array(newcoord, "2");
         };
     }
     else if (npcy < tary) {
         var newcoord = npcx + "." + (parseInt(npcy) + rate);
-        if (!(collmap.hasOwnProperty(cellname))) {
+        if ("true" == "true") {
             newcoords[newcoords.length] = new Array(newcoord, "6");
         };
     };
-    console.log(newcoords)
     if (newcoords.length > 0) {
         var tar = newcoords[Math.floor(Math.random() * newcoords.length)];
-        console.log(tar)
-        coredata.npcs[npc].pos = tar[0];
-        general.DoMovement(npc, tar[1], 1);
+        //coredata.npcs[npc].pos = tar[0];
+        general.DoMovement(npc, chunk, tar[1], rate);
     };
 };
 
-function dirToTarget(npc, tarx, tary) {
-    var npcpos = coredata.npcs[npc].pos.split(".");
+function dirToTarget(npc, chunk, tarx, tary) {
+    var npcpos = coredata.chunks[chunk].npcs[npc].pos.split(".");
     var npcx = npcpos[0];
     var npcy = npcpos[1];
     if (npcx > tarx) {

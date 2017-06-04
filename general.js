@@ -61,7 +61,7 @@ function Collission(location, width, height, callback){
   for (var chunk in coredata.chunks){
     getDist(location, chunk, function(result){
       if (Math.abs(result[1]) < (64 + (width/2)) && Math.abs(result[2]) < (64 + (height/2))){
-        for (part in collideableParts){
+        for (var part in collideableParts){
           if (collideableParts[part] == "players" && playersHaveBeenRun !== true){var db = coredata[collideableParts[part]]; playersHaveBeenRun = true; chunk = "none"} else {var db = coredata.chunks[chunk][collideableParts[part]]};
           for (var item in db){
             var xo = db[item].pos.split('.')[0];
@@ -100,7 +100,7 @@ function StateController(){
   for (var chunk in coredata.chunks){
     for (var part in stateParts){
       var db = coredata.chunks[chunk][stateParts[part]]
-      for(item in db){
+      for(var item in db){
         if (db[item].state > 0){
           db[item].state -= 1;
         }
@@ -180,7 +180,8 @@ function DoMovement(name, chunk, dir, rate, maintainFacingDirection) {
     cellname = ''+x+'.'+y+''
   };
 
-  if (maintainFacingDirection == true){
+  if (maintainFacingDirection == 1){
+    console.log("FACE SAME!")
     dir = db[nameType][name].dir;
   };
 
@@ -191,12 +192,11 @@ function DoMovement(name, chunk, dir, rate, maintainFacingDirection) {
         db[nameType][name].dir = dir;
       } else {
         //if collider is self. ignore collission
-        if (result[1].length == 1 && result[1][0][0] == name && result[1][0][1] == "none"){
+        if (result[1].length == 1 && result[1][0][0] == name){
           db[nameType][name].pos = cellname;
           db[nameType][name].dir = dir;
         } else {
           db[nameType][name].dir = dir;
-          console.log(result[1])
         }
       }
     });

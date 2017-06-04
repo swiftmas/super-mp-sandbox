@@ -141,8 +141,8 @@ setInterval(function(){
   var tickstart = new Date().getTime()
   general.ProcessChunks();
   general.StateController();
-  //npcs.npccontroller();
-  //npcs.alerttimedown();
+  npcs.npccontroller();
+  npcs.alerttimedown();
   general.ProcessMovements();
   combat.processAttackQueue();
   combat.processAttacks();

@@ -47,6 +47,7 @@ function processAttacks(){
 
 function attack(attacker, chunk){
     // second argument, npc or player is the attribute of the attacker, not whats being attacked.
+    var distance = 5
     var db, nameType
     switch(attacker[0]){
       case "n":
@@ -59,7 +60,8 @@ function attack(attacker, chunk){
         nameType = "entities"
         break;
     }
-    if (chunk == "none"){db = coredata; chunk = db[nameType][attacker].closeChunks[0]} else { db = coredata.chunks[chunk]}
+    //added more distane to npcs attack as it did not equal that of the player for some reason.
+    if (chunk == "none"){db = coredata; chunk = db[nameType][attacker].closeChunks[0]} else { db = coredata.chunks[chunk]; distance = 6 }
 
     var at = db[nameType];
     if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; return; };
@@ -69,18 +71,18 @@ function attack(attacker, chunk){
     var atpos = "";
     if (atdir == "2"){
     	var nx = parseInt(atorig[0])
-    	var ny = parseInt(atorig[1]) - 5
+    	var ny = parseInt(atorig[1]) - distance
     	atpos = nx + "." + ny
     } else if (atdir == "6") {
 		  var nx = parseInt(atorig[0])
-    	var ny = parseInt(atorig[1]) + 5
+    	var ny = parseInt(atorig[1]) + distance
     	atpos = nx + "." + ny
     } else if (atdir == "8") {
-    	var nx = parseInt(atorig[0]) - 5
+    	var nx = parseInt(atorig[0]) - distance
     	var ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
     } else if (atdir == "4") {
-    	var nx = parseInt(atorig[0]) + 5
+    	var nx = parseInt(atorig[0]) + distance
     	var ny = parseInt(atorig[1])
     	atpos = nx + "." + ny
     };
@@ -114,7 +116,7 @@ function dodamage(atpos, owner, chunk, direction, friendlyFire){
       if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){break;};
       db[nameType][name].health = db[nameType][name].health - damage
-      general.DoMovement(name, chunk, direction, 6, true);
+      general.DoMovement(name, chunk, direction, 6, 1);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
         db[nameType][name].health = 100;
