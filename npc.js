@@ -22,8 +22,8 @@ function npccontroller() {
     npcLoop:
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
+            var surroundings = [chunk, 32];
             for (var nearbyChunk in coredata.chunks){
-              var surroundings = [chunk, 64];
               general.getDist(cdn[npc].pos, nearbyChunk, function(result){
                 if (result[0] < surroundings[1]) {
                   surroundings = [nearbyChunk, result[0]];
@@ -32,6 +32,7 @@ function npccontroller() {
 
             }
             if (surroundings[0] !== chunk){
+              console.log("MOVE THIS NPC!!");
               coredata.chunks[surroundings[0]].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
               delete cdn[npc];
               break npcLoop;
