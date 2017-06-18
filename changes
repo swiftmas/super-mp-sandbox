@@ -1,0 +1,38 @@
+adding events system t0 game 	
+
+
+message at night and at morning. map resets and uses that times chunks reloaded.venturing out of the city leads to danger. spirits lurk in the darkness. 
+
+events are added to coredata and parsed. events can be a one-off(spawn an npc) and complete. events can wait for a condition and then coplete with more actions. events can repeat until said action. 
+
+ex. spawn army at red base. creates npcs. on battle over (once team has won battle) delete npcs from chunk. 
+events if not completed will be reloaded after a day or night cycle. must have a toggle for whether it can exist at night or day or both.
+
+
+data: id pre-actions(list of functions to call) conditions(list of cond) post-actions() state(engaged or not) day(t/f) night(t/f)
+
+
+
+
+speach has own engine. there are speach profiles which each npc type is assigned to. then specific ids can have specific text types but that way there is a default text assignment based on team. then we can go crazy from there. text is sent via seperate socket emit, when client recives arrows become selectors but attacks stay same. The interact button continues dialog while any of the attacks cancel it. speech events are saved with current state and next possible state in coredata.dialog dialog is a per player event
+
+
+
+
+
+
+
+
+
+
+
+split into events and triggers
+events can be crafted by functions but shoulf primarily be in thier own json. 
+events are triggered and goto coredata.events next to players.
+event: id  type  UserAffected  state  
+events in that spot keep track of its state not its content
+
+
+all speach events are handled this way. npc types will call different events
+
+the night brings something terrible. every night you must find shelter or you are possibpy killed by the darkness. not a metaphor. its a mechanic of tbe game

@@ -85,6 +85,20 @@ var server = http.createServer(function(request, response){
                 }
             });
             break;
+        case '/cli.css':
+            fs.readFile(__dirname + path, function(error, data){
+                if (error){
+                    response.writeHead(404);
+                    response.write("opps this doesn't exist - 404");
+                    response.end();
+                }
+                else{
+                    response.writeHead(200, {"Content-Type": "text/css"});
+                    response.write(data, "utf8");
+                    response.end();
+                }
+            });
+            break;
   case '/client-modules.js':
             fs.readFile(__dirname + path, function(error, data){
                 if (error){

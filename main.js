@@ -82,9 +82,20 @@ function draw(){
 				image2draw = charAlg(db[code]);
 				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 26, 8, 8);
 				ctx.drawImage.apply(ctx, image2draw);
+
 			};
 		};
 		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
+		//ctx.fillStyle="rgba(55,55,55,.7)";
+		//ctx.fillRect(0,33,64,31);
+		//ctx.fillStyle="black";
+		//ctx.font='6px tiny';
+                //ctx.fillText("This much fits", 1, 38);
+		//ctx.fillText("pos: " + campos, 1, 43);
+		//ctx.fillText("abcdefghijklmno", 1, 48);
+		//ctx.fillText("pqrstuvwxyz wow", 1, 53);
+		//ctx.fillText("that was all the ABCs", 1, 58);
+		//ctx.fillText("the last line", 1, 63);
 	};
 };
 
