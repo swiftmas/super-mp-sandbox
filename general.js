@@ -30,7 +30,7 @@ module.exports = {
 };
 
 function ProcessTime(){
-  globals.time -= 50
+  globals.time -= 1
   if (globals.time == 3300){
     console.log("The day grows long");
   };
@@ -41,7 +41,7 @@ function ProcessTime(){
     globals.ChangeDayNight("night");
     coredata.chunks = {}
   }
-  if (globals.time == 2900){
+  if (globals.time == 2970){
     globals.serverPause = false;
   }
   if (globals.time == 300){
@@ -55,7 +55,7 @@ function ProcessTime(){
     coredata.chunks = {}
     globals.time = 6000;
   }
-  if (globals.time == 5900){
+  if (globals.time == 5970){
     globals.serverPause = false;
   }
 }

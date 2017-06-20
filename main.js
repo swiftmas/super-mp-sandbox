@@ -10,7 +10,7 @@ var coredata = {};
 var TeamSelected = null;
 var touchdir = ["none", 0];
 var touchtimer = 0;
-var serverMessage = "";
+var serverMessage = null;
 var serverMessageTimer = 0;
 
 //Utility Functoins //////////////////////////////////////////
@@ -86,6 +86,16 @@ function draw(){
 			};
 		};
 		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
+		if (serverMessage != null){
+			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
+			ctx.fillStyle=style;
+			ctx.fillRect(0,0,64,64);
+			style = "rgba(55,55,55," + serverMessageTimer/10 + ")"
+			ctx.fillStyle=style;
+			ctx.font='6px tiny';
+			ctx.fillText(serverMessage, 1, 30);
+			serverMessageTimer -= 1;
+		}
 		//ctx.fillStyle="rgba(55,55,55,.7)";
 		//ctx.fillRect(0,33,64,31);
 		//ctx.fillStyle="black";

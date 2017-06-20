@@ -214,7 +214,7 @@ setInterval(function(){
       listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
 
     }
-  } else { listener.socket.emit('serverMessage', globals.serverMessage)}
+  } else { listener.sockets.emit('serverMessage', globals.serverMessage)}
   ticklength = (new Date().getTime()) - tickstart
   if ( ticklength > 5){console.log(ticklength)}
 }, 100);
