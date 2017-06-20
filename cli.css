@@ -1,0 +1,38 @@
+p{
+    font-family: tiny;
+}
+
+@font-face {
+    font-family: "tiny";
+    src: url("static/TinyRegular.woff") format('woff');
+}
+
+canvas, img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+    width: 512px;
+    height: auto;
+}
+
+body {
+  margin: 0px;
+  text-align: center;
+  background-color: #000;
+}
+
+#chooseteam {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 10%;
+}
+
+h1 {
+  font-size: 500%;
+}
+
+
