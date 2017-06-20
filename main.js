@@ -10,8 +10,8 @@ var coredata = {};
 var TeamSelected = null;
 var touchdir = ["none", 0];
 var touchtimer = 0;
-
-
+var serverMessage = "";
+var serverMessageTimer = 0;
 
 //Utility Functoins //////////////////////////////////////////
 
@@ -175,6 +175,13 @@ function move(playername, dir) {
 socket.on('start', function(data) {
 	TeamSelected = data;
 	console.log("Player Initialized:", TeamSelected);
+});
+
+socket.on('serverMessage', function(data) {
+	serverMessage = data;
+	console.log("serverMessage:", serverMessage);
+	serverMessageTimer = 10;
+	draw(coredata);
 });
 
 socket.on('camera', function(data) {

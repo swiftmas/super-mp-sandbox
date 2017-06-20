@@ -24,7 +24,8 @@ exports.movementQueue = {};
 exports.moveQueue = [];
 exports.time = 6000;
 exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); },
-
+exports.serverPause = false;
+exports.serverMessage = "day";
 
 
 // Tuning settings
