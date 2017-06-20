@@ -153,6 +153,7 @@ var listener = io.listen(server);
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
   var tickstart = new Date().getTime()
+  general.ProcessTime();
   general.ProcessChunks();
   general.StateController();
   npcs.npccontroller();
@@ -186,8 +187,6 @@ setInterval(function(){
         var pos = dp[npc].pos;
         var state = dp[npc].state;
         var dir = dp[npc].dir
-        //position player camera!
-        //listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
         datas.push(code + "." + dir + "." + state + "." + pos);
       }
       //Attacks
@@ -222,8 +221,8 @@ setInterval(function(){
 listener.sockets.on('connection', function(socket){
 
 ////// INIT ////////////
-  var mapname = "This is to take away the coll map sending. it can be used to define which background image to use."
-  socket.emit('getmap', mapname);
+  var mapname = "This simply says that the game has started."
+  socket.emit('start', mapname);
 
 // For every Client data event (this is where we recieve movement)////////////
   socket.on('movement', function(data){

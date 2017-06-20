@@ -7,7 +7,7 @@ var xwin = window.innerWidth / 2;
 var ywin = window.innerHeight / 2;
 var userplayer = null;
 var coredata = {};
-var mapdata = {};
+var TeamSelected = null;
 var touchdir = ["none", 0];
 var touchtimer = 0;
 
@@ -183,9 +183,9 @@ function move(playername, dir) {
 
 
 ////// GET data //////////////
-socket.on('getmap', function(data) {
-	mapdata = data;
-	console.log("map was loaded:", mapdata);
+socket.on('start', function(data) {
+	TeamSelected = data;
+	console.log("Player Initialized:", TeamSelected);
 });
 
 socket.on('camera', function(data) {
@@ -196,7 +196,7 @@ socket.on('getdata', function(data){
 	coredata = data;
 	//updatehud();
 	//moveplayers(data.players);
-	if (mapdata !== null) {
+	if (TeamSelected !== null) {
 		draw(coredata);
 	};
 });

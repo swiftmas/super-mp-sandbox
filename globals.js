@@ -1,15 +1,31 @@
 /////// ONE MODULE TO RULE THEM ALL //////////////////
 
+const fs = require('fs');
+
+// Day Night Change
+function ChangeDayNight(choice){
+  switch(choice){
+    case "day":
+      exports.chunkdata = JSON.parse(fs.readFileSync("./daychunks.json"));
+      break;
+    case "night":
+      exports.chunkdata = JSON.parse(fs.readFileSync("./nightchunks.json"));
+      break;
+  }
+};
+
 
 exports = module.exports = {};
-exports.collmap = require("./coll.json");
 exports.coredata = {"chunks":{},"players":{}};
-exports.chunkdata = require("./chunks.json")
-exports.mapchange = false;
+exports.chunkdata = JSON.parse(fs.readFileSync("./daychunks.json"));
 exports.chunkParts = ["npcs","entities"];
 exports.attackQueue = {};
 exports.movementQueue = {};
 exports.moveQueue = [];
+exports.time = 6000;
+exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); },
+
+
 
 // Tuning settings
 exports.hitbox1 = {"w": 3, "h": 2}

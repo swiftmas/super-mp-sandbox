@@ -22,7 +22,7 @@ function npccontroller() {
     npcLoop:
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
-            var surroundings = [chunk, 32];
+            var surroundings = [chunk, 36];
             for (var nearbyChunk in coredata.chunks){
               general.getDist(cdn[npc].pos, nearbyChunk, function(result){
                 if (result[0] < surroundings[1]) {
@@ -47,8 +47,9 @@ function npccontroller() {
                 cdn[npc].health = 100;
                 cdn[npc].respawn = 200;
                 if (cdn[npc].chunk !== chunk){
-                  console.log(cdn[npc])
-                  coredata.chunks[cdn[npc].chunk].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
+                  if (coredata.chunks.hasOwnProperty(cdn[npc].chunk)){
+                    coredata.chunks[cdn[npc].chunk].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
+                  }
                   delete cdn[npc];
                   break npcLoop;
                 }
@@ -258,12 +259,13 @@ function isLineOfSight(orig, target) {
 
 function getSurroundings(npc, chunk, dist) {
     var origin = coredata.chunks[chunk].npcs[npc].pos;
+    var team = coredata.chunks[chunk].npcs[npc].team;
     var dist = parseInt(dist);
     var surroundings = ["none", dist];
     var orig = [origin.split(".")[0], origin.split(".")[1]];
     var gp = coredata.players
     for (var player in coredata.players) {
-        if (gp.hasOwnProperty(player) && gp[player].alerttimer > 0 ) {
+        if (gp.hasOwnProperty(player) && gp[player].alerttimer > 0 && team != gp[player].team ) {
             var ppos = gp[player].pos;
             var ppsspl = gp[player].pos.split(".")
             general.getDist(origin, ppos, function(result){
@@ -278,8 +280,9 @@ function getSurroundings(npc, chunk, dist) {
     };
     var gn = coredata.chunks[chunk].npcs;
     for (var npctar in gn) {
-        if (gn.hasOwnProperty(npctar) && npctar !== npc && gn[npctar].alerttimer > 0) {
+        if (gn.hasOwnProperty(npctar) && npctar !== npc && gn[npctar].alerttimer > 0 && team != gn[npctar].team ) {
             var ppos = gn[npctar].pos;
+            var ppsspl = gn[npctar].pos.split(".")
             general.getDist(origin, ppos, function(result){
               if (result[0] < surroundings[1]) {
                 surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
