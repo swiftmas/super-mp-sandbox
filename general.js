@@ -1,9 +1,7 @@
 globals = require('./globals.js');
+const fs = require('fs');
 coredata = globals.coredata;
-chunkdata = globals.chunkdata;
-collmap = globals.collmap;
 chunkParts = globals.chunkParts;
-hitbox1 = globals.hitbox1;
 moveQueue = globals.moveQueue;
 mapchange = globals.mapchange;
 
@@ -13,6 +11,9 @@ module.exports = {
   },
   ProcessChunks: function () {
     ProcessChunks();
+  },
+  ProcessTime: function () {
+    ProcessTime();
   },
   Collission: function (location, width, height, callback) {
     Collission(location, width, height, callback);
@@ -28,17 +29,38 @@ module.exports = {
   },
 };
 
+function ProcessTime(){
+  globals.time -= 1
+  if (globals.time == 3300){
+    console.log("The day grows long");
+  };
+  if (globals.time == 3000){
+    console.log("Night has fallen. The darkness chills you");
+    globals.ChangeDayNight("night");
+    coredata.chunks = {}
+  }
+  if (globals.time == 300){
+    console.log("Day is near");
+  }
+  if (globals.time == 0){
+    console.log("Day has broken. the light blesses you");
+    globals.ChangeDayNight("day");
+    coredata.chunks = {}
+    globals.time = 6000;
+  }
+}
+
 function ProcessChunks(){
   var CurrentChunksInTick = []
   for (var player in coredata.players) {
       coredata.players[player].closeChunks = [];
-      for (var chunk in chunkdata){
+      for (var chunk in globals.chunkdata){
         getDist(coredata.players[player].pos, chunk, function(result) {
           if (Math.abs(result[1]) < 70 && Math.abs(result[2]) < 70){
             coredata.players[player].closeChunks.push(chunk);
             CurrentChunksInTick.push(chunk);
             if (! coredata.chunks.hasOwnProperty(chunk)){
-              coredata.chunks[chunk] = chunkdata[chunk];
+              coredata.chunks[chunk] = globals.chunkdata[chunk];
               console.log("New chunk added: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
             };
           };

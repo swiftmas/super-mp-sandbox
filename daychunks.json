@@ -50,7 +50,7 @@
         "state": "63",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "02",
         "skin": "redKnight",
         "dir": "2",
         "origin": "32.48",
@@ -96,7 +96,7 @@
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "03",
         "skin": "redKnight",
         "dir": "2",
         "origin": "50.70",
@@ -181,14 +181,14 @@
   "128.32": {
     "attacks": [],
     "npcs": {
-      "n005": {
+      "n006": {
         "pos": "120.20",
         "w": 5,
         "h": 3,
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "03",
         "skin": "redKnight",
         "dir": "2",
         "origin": "120.20",
@@ -234,7 +234,7 @@
         "state": "000",
         "health": 100,
         "alerttimer": 0,
-        "team": "04",
+        "team": "02",
         "skin": "redKnight",
         "dir": "2",
         "origin": "120.80",

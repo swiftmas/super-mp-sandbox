@@ -96,6 +96,8 @@ function attack(attacker, chunk){
 };
 
 function dodamage(atpos, owner, chunk, direction, friendlyFire){
+  var ownerTeam
+  if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   var damage = 25;
   var at
   switch(direction){
@@ -115,6 +117,7 @@ function dodamage(atpos, owner, chunk, direction, friendlyFire){
       var nameType = result[1][hit][2]
       if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){break;};
+      if (db[nameType][name].hasOwnProperty("team")){ if (db[nameType][name].team == ownerTeam) {break;}};
       db[nameType][name].health = db[nameType][name].health - damage
       general.DoMovement(name, chunk, direction, 6);
       if (db[nameType][name].health <= 0){
