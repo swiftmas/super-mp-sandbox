@@ -86,14 +86,15 @@ function draw(){
 			};
 		};
 		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
+
 		if (serverMessage != null){
 			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
 			ctx.fillStyle=style;
 			ctx.fillRect(0,0,64,64);
-			style = "rgba(55,55,55," + serverMessageTimer/10 + ")"
+			style = "rgba(255,255,255," + serverMessageTimer/20 + ")"
 			ctx.fillStyle=style;
 			ctx.font='6px tiny';
-			ctx.fillText(serverMessage, 1, 30);
+			ctx.fillText(serverMessage, 5, 28);
 			serverMessageTimer -= 1;
 		}
 		//ctx.fillStyle="rgba(55,55,55,.7)";
@@ -201,7 +202,7 @@ socket.on('start', function(data) {
 socket.on('serverMessage', function(data) {
 	serverMessage = data;
 	console.log("serverMessage:", serverMessage);
-	serverMessageTimer = 10;
+	if (serverMessageTimer <= 10) { serverMessageTimer += 2 };
 	draw(coredata);
 });
 

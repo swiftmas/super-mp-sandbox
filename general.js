@@ -41,7 +41,7 @@ function ProcessTime(){
     globals.ChangeDayNight("night");
     coredata.chunks = {}
   }
-  if (globals.time == 2970){
+  if (globals.time == 2960){
     globals.serverPause = false;
   }
   if (globals.time == 300){
@@ -55,7 +55,7 @@ function ProcessTime(){
     coredata.chunks = {}
     globals.time = 6000;
   }
-  if (globals.time == 5970){
+  if (globals.time == 5960){
     globals.serverPause = false;
   }
 }

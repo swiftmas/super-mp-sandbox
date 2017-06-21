@@ -23,9 +23,10 @@ exports.attackQueue = {};
 exports.movementQueue = {};
 exports.moveQueue = [];
 exports.time = 50;
-exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); },
+exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); };
+exports.daystate = "day"
 exports.serverPause = false;
-exports.serverMessage = "day";
+exports.serverMessage = null;
 
 
 // Tuning settings
