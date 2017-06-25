@@ -12,6 +12,7 @@ var touchdir = ["none", 0];
 var touchtimer = 0;
 var serverMessage = null;
 var serverMessageTimer = 0;
+var serverTime = 6000
 
 //Utility Functoins //////////////////////////////////////////
 
@@ -43,12 +44,12 @@ function resize(){
 
 
 function add_player(team){
-	playername = "p" + socket.io.engine.id;
-	newplayerdata = {};
+	var playername = "p" + socket.io.engine.id;
+	var newplayerdata = {};
 	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"0", "health": 100, "alerttimer": 0, "team": team, "origin": "40.50", "closeChunks": [], "h": 3, "w": 3};
 	console.log(newplayerdata);
 	userplayer = playername;
-	elem = document.getElementById("chooseteam");
+	var elem = document.getElementById("chooseteam");
 	elem.parentNode.removeChild(elem);
         socket.emit('add_player', newplayerdata);
 };
@@ -68,16 +69,18 @@ function charAlg(code){
 }
 
 function draw(){
+	serverTime -= 1;
 	if ( userplayer !== null ){
-
+		//CLEAN canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 		// DRAW map ///////////////////////////////////
 		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
-
+		//Get all sprite locations
 		db = coredata;
 		for (var code in db){
 			blk = db[code].split(".");
+			//Draw each sprite
 			if (db[code].length > 0){
 				image2draw = charAlg(db[code]);
 				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 26, 8, 8);
@@ -85,8 +88,9 @@ function draw(){
 
 			};
 		};
+		// Draw the top layer of the map
 		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
-
+		// If server message, display now
 		if (serverMessage != null){
 			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
 			ctx.fillStyle=style;
@@ -97,16 +101,34 @@ function draw(){
 			ctx.fillText(serverMessage, 5, 28);
 			serverMessageTimer -= 1;
 		}
-		//ctx.fillStyle="rgba(55,55,55,.7)";
-		//ctx.fillRect(0,33,64,31);
-		//ctx.fillStyle="black";
-		//ctx.font='6px tiny';
-                //ctx.fillText("This much fits", 1, 38);
-		//ctx.fillText("pos: " + campos, 1, 43);
-		//ctx.fillText("abcdefghijklmno", 1, 48);
-		//ctx.fillText("pqrstuvwxyz wow", 1, 53);
-		//ctx.fillText("that was all the ABCs", 1, 58);
-		//ctx.fillText("the last line", 1, 63);
+		if (serverTime < 3400 && serverTime > 3000){
+			ctx.globalCompositeOperation = "color-burn";
+			percent = (40 - ((serverTime - 3000)/10))/100
+			style = "rgba(0,21,211," + percent + ")"
+			ctx.fillStyle=style;
+			ctx.fillRect(0,0,64,64);
+			ctx.globalCompositeOperation = "source-over";
+
+		}
+
+		if (serverTime <= 3000 && serverTime > 400){
+			ctx.globalCompositeOperation = "color-burn";
+			percent = 0.4
+			style = "rgba(0,21,211," + percent + ")"
+			ctx.fillStyle=style;
+			ctx.fillRect(0,0,64,64);
+			ctx.globalCompositeOperation = "source-over";
+		}
+
+		if (serverTime <= 400){
+			ctx.globalCompositeOperation = "color-burn";
+			percent = ((serverTime)/10)/100
+			style = "rgba(0,21,211," + percent + ")"
+			ctx.fillStyle=style;
+			ctx.fillRect(0,0,64,64);
+			ctx.globalCompositeOperation = "source-over";
+		}
+
 	};
 };
 
@@ -139,7 +161,7 @@ KeyboardController({
 		38: function() { move(userplayer, '2'); },
 		39: function() { move(userplayer, '4'); },
 		40: function() { move(userplayer, '6'); },
-    192: function() { console.log(JSON.stringify(coredata)); }
+    192: function() { console.log(serverTime, JSON.stringify(coredata)); }
 }, 50);
 
 
@@ -195,12 +217,14 @@ function move(playername, dir) {
 
 ////// GET data //////////////
 socket.on('start', function(data) {
-	TeamSelected = data;
-	console.log("Player Initialized:", TeamSelected);
+	TeamSelected = true;
+	serverTime = data;
+	console.log("Player Initialized:", data);
 });
 
 socket.on('serverMessage', function(data) {
-	serverMessage = data;
+	serverMessage = data.message;
+	serverTime = data.time;
 	console.log("serverMessage:", serverMessage);
 	if (serverMessageTimer <= 10) { serverMessageTimer += 2 };
 	draw(coredata);

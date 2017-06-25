@@ -214,7 +214,7 @@ setInterval(function(){
       listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
 
     }
-  } else { listener.sockets.emit('serverMessage', globals.serverMessage)}
+  } else { listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})}
   ticklength = (new Date().getTime()) - tickstart
   if ( ticklength > 5){console.log(ticklength)}
 }, 100);
@@ -223,8 +223,6 @@ setInterval(function(){
 listener.sockets.on('connection', function(socket){
 
 ////// INIT ////////////
-  var mapname = "This simply says that the game has started."
-  socket.emit('start', mapname);
 
 // For every Client data event (this is where we recieve movement)////////////
   socket.on('movement', function(data){
@@ -239,6 +237,7 @@ listener.sockets.on('connection', function(socket){
         coredata.players[key] = data[key];
       };
     };
+    socket.emit('start', globals.time);
   });
 
 // Listens for attacks ////// !!!!!! NEEDS FUNCTION OUSIDE OF LISTENER  !!!!!!!!///////////////////////////

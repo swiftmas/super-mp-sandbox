@@ -10,6 +10,7 @@ function ChangeDayNight(choice){
       break;
     case "night":
       exports.chunkdata = JSON.parse(fs.readFileSync("./nightchunks.json"));
+      exports.daystate = "night"
       break;
   }
 };
@@ -17,17 +18,16 @@ function ChangeDayNight(choice){
 
 exports = module.exports = {};
 exports.coredata = {"chunks":{},"players":{}};
-exports.chunkdata = JSON.parse(fs.readFileSync("./daychunks.json"));
+exports.chunkdata = JSON.parse(fs.readFileSync("./nightchunks.json"));
 exports.chunkParts = ["npcs","entities"];
 exports.attackQueue = {};
 exports.movementQueue = {};
 exports.moveQueue = [];
-exports.time = 50;
+exports.time = 400;
 exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); };
-exports.daystate = "day"
+exports.daystate = "night"
 exports.serverPause = false;
 exports.serverMessage = null;
-
 
 // Tuning settings
 exports.hitbox1 = {"w": 3, "h": 2}
