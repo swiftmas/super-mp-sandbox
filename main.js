@@ -100,7 +100,14 @@ function draw(){
 			ctx.font='6px tiny';
 			ctx.fillText(serverMessage, 5, 28);
 			serverMessageTimer -= 1;
+			if (serverMessageTimer <= 0) {
+				serverMessageTimer = 0;
+				serverMessage = null;
+			}
 		}
+
+
+		//////////////////// TIME OF DAY SHADERS //////////////////////
 		if (serverTime < 3400 && serverTime > 3000){
 			ctx.globalCompositeOperation = "color-burn";
 			percent = (40 - ((serverTime - 3000)/10))/100
