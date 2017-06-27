@@ -1,8 +1,8 @@
 /////// ONE MODULE TO RULE THEM ALL //////////////////
 
 const fs = require('fs');
-
-// Day Night Change
+////// Global maintenece funtions ///////////////////
+// Day Night Change. Gotta find a way to move this.
 function ChangeDayNight(choice){
   switch(choice){
     case "day":
@@ -15,19 +15,20 @@ function ChangeDayNight(choice){
   }
 };
 
-
+////////////////// Vars
 exports = module.exports = {};
 exports.coredata = {"chunks":{},"players":{}};
 exports.chunkdata = JSON.parse(fs.readFileSync("./nightchunks.json"));
+exports.dialogdb = require('./dialogdb.json');
 exports.chunkParts = ["npcs","entities"];
-exports.attackQueue = {};
-exports.movementQueue = {};
-exports.moveQueue = [];
-exports.time = 400;
-exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); };
-exports.daystate = "night"
+exports.time = 400; /// shoud be 6000, using other numbers to test time transitions.
+exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); }; //// gotta fit this into gernal.js but it wasn't wroking.
+exports.daystate = "night" /// Required so its easier to determine if its day or night wihtout relying on the day timer which may change.
 exports.serverPause = false;
 exports.serverMessage = null;
 
-// Tuning settings
-exports.hitbox1 = {"w": 3, "h": 2}
+/////////////////////// QUEUES
+exports.attackQueue = {};
+exports.movementQueue = {};
+/// This is a queue of all incoming movement request from players, it is then converted to the move queue so that duplicate movements are not counted. this will be revised.
+exports.moveQueue = [];

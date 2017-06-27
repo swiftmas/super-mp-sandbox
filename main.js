@@ -13,6 +13,7 @@ var touchtimer = 0;
 var serverMessage = null;
 var serverMessageTimer = 0;
 var serverTime = 6000
+var dialog = null;
 
 //Utility Functoins //////////////////////////////////////////
 
@@ -73,7 +74,7 @@ function draw(){
 	if ( userplayer !== null ){
 		//CLEAN canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+		ctx.font='6px tiny';
 		// DRAW map ///////////////////////////////////
 		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
 		//Get all sprite locations
@@ -90,22 +91,6 @@ function draw(){
 		};
 		// Draw the top layer of the map
 		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
-		// If server message, display now
-		if (serverMessage != null){
-			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
-			ctx.fillStyle=style;
-			ctx.fillRect(0,0,64,64);
-			style = "rgba(255,255,255," + serverMessageTimer/20 + ")"
-			ctx.fillStyle=style;
-			ctx.font='6px tiny';
-			ctx.fillText(serverMessage, 5, 28);
-			serverMessageTimer -= 1;
-			if (serverMessageTimer <= 0) {
-				serverMessageTimer = 0;
-				serverMessage = null;
-			}
-		}
-
 
 		//////////////////// TIME OF DAY SHADERS //////////////////////
 		if (serverTime < 3400 && serverTime > 3000){
@@ -135,6 +120,40 @@ function draw(){
 			ctx.fillRect(0,0,64,64);
 			ctx.globalCompositeOperation = "source-over";
 		}
+
+		//////////// UI stuff ////////////////////
+		ctx.fillStyle= "grey";
+		ctx.fillRect(1,1, 10,3)
+		ctx.fillStyle= "#00ff38";
+		ctx.fillRect(1,1, Math.round(playerHealth/10),3)
+		ctx.fillText(Math.floor(serverTime/100), 14, 5);
+
+		if (dialog != null){
+			ctx.fillStyle= "black";
+			ctx.fillText(dialog[0], 1, 34);
+			ctx.fillText(dialog[1], 1, 39);
+			ctx.fillText(dialog[2], 1, 44);
+			ctx.fillText(dialog[3], 1, 49);
+			ctx.fillText(dialog[4], 1, 54);
+		}
+
+		// If server message, display now
+		if (serverMessage != null){
+			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
+			ctx.fillStyle=style;
+			ctx.fillRect(0,0,64,64);
+			style = "rgba(255,255,255," + serverMessageTimer/20 + ")"
+			ctx.fillStyle=style;
+			ctx.fillText(serverMessage, 5, 28);
+			serverMessageTimer -= 1;
+			if (serverMessageTimer <= 0) {
+				serverMessageTimer = 0;
+				serverMessage = null;
+			}
+		}
+
+
+
 
 	};
 };
@@ -182,7 +201,8 @@ function KeyboardController(keys, repeat) {
 	//
 	document.onkeydown= function(event) {
 			var key= (event || window.event).keyCode;
-			if (key == 78){ socket.emit('attack', userplayer); console.log('attack') };
+			if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack') };
+			if (key == 75){ socket.emit('action', [userplayer, "interact"]); console.log('interact') };
 			if (!(key in keys))
 					return true;
 			if (!(key in timers)) {
@@ -229,6 +249,11 @@ socket.on('start', function(data) {
 	console.log("Player Initialized:", data);
 });
 
+socket.on('dialog', function(data) {
+	dialog = data[0]
+	console.log("Dialog gottedidid:", data);
+});
+
 socket.on('serverMessage', function(data) {
 	serverMessage = data.message;
 	serverTime = data.time;
@@ -238,7 +263,8 @@ socket.on('serverMessage', function(data) {
 });
 
 socket.on('camera', function(data) {
-		campos = data.split(".");
+		campos = data[0].split(".");
+		playerHealth = data[1]
 });
 
 socket.on('getdata', function(data){

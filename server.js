@@ -6,6 +6,7 @@ var io = require('socket.io');
 var npcs = require('./npc.js');
 var globals = require('./globals.js');
 var combat = require('./combat.js');
+var interact = require('./interact.js');
 var general = require('./general.js');
 
 
@@ -148,7 +149,7 @@ coredata = globals.coredata;
 collmap = globals.collmap;
 attackQueue = globals.attackQueue;
 moveQueue = globals.moveQueue;
-var listener = io.listen(server);
+listener = io.listen(server);
 
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
@@ -175,7 +176,7 @@ setInterval(function(){
       var state = dp[player].state;
       var dir = dp[player].dir
       //position player camera!
-      listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
+      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health])
       playerDatas.push(code + "." + dir + "." + state + "." + pos);
     }
 
@@ -241,8 +242,15 @@ listener.sockets.on('connection', function(socket){
   });
 
 // Listens for attacks ////// !!!!!! NEEDS FUNCTION OUSIDE OF LISTENER  !!!!!!!!///////////////////////////
-  socket.on('attack', function(data) {
-    attackQueue[coredata.players[data].pos] =  [data, "players"];
+  socket.on('action', function(data) {
+    switch (data[1]){
+      case "attack":
+        attackQueue[coredata.players[data[0]].pos] =  [data[0], "players"];
+        break;
+      case "interact":
+        interact.startDialog(data[0]); 
+        break;
+    };
   });
 // Listens for disconnects
   socket.on('disconnect', function() {
