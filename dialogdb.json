@@ -1,0 +1,107 @@
+{
+  "NonTeamStandard": {
+    "start": {
+      "textVariations": [
+        [
+          "what",
+          "do",
+          "you",
+          "want",
+          "?"
+        ],
+        [
+          "Why",
+          "are you",
+          "Talking",
+          "To me",
+          "?"
+        ]
+      ],
+      "pointers": [],
+      "actions": []
+    }
+  },
+  "TeamStandard": {
+    "start": {
+      "textVariations": [
+        [
+          "How can I",
+          "Help You?",
+          "-What's new",
+          "-Where am I?",
+          ""
+        ],
+        [
+          "What can I",
+          "do you for?",
+          "-What's new",
+          "-Where am I?",
+          ""
+        ]
+      ],
+      "pointers": [
+        [
+          "TeamStandard",
+          "start"
+        ],
+        [
+          "TeamStandard",
+          "start"
+        ],
+        [
+          "TeamStandard",
+          "news"
+        ],
+        [
+          "TeamStandard",
+          "whereami"
+        ]
+      ],
+      "actions": []
+    },
+    "whereami": {
+      "textVariations": [
+        [
+          "Whelp, you",
+          "are in the ",
+          "middle of ",
+          "Agrabah",
+          "Broseph"
+        ],
+        [
+          "lel I dont",
+          "even know man",
+          "High as a kite",
+          "all day erry",
+          "Day."
+        ]
+      ],
+      "pointers": [
+        "exit"
+      ],
+      "actions": []
+    },
+    "news": {
+      "textVariations": [
+        [
+          "News",
+          "News",
+          "News",
+          "News",
+          "News"
+        ],
+        [
+          "News",
+          "New",
+          "News",
+          "New",
+          "news"
+        ]
+      ],
+      "pointers": [
+        "exit"
+      ],
+      "actions": []
+    }
+  }
+}

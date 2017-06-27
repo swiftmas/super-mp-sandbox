@@ -6,6 +6,7 @@ var io = require('socket.io');
 var npcs = require('./npc.js');
 var globals = require('./globals.js');
 var combat = require('./combat.js');
+var interact = require('./interact.js');
 var general = require('./general.js');
 
 
@@ -148,71 +149,73 @@ coredata = globals.coredata;
 collmap = globals.collmap;
 attackQueue = globals.attackQueue;
 moveQueue = globals.moveQueue;
-var listener = io.listen(server);
+listener = io.listen(server);
 
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
   var tickstart = new Date().getTime()
   general.ProcessTime();
-  general.ProcessChunks();
-  general.StateController();
-  npcs.npccontroller();
-  npcs.alerttimedown();
-  general.ProcessMovements();
-  combat.processAttackQueue();
-  combat.processAttacks();
+  if (globals.serverPause == false ){
+    general.ProcessChunks();
+    general.StateController();
+    npcs.npccontroller();
+    npcs.alerttimedown();
+    general.ProcessMovements();
+    combat.processAttackQueue();
+    combat.processAttacks();
 
 
-  /////Convert Catagories to Packets//////////
-  var playerDatas = [];
-  //PLAYERS
-  var dp = coredata.players;
-  for ( var player in dp){
-    var code = dp[player].team;
-    var pos = dp[player].pos;
-    var state = dp[player].state;
-    var dir = dp[player].dir
-    //position player camera!
-    listener.sockets.connected[player.slice(1)].emit('camera', dp[player].pos)
-    playerDatas.push(code + "." + dir + "." + state + "." + pos);
-  }
 
-  for (var player in coredata.players){
-    var datas = [];
-    for (var chunk in coredata.players[player].closeChunks){
-      //console.log(JSON.stringify(coredata.players[player].closeChunks), coredata.players[player].closeChunks[chunk], coredata.chunks);
-      var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
-      for ( var npc in dp){
-        var code = dp[npc].team;
-        var pos = dp[npc].pos;
-        var state = dp[npc].state;
-        var dir = dp[npc].dir
-        datas.push(code + "." + dir + "." + state + "." + pos);
-      }
-      //Attacks
-      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;
-      for (var attack in db){
-        var code = db[attack].type
-        var pos = db[attack].pos
-        var dir = db[attack].dir
-        var state = db[attack].state
-        datas.push(code + "." + dir + "." + state + "." + pos);
-      }
-      //entities
-      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].entities;
-      for (var attack in db){
-        var code = db[attack].team
-        var pos = db[attack].pos
-        var dir = db[attack].dir
-        var state = db[attack].state
-        datas.push(code + "." + dir + "." + state + "." + pos);
-      }
+    /////Convert Catagories to Packets//////////
+    var playerDatas = [];
+    //PLAYERS
+    var dp = coredata.players;
+    for ( var player in dp){
+      var code = dp[player].team;
+      var pos = dp[player].pos;
+      var state = dp[player].state;
+      var dir = dp[player].dir
+      //position player camera!
+      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health])
+      playerDatas.push(code + "." + dir + "." + state + "." + pos);
     }
-    playerspecificData = datas.concat(playerDatas)
-    listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
 
-  }
+    for (var player in coredata.players){
+      var datas = [];
+      for (var chunk in coredata.players[player].closeChunks){
+        //console.log(JSON.stringify(coredata.players[player].closeChunks), coredata.players[player].closeChunks[chunk], coredata.chunks);
+        var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
+        for ( var npc in dp){
+          var code = dp[npc].team;
+          var pos = dp[npc].pos;
+          var state = dp[npc].state;
+          var dir = dp[npc].dir
+          datas.push(code + "." + dir + "." + state + "." + pos);
+        }
+        //Attacks
+        var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;
+        for (var attack in db){
+          var code = db[attack].type
+          var pos = db[attack].pos
+          var dir = db[attack].dir
+          var state = db[attack].state
+          datas.push(code + "." + dir + "." + state + "." + pos);
+        }
+        //entities
+        var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].entities;
+        for (var attack in db){
+          var code = db[attack].team
+          var pos = db[attack].pos
+          var dir = db[attack].dir
+          var state = db[attack].state
+          datas.push(code + "." + dir + "." + state + "." + pos);
+        }
+      }
+      playerspecificData = datas.concat(playerDatas)
+      listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
 
+    }
+  } else { listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})}
   ticklength = (new Date().getTime()) - tickstart
   if ( ticklength > 5){console.log(ticklength)}
 }, 100);
@@ -221,8 +224,6 @@ setInterval(function(){
 listener.sockets.on('connection', function(socket){
 
 ////// INIT ////////////
-  var mapname = "This simply says that the game has started."
-  socket.emit('start', mapname);
 
 // For every Client data event (this is where we recieve movement)////////////
   socket.on('movement', function(data){
@@ -237,11 +238,19 @@ listener.sockets.on('connection', function(socket){
         coredata.players[key] = data[key];
       };
     };
+    socket.emit('start', globals.time);
   });
 
 // Listens for attacks ////// !!!!!! NEEDS FUNCTION OUSIDE OF LISTENER  !!!!!!!!///////////////////////////
-  socket.on('attack', function(data) {
-    attackQueue[coredata.players[data].pos] =  [data, "players"];
+  socket.on('action', function(data) {
+    switch (data[1]){
+      case "attack":
+        attackQueue[coredata.players[data[0]].pos] =  [data[0], "players"];
+        break;
+      case "interact":
+        interact.startDialog(data[0]); 
+        break;
+    };
   });
 // Listens for disconnects
   socket.on('disconnect', function() {

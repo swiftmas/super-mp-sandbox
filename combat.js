@@ -64,7 +64,7 @@ function attack(attacker, chunk){
     if (chunk == "none"){db = coredata; chunk = db[nameType][attacker].closeChunks[0]} else { db = coredata.chunks[chunk]; distance = 6 }
 
     var at = db[nameType];
-    if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; return; };
+    if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; at[attacker].health = 100; return; };
     //coredata.attacks["a" + attacker] = at[attacker].pos;
     var atdir = at[attacker].dir;
     var atorig = at[attacker].pos.split(".");
@@ -122,7 +122,7 @@ function dodamage(atpos, owner, chunk, direction, friendlyFire){
       general.DoMovement(name, chunk, direction, 6);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
-        db[nameType][name].health = 100;
+
       };
     };
   });
