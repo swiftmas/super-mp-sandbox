@@ -165,10 +165,11 @@ function getDist(origin, destination, callback) {
 
 function ProcessMovements(){
   for (var inst in moveQueue){
-    if (coredata.players[moveQueue[inst][0]].state < 10){
-      DoMovement(moveQueue[inst][0], "none",moveQueue[inst][1], 2);
+    if (coredata.players.hasOwnProperty(moveQueue[inst][0]) && coredata.players[moveQueue[inst][0]].state < 10){
+      if(moveQueue[inst][1] != null){
+        DoMovement(moveQueue[inst][0], "none",moveQueue[inst][1], 2);
+      };
     }
-    delete moveQueue[inst];
   }
 };
 

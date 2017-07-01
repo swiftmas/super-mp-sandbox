@@ -1,11 +1,12 @@
-adding events system t0 game 	
+adding events system t0 game
 
 
-message at night and at morning. map resets and uses that times chunks reloaded.venturing out of the city leads to danger. spirits lurk in the darkness. 
+message
+ night and at morning. map resets and uses that times chunks reloaded.venturing out of the city leads to danger. spirits lurk in the darkness. 
 
-events are added to coredata and parsed. events can be a one-off(spawn an npc) and complete. events can wait for a condition and then coplete with more actions. events can repeat until said action. 
+events are added to coredata and parsed. events can be a one-off(spawn an npc) and complete. events can wait for a condition and then coplete with more actions. events can repeat until said action.
 
-ex. spawn army at red base. creates npcs. on battle over (once team has won battle) delete npcs from chunk. 
+ex. spawn army at red base. creates npcs. on battle over (once team has won battle) delete npcs from chunk.
 events if not completed will be reloaded after a day or night cycle. must have a toggle for whether it can exist at night or day or both.
 
 
@@ -27,9 +28,9 @@ speach has own engine. there are speach profiles which each npc type is assigned
 
 
 split into events and triggers
-events can be crafted by functions but shoulf primarily be in thier own json. 
+events can be crafted by functions but shoulf primarily be in thier own json.
 events are triggered and goto coredata.events next to players.
-event: id  type  UserAffected  state  
+event: id  type  UserAffected  state
 events in that spot keep track of its state not its content
 
 
