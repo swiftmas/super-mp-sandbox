@@ -14,6 +14,7 @@ var serverTime = 6000
 var dialog = null;
 var selector = 0;
 var currentDirKey = null;
+var currentDir = null;
 var controlState = "character";
 
 
@@ -152,6 +153,7 @@ function draw(){
 
 
 function control(dir){
+	if (dir == currentDir){return};
 	switch (dir){
 		case "2":
 			if(controlState == "character"){	socket.emit('movement', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
@@ -168,7 +170,7 @@ function control(dir){
 		case "null":
 			if(controlState == "character"){	socket.emit('movement', [userplayer, null]); } else { if (selector <= 5){selector += 1}  }
 			break;
-
+	  currentDir = dir;
 	}
 }
 
@@ -254,3 +256,22 @@ socket.on('getdata', function(data){
 
 
 ////// UTILITY EVENTS //////////////////////////
+
+var tc = new Hammer(map);
+tc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+tc.on("panup", function(ev){
+	control("2")
+});
+tc.on("pandown", function(ev){
+        control("6")
+});
+tc.on("panright", function(ev){
+        control("4")
+});
+tc.on("panleft", function(ev){
+        control("8")
+});
+
+tc.on("panend", function(ev){
+	control("null")
+});
