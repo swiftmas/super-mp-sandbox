@@ -217,7 +217,7 @@ setInterval(function(){
     }
   } else { listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})}
   ticklength = (new Date().getTime()) - tickstart
-  if ( ticklength > 5){console.log(ticklength)}
+  if ( ticklength > 10){console.log(ticklength)}
 }, 100);
 
 ///// Per Connectoin /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -248,7 +248,7 @@ listener.sockets.on('connection', function(socket){
         attackQueue[coredata.players[data[0]].pos] =  [data[0], "players"];
         break;
       case "interact":
-        interact.startDialog(data[0]); 
+        interact.startDialog(data[0]);
         break;
     };
   });

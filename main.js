@@ -8,18 +8,13 @@ var ywin = window.innerHeight / 2;
 var userplayer = null;
 var coredata = {};
 var TeamSelected = null;
-var touchdir = ["none", 0];
-var touchtimer = 0;
 var serverMessage = null;
 var serverMessageTimer = 0;
 var serverTime = 6000
 var dialog = null;
-
-//Utility Functoins //////////////////////////////////////////
-
-//RO real origin (used all over in draw)
-
-
+var selector = 0;
+var currentDirKey = null;
+var controlState = "character";
 
 
 
@@ -100,7 +95,6 @@ function draw(){
 			ctx.fillStyle=style;
 			ctx.fillRect(0,0,64,64);
 			ctx.globalCompositeOperation = "source-over";
-
 		}
 
 		if (serverTime <= 3000 && serverTime > 400){
@@ -151,15 +145,32 @@ function draw(){
 				serverMessage = null;
 			}
 		}
-
-
-
-
 	};
 };
 
+//mOVEMENT /////////////////////////////////////////
 
 
+function control(dir){
+	switch (dir){
+		case "2":
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
+			break;
+		case "4":
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "4"]); } else { if (selector > 0){selector -= 1}  }
+			break;
+		case "6":
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "6"]); } else { if (selector <= 5){selector += 1}  }
+			break;
+		case "8":
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "8"]); } else { if (selector <= 5){selector += 1}  }
+			break;
+		case "null":
+			if(controlState == "character"){	socket.emit('movement', [userplayer, null]); } else { if (selector <= 5){selector += 1}  }
+			break;
+
+	}
+}
 
 ///// GET PLAYER TEAM AND STUFF ////
 document.getElementById("selBlue").addEventListener("click", function(event) { add_player(1); });
@@ -168,78 +179,40 @@ document.getElementById("selRed").addEventListener("click", function(event) { ad
 document.getElementById("selGold").addEventListener("click", function(event) { add_player(4); });
 
 
-
-
-resize();
 window.addEventListener("resize", function() {
 	resize();
 });
+resize();
+///// USER INPUT for player movement  ////////////////////////////   192
 
-///// USER INPUT for player movement  ////////////////////////////
-
-
-KeyboardController({
-    87: function() { move(userplayer, '2'); },
-		68: function() { move(userplayer, '4'); },
-		83: function() { move(userplayer, '6'); },
-		65: function() { move(userplayer, '8'); },
-		37: function() { move(userplayer, '8'); },
-		38: function() { move(userplayer, '2'); },
-		39: function() { move(userplayer, '4'); },
-		40: function() { move(userplayer, '6'); },
-    192: function() { console.log(serverTime, JSON.stringify(coredata)); }
-}, 50);
-
-
-
-
-function KeyboardController(keys, repeat) {
-	var timers= {};
-
-	// When key is pressed and we don't already think it's pressed, call the
-	// key action callback and set a timer to generate another one after a delay
-	//
-	document.onkeydown= function(event) {
-			var key= (event || window.event).keyCode;
-			if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack') };
-			if (key == 75){ socket.emit('action', [userplayer, "interact"]); console.log('interact') };
-			if (!(key in keys))
-					return true;
-			if (!(key in timers)) {
-					timers[key]= null;
-					keys[key]();
-					if (repeat!==0)
-							timers[key]= setInterval(keys[key], repeat);
-			}
-			return false;
-	};
-
-
-	document.onkeyup= function(event) {
-			var key= (event || window.event).keyCode;
-			if (key in timers) {
-					if (timers[key]!==null)
-							clearInterval(timers[key]);
-					delete timers[key];
-			}
-	};
-
-
-	window.onblur= function() {
-			for (key in timers)
-					if (timers[key]!==null)
-							clearInterval(timers[key]);
-			timers= {};
-	};
-
+document.onkeydown= function(event) {
+		var key= (event || window.event).keyCode;
+		if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack'); return };
+		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
+		if (key == 75){ socket.emit('action', [userplayer, "interact"]); console.log('interact'); return };
+		if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack'); return };
+		//arrows
+		if (key == 87){ control("2") };
+		if (key == 68){ control("4") };
+		if (key == 83){ control("6") };
+		if (key == 65){ control("8") };
+		// WASd
+		if (key == 38){ control("2") };
+		if (key == 39){ control("4") };
+		if (key == 40){ control("6") };
+		if (key == 37){ control("8") };
+		currentDirKey = key;
 };
 
 
-//mOVEMENT /////////////////////////////////////////
-
-function move(playername, dir) {
-	socket.emit('movement', [playername, dir]);
+document.onkeyup= function(event) {
+		var key= (event || window.event).keyCode;
+		if (key == currentDirKey){ currentDirKey = null; control("null")};
 };
+
+
+
+
 
 
 ////// GET data //////////////
@@ -281,74 +254,3 @@ socket.on('getdata', function(data){
 
 
 ////// UTILITY EVENTS //////////////////////////
-
-
-///// Touch device controlls ///////////////////////
-document.getElementById("attack").addEventListener("click", function(event) {
-	socket.emit('attack', userplayer);
-});
-
-document.getElementById("map").addEventListener("touchstart", function(event) {
-	event.preventDefault();
-	var pattack = [userplayer];
-	//socket.emit('attacks', pattack);
-	tstarx = Math.ceil((event.pageX));
- 	tstary = Math.ceil((event.pageY));
-	touchdown = true;
-	initialtouch = true;
-	document.getElementById("logger").innerHTML = initialtouch
-}, false);
-
-
-document.addEventListener("touchmove", function(event) {
-	event.preventDefault();
-	tmovx = Math.ceil((event.pageX));
- 	tmovy = Math.ceil((event.pageY));
- 	if (initialtouch == true){
- 		//getswipedir(tmovx, tmovy);
- 		initialtouch = false;
- 		document.getElementById("logger").innerHTML = initialtouch
- 	};
- 	if (Date.now() > touchtimer + 200){
-		getswipedir(tmovx, tmovy);
-		touchtimer = Date.now();
-	};
-}, false);
-
-
-function getswipedir(x, y) {
-	var dirlength = [];
-    if (y > tstary + 2){
-    	var ddist = y - tstary;
-    	dirlength.push(["6", ddist])
-    };
-    if (y < tstary - 2){
-    	var udist = tstary - y;
-    	dirlength.push(["2", udist])
-    };
-    if (x > tstarx + 2){
-    	var rdist = x - tstarx;
-    	dirlength.push(["4", rdist])
-    };
-    if (x < tstarx - 2){
-    	var ldist = tstarx - x;
-    	dirlength.push(["8", ldist])
-    };
-    var top = ["none", 0];
-    if (dirlength.length > 1){
-    	for (var i = 0; i < dirlength.length; i++ ){
-    		if (dirlength[i][1] > top[1]){
-    			top = dirlength[i];
-    			touchdir = top[0];
-    		};
-    	};
-    	move(userplayer, top[0]);
-    } else if (dirlength.length == 1) {
-    	top = dirlength[0];
-    	touchdir = top[0]
-    	move(userplayer, top[0]);
-    };
-
-  	//var coor = "Coordinates: (" + top[0] + ")";
-  	document.getElementById("coor").innerHTML = touchdir;
-};

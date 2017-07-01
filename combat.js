@@ -100,7 +100,7 @@ function dodamage(atpos, owner, chunk, direction, friendlyFire){
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   var damage = 25;
   var at
-  switch(direction){
+  switch (direction){
     case "2":
     case "6":
       at = {"h": 3, "w": 6}
@@ -110,6 +110,7 @@ function dodamage(atpos, owner, chunk, direction, friendlyFire){
       at = {"h": 6, "w": 3}
       break;
   }
+  console.log(direction)
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
       var name = result[1][hit][0]

@@ -18,12 +18,12 @@ function ChangeDayNight(choice){
 ////////////////// Vars
 exports = module.exports = {};
 exports.coredata = {"chunks":{},"players":{}};
-exports.chunkdata = JSON.parse(fs.readFileSync("./nightchunks.json"));
+exports.chunkdata = JSON.parse(fs.readFileSync("./daychunks.json"));
 exports.dialogdb = require('./dialogdb.json');
 exports.chunkParts = ["npcs","entities"];
-exports.time = 400; /// shoud be 6000, using other numbers to test time transitions.
+exports.time = 3100; /// shoud be 6000, using other numbers to test time transitions.
 exports.ChangeDayNight = function (choice) { ChangeDayNight(choice); }; //// gotta fit this into gernal.js but it wasn't wroking.
-exports.daystate = "night" /// Required so its easier to determine if its day or night wihtout relying on the day timer which may change.
+exports.daystate = "day" /// Required so its easier to determine if its day or night wihtout relying on the day timer which may change.
 exports.serverPause = false;
 exports.serverMessage = null;
 
