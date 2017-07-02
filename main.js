@@ -259,6 +259,9 @@ socket.on('getdata', function(data){
 
 var tc = new Hammer(map);
 tc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+tc.on("press", function(ev){socket.emit('action', [userplayer, "attack"]); console.log('attack'); return });
+
 tc.on("panup", function(ev){
 	control("2")
 });
