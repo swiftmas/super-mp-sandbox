@@ -12,6 +12,7 @@ var serverMessage = null;
 var serverMessageTimer = 0;
 var serverTime = 6000
 var dialog = null;
+var dialogPointers = [null, null, null, null, null];
 var selector = 0;
 var currentDirKey = null;
 var currentDir = null;
@@ -122,14 +123,18 @@ function draw(){
 		ctx.fillStyle= "#00ff38";
 		ctx.fillRect(1,1, Math.round(playerHealth/10),3)
 		ctx.fillText(Math.floor(serverTime/100), 14, 5);
+		ctx.fillText(selector, 24, 5);
 
 		if (dialog != null){
-			ctx.fillStyle= "black";
-			ctx.fillText(dialog[0], 1, 34);
-			ctx.fillText(dialog[1], 1, 39);
-			ctx.fillText(dialog[2], 1, 44);
-			ctx.fillText(dialog[3], 1, 49);
-			ctx.fillText(dialog[4], 1, 54);
+			ctx.fillStyle= "rgba(15,15,15,0.85)"
+			ctx.fillRect(0,36,64,28);
+			ctx.fillStyle= "grey";
+			ctx.fillText(dialog[0], 3, 42);
+			ctx.fillText(dialog[1], 3, 47);
+			ctx.fillText(dialog[2], 3, 52);
+			ctx.fillText(dialog[3], 3, 57);
+			ctx.fillText(dialog[4], 3, 62);
+			ctx.fillText(">", -1, 42 + (5*selector));
 		}
 
 		// If server message, display now
@@ -152,9 +157,9 @@ function draw(){
 //mOVEMENT /////////////////////////////////////////
 
 
-function control(dir){
-	if (dir == currentDir){return};
-	switch (dir){
+function control(action){
+	if (action == currentDir){return};
+	switch (action){
 		case "2":
 			if(controlState == "character"){	socket.emit('movement', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
 			break;
@@ -162,15 +167,37 @@ function control(dir){
 			if(controlState == "character"){	socket.emit('movement', [userplayer, "4"]); } else { if (selector > 0){selector -= 1}  }
 			break;
 		case "6":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "6"]); } else { if (selector <= 5){selector += 1}  }
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "6"]); } else { if (selector < 4){selector += 1}  }
 			break;
 		case "8":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "8"]); } else { if (selector <= 5){selector += 1}  }
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "8"]); } else { if (selector < 4){selector += 1}  }
 			break;
 		case "null":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, null]); } else { if (selector <= 5){selector += 1}  }
+			if(controlState == "character"){	socket.emit('movement', [userplayer, null]); } else { selector = selector  }
 			break;
-	  currentDir = dir;
+		case "interact":
+			if(controlState == "character"){
+				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
+			} else {
+				if (dialogPointers == "exit"){
+					selector = 0;
+					dialogPointers = [null, null, null, null, null];
+					dialog = null;
+					controlState = "character";
+					return;
+				}
+				socket.emit('action', [userplayer, "interact", dialogPointers[selector]]); console.log('speak', dialogPointers[selector]);
+			}
+			break;
+		case "attack":
+			if (controlState == "character"){socket.emit('action', [userplayer, "attack"]);}
+			selector = 0;
+			dialogPointers = [null, null, null, null, null];
+			dialog = null;
+			controlState = "character";
+			break;
+
+	  if (["2", "4", "6", "8"].indexOf(action) !== 1) {currentDir = action;}
 	}
 }
 
@@ -189,9 +216,9 @@ resize();
 
 document.onkeydown= function(event) {
 		var key= (event || window.event).keyCode;
-		if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack'); return };
+		if (key == 78){ control("attack"); console.log('attack'); return };
 		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
-		if (key == 75){ socket.emit('action', [userplayer, "interact"]); console.log('interact'); return };
+		if (key == 75){ control("interact"); console.log('interact'); return };
 		if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack'); return };
 		//arrows
 		if (key == 87){ control("2") };
@@ -225,7 +252,9 @@ socket.on('start', function(data) {
 });
 
 socket.on('dialog', function(data) {
-	dialog = data[0]
+	dialog = data[0];
+	dialogPointers= data[1];
+	controlState = "dialog";
 	console.log("Dialog gottedidid:", data);
 });
 

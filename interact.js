@@ -9,6 +9,9 @@ attackQueue = globals.attackQueue;
 module.exports = {
   startDialog: function (interacter) {
     startDialog(interacter);
+  },
+  getDialog: function (interacter, path) {
+    getDialog(interacter, path);
   }
 };
 

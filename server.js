@@ -248,7 +248,11 @@ listener.sockets.on('connection', function(socket){
         attackQueue[coredata.players[data[0]].pos] =  [data[0], "players"];
         break;
       case "interact":
-        interact.startDialog(data[0]);
+        if (data[2] !== null){
+          interact.getDialog(data[0], data[2]);
+        } else {
+          interact.startDialog(data[0]);
+        };
         break;
     };
   });
