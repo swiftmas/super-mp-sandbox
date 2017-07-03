@@ -17,7 +17,7 @@
           "?"
         ]
       ],
-      "pointers": [],
+      "pointers": ["exit"],
       "actions": []
     }
   },
