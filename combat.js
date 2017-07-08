@@ -7,8 +7,8 @@ attackQueue = globals.attackQueue;
 
 ///// Exports ///////////////////////////
 module.exports = {
-  attack: function (attacker, dir) {
-    attack(attacker, dir);
+  attack: function (attacker, chunk, attacktype) {
+    attack(attacker, chunk, attacktype);
   },
   processAttacks: function () {
     processAttacks();
@@ -72,7 +72,7 @@ function attack(attacker, chunk, attacktype){
     // Get weapon attack data based on slot.
     switch(attacktype){
       case "attack1":
-        attackData = globals.weaponData[at[attacker].slot1];
+        attackData = JSON.parse(JSON.stringify(globals.weaponData[at[attacker].slot1]));
         break;
       case "attack2":
         attackData = globals.weaponData[at[attacker].slot2];
