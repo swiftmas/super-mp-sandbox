@@ -234,12 +234,12 @@ listener.sockets.on('connection', function(socket){
 
 // This listens for new players ////////
   socket.on('add_player', function(data){
-    console.log(data);
     for (var key in data){
       if (data.hasOwnProperty(key)) {
         coredata.players[key] = data[key];
       };
     };
+    console.log(coredata.players[key]);
     socket.emit('start', globals.time);
   });
 
@@ -247,10 +247,13 @@ listener.sockets.on('connection', function(socket){
   socket.on('action', function(data) {
     switch (data[1]){
       case "attack1":
-        attackQueue[data[0]] =  ["attack1"];
+        attackQueue[data[0]] =  "attack1";
         break;
       case "attack2":
-        attackQueue[data[0]] =  ["attack3"];
+        attackQueue[data[0]] =  "attack2";
+        break;
+      case "attack3":
+        attackQueue[data[0]] =  "attack3";
         break;
       case "interact":
         if (data[2] !== null){

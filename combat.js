@@ -22,7 +22,7 @@ module.exports = {
 /// Gets attacks from queue (players only) and makes them happen
 function processAttackQueue(){
   for (var inst in attackQueue){
-    attack(inst, "none")
+    attack(inst, "none", attackQueue[inst])
     delete attackQueue[inst];
   }
 };
@@ -46,26 +46,42 @@ function processAttacks(){
 };
 
 function attack(attacker, chunk, attacktype){
-    // second argument, npc or player is the attribute of the attacker, not whats being attacked.
+    console.log(attacker, chunk, attacktype)
+    // Cleanup Data Model
     var distance = 6
-    var db, nameType
+    var db, nameType, attackData;
     switch(attacker[0]){
       case "n":
         nameType = "npcs"
+        db = coredata.chunks[chunk]
         break;
       case "p":
         nameType = "players"
+        db = coredata
+        chunk = db[nameType][attacker].closeChunks[0]
         break;
       case "e":
         nameType = "entities"
+        db = coredata.chunks[chunk]
         break;
     }
-    //added more distane to npcs attack as it did not equal that of the player for some reason.
-    if (chunk == "none"){db = coredata; chunk = db[nameType][attacker].closeChunks[0]} else { db = coredata.chunks[chunk]}
-
+    // SET at as the variable for either players or other data types
     var at = db[nameType];
+    // RESET PLAYER TO START POSITION IF HE IS DEAD
     if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; at[attacker].health = 100; return; };
-    //coredata.attacks["a" + attacker] = at[attacker].pos;
+    // Get weapon attack data based on slot.
+    switch(attacktype){
+      case "attack1":
+        attackData = globals.weaponData[at[attacker].slot1];
+        break;
+      case "attack2":
+        attackData = globals.weaponData[at[attacker].slot2];
+        break;
+      case "attack3":
+        attackData = globals.weaponData[at[attacker].slot3];
+        break;
+    };
+    //GET ATTaCK DIRECTION
     var atdir = at[attacker].dir;
     var atorig = at[attacker].pos.split(".");
     var atpos = "";
@@ -87,9 +103,11 @@ function attack(attacker, chunk, attacktype){
     	atpos = nx + "." + ny
     };
     if (at[attacker].state < 10) {
-      coredata.chunks[chunk].attacks.push({"pos": atpos, "dir": atdir, "state": "3", "owner": attacker, "chunk": chunk, "type": "18"});
+      situationalData = {"pos": atpos, "dir": atdir, "owner": attacker, "chunk": chunk}
+      for (var attrname in situationalData) { attackData[attrname] = situationalData[attrname]; }
+      console.log(attackData)
+      coredata.chunks[chunk].attacks.push(attackData);
       at[attacker].state = 13 /// Keep for now but eventaully this will be per weapon.
-      console.log(attacker + " placed attack");
 
     };
 
