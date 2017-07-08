@@ -163,6 +163,8 @@ setInterval(function(){
     general.ProcessMovements();
     combat.processAttackQueue();
     combat.processAttacks();
+    npcs.npccontroller();
+    npcs.alerttimedown();
 
 
 
@@ -244,8 +246,11 @@ listener.sockets.on('connection', function(socket){
 // Listens for attacks ////// !!!!!! NEEDS FUNCTION OUSIDE OF LISTENER  !!!!!!!!///////////////////////////
   socket.on('action', function(data) {
     switch (data[1]){
-      case "attack":
-        attackQueue[coredata.players[data[0]].pos] =  [data[0], "players"];
+      case "attack1":
+        attackQueue[data[0]] =  ["attack1"];
+        break;
+      case "attack2":
+        attackQueue[data[0]] =  ["attack3"];
         break;
       case "interact":
         if (data[2] !== null){

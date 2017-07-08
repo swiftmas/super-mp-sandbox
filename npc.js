@@ -71,7 +71,7 @@ function npccontroller() {
                 else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace) {
-                        combat.attack(npc, chunk);
+                        combat.attack(npc, chunk, "attack1");
                     }
                     else {
                         cdn[npc].dir = dirToFace;

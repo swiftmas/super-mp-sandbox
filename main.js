@@ -44,7 +44,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"0", "health": 100, "alerttimer": 0, "team": team, "origin": "40.50", "closeChunks": [], "h": 3, "w": 3};
+	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"0", "health": 100, "alerttimer": 0, "team": team, "slot1": 1 , "origin": "40.50", "closeChunks": [], "h": 3, "w": 3};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -164,13 +164,13 @@ function control(action){
 			if(controlState == "character"){	socket.emit('movement', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
 			break;
 		case "4":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "4"]); } else { if (selector > 0){selector -= 1}  }
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "4"]); } else { selector = selector }
 			break;
 		case "6":
 			if(controlState == "character"){	socket.emit('movement', [userplayer, "6"]); } else { if (selector < 4){selector += 1}  }
 			break;
 		case "8":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "8"]); } else { if (selector < 4){selector += 1}  }
+			if(controlState == "character"){	socket.emit('movement', [userplayer, "8"]); } else { selector = selector }
 			break;
 		case "null":
 			if(controlState == "character"){	socket.emit('movement', [userplayer, null]); } else { selector = selector  }
@@ -189,16 +189,29 @@ function control(action){
 				socket.emit('action', [userplayer, "interact", dialogPointers[selector]]); console.log('speak', dialogPointers[selector]);
 			}
 			break;
-		case "attack":
-			if (controlState == "character"){socket.emit('action', [userplayer, "attack"]);}
+		case "attack1":
+			if (controlState == "character"){socket.emit('action', [userplayer, "attack1"]);}
 			selector = 0;
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;
 			controlState = "character";
 			break;
-
-	  if (["2", "4", "6", "8"].indexOf(action) !== 1) {currentDir = action;}
+		case "attack2":
+			if (controlState == "character"){socket.emit('action', [userplayer, "attack2"]);}
+			selector = 0;
+			dialogPointers = [null, null, null, null, null];
+			dialog = null;
+			controlState = "character";
+			break;
+		case "attack3":
+			if (controlState == "character"){socket.emit('action', [userplayer, "attack3"]);}
+			selector = 0;
+			dialogPointers = [null, null, null, null, null];
+			dialog = null;
+			controlState = "character";
+			break;
 	}
+	if (["2", "4", "6", "8", "null"].indexOf(action) !== -1) {currentDir = action;}
 }
 
 ///// GET PLAYER TEAM AND STUFF ////
@@ -216,20 +229,21 @@ resize();
 
 document.onkeydown= function(event) {
 		var key= (event || window.event).keyCode;
-		if (key == 78){ control("attack"); console.log('attack'); return };
+		if (key == 78){ control("attack1"); return };
+		if (key == 74){ control("attack2"); return };
+		if (key == 77){ control("attack3"); return };
 		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
-		if (key == 75){ control("interact"); console.log('interact'); return };
-		if (key == 78){ socket.emit('action', [userplayer, "attack"]); console.log('attack'); return };
-		//arrows
+		if (key == 75){ control("interact"); return };
+		//wasd
 		if (key == 87){ control("2") };
 		if (key == 68){ control("4") };
 		if (key == 83){ control("6") };
 		if (key == 65){ control("8") };
-		// WASd
-		if (key == 38){ control("2") };
-		if (key == 39){ control("4") };
-		if (key == 40){ control("6") };
-		if (key == 37){ control("8") };
+		// arrows
+		if (key == 38){ event.preventDefault(); control("2") };
+		if (key == 39){ event.preventDefault(); control("4") };
+		if (key == 40){ event.preventDefault(); control("6") };
+		if (key == 37){ event.preventDefault(); control("8") };
 		currentDirKey = key;
 };
 
@@ -289,23 +303,23 @@ socket.on('getdata', function(data){
 var tc = new Hammer(map);
 tc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-tc.on("tap", function(ev){socket.emit('action', [userplayer, "attack"]); console.log('attack'); return });
+tc.on("tap", function(ev){control("attack1"); return });
 
-tc.on("press", function(ev){control("interact"); console.log('attack'); return });
+tc.on("press", function(ev){control("interact"); return });
 
 tc.on("panup", function(ev){
 	control("2")
 });
 tc.on("pandown", function(ev){
-        control("6")
+  control("6")
 });
 tc.on("panright", function(ev){
-        control("4")
+  control("4")
 });
 tc.on("panleft", function(ev){
-        control("8")
+  control("8")
 });
-
-tc.on("panend", function(ev){
+map.addEventListener('touchend', touchend, false);
+function touchend(ev){
 	control("null")
-});
+};

@@ -28,7 +28,7 @@ exports.serverPause = false;
 exports.serverMessage = null;
 
 /////////////////////// QUEUES
-exports.attackQueue = {};
+exports.attackQueue = [];
 exports.movementQueue = {};
 /// This is a queue of all incoming movement request from players, it is then converted to the move queue so that duplicate movements are not counted. this will be revised.
 exports.moveQueue = [];

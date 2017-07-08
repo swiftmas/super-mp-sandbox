@@ -19,14 +19,14 @@ module.exports = {
 };
 
 
-
+/// Gets attacks from queue (players only) and makes them happen
 function processAttackQueue(){
   for (var inst in attackQueue){
-    attack(attackQueue[inst][0], "none")
+    attack(inst, "none")
     delete attackQueue[inst];
   }
 };
-
+// This is the processing section. All attacks are placed in coredate. this allows for attacks to have timeouts that are not tied to the player. this is to handle animations and damageOverTime affects.
 function processAttacks(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
@@ -45,9 +45,9 @@ function processAttacks(){
   }
 };
 
-function attack(attacker, chunk){
+function attack(attacker, chunk, attacktype){
     // second argument, npc or player is the attribute of the attacker, not whats being attacked.
-    var distance = 5
+    var distance = 6
     var db, nameType
     switch(attacker[0]){
       case "n":
@@ -61,7 +61,7 @@ function attack(attacker, chunk){
         break;
     }
     //added more distane to npcs attack as it did not equal that of the player for some reason.
-    if (chunk == "none"){db = coredata; chunk = db[nameType][attacker].closeChunks[0]} else { db = coredata.chunks[chunk]; distance = 6 }
+    if (chunk == "none"){db = coredata; chunk = db[nameType][attacker].closeChunks[0]} else { db = coredata.chunks[chunk]}
 
     var at = db[nameType];
     if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; at[attacker].health = 100; return; };
@@ -87,8 +87,8 @@ function attack(attacker, chunk){
     	atpos = nx + "." + ny
     };
     if (at[attacker].state < 10) {
-      coredata.chunks[chunk].attacks.push({"pos": atpos, "dir": atdir, "state": "3", "owner": attacker, "chunk": chunk, "type": "5"});
-      at[attacker].state = 13
+      coredata.chunks[chunk].attacks.push({"pos": atpos, "dir": atdir, "state": "3", "owner": attacker, "chunk": chunk, "type": "18"});
+      at[attacker].state = 13 /// Keep for now but eventaully this will be per weapon.
       console.log(attacker + " placed attack");
 
     };
