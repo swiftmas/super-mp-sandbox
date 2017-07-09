@@ -36,7 +36,7 @@ function processAttacks(){
       if (db[attack].state <= 0){ removes.push(attack); break};
 
       if (db[attack].state == 3){
-        dodamage(db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, false);
+        dodamage(db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, false, db[attack].damage);
       }
     };
     for (var rem in removes){
@@ -113,7 +113,7 @@ function attack(attacker, chunk, attacktype){
 
 };
 
-function dodamage(atpos, owner, chunk, direction, friendlyFire){
+function dodamage(atpos, owner, chunk, direction, damage, friendlyFire){
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   var damage = 25;
