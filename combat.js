@@ -33,6 +33,12 @@ function processAttacks(){
     var removes = [];
     for (var attack = db.length -1; attack >= 0; attack--){
       //console.log(JSON.stringify(db[attack]));
+      if (db[attack].projectile){
+        if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
+        if (db[attack].distance > 0){ db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity)} else { removes.push(attack); break};
+        dodamage(db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, false, db[attack].damage);
+
+      }
       if (db[attack].state <= 0){ removes.push(attack); break};
 
       if (db[attack].state == 3){
@@ -72,7 +78,7 @@ function attack(attacker, chunk, attacktype){
     // Get weapon attack data based on slot.
     switch(attacktype){
       case "attack1":
-        attackData = JSON.parse(JSON.stringify(globals.weaponData[at[attacker].slot1]));
+        attackData = globals.weaponData[at[attacker].slot1];
         break;
       case "attack2":
         attackData = globals.weaponData[at[attacker].slot2];
@@ -81,6 +87,9 @@ function attack(attacker, chunk, attacktype){
         attackData = globals.weaponData[at[attacker].slot3];
         break;
     };
+    if (attackData != undefined && attackData.hasOwnProperty("damage")){
+      attackData = JSON.parse(JSON.stringify(attackData))
+    } else {return};
     //GET ATTaCK DIRECTION
     var atdir = at[attacker].dir;
     var atorig = at[attacker].pos.split(".");

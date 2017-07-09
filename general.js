@@ -188,6 +188,9 @@ if (rate == 6){faceDir = false}
       nameType = "entities"
       break;
   }
+  if (nameType == null){
+    nameType = "attacks"
+  }
   // Chunk with none is a player, all other moveable objects belong to a chunk.
   if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
 
