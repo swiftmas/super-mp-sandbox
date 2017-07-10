@@ -35,14 +35,14 @@ function processAttacks(){
       //console.log(JSON.stringify(db[attack]));
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
-        if (db[attack].distance > 0){ db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity)} else { removes.push(attack); break};
-        dodamage(db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, false, db[attack].damage);
+        if (db[attack].distance > 0){ db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true)} else { removes.push(attack); break};
+        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false);
 
       }
       if (db[attack].state <= 0){ removes.push(attack); break};
 
       if (db[attack].state == 3){
-        dodamage(db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, false, db[attack].damage);
+        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false);
       }
     };
     for (var rem in removes){
@@ -122,19 +122,20 @@ function attack(attacker, chunk, attacktype){
 
 };
 
-function dodamage(atpos, owner, chunk, direction, damage, friendlyFire){
+function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire){
+
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
-  var damage = 25;
+  if (damage == null){damage = 25;};
   var at
   switch (direction){
     case "2":
     case "6":
-      at = {"h": 3, "w": 6}
+      at = {"h": w, "w": h}
       break;
     case "4":
     case "8":
-      at = {"h": 6, "w": 3}
+      at = {"h": h, "w": w}
       break;
   }
   console.log(direction)
@@ -147,7 +148,8 @@ function dodamage(atpos, owner, chunk, direction, damage, friendlyFire){
       if (nameType == "colliders"){break;};
       if (db[nameType][name].hasOwnProperty("team")){ if (db[nameType][name].team == ownerTeam) {break;}};
       db[nameType][name].health = db[nameType][name].health - damage
-      general.DoMovement(name, chunk, direction, 6);
+      attack.distance = 0;
+      general.DoMovement(name, chunk, direction, 6, false, false);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
 

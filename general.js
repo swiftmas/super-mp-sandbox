@@ -21,8 +21,8 @@ module.exports = {
   StateController: function () {
     StateController();
   },
-  DoMovement: function (name, dir, rate, maintainFacingDirection) {
-    DoMovement(name, dir, rate, maintainFacingDirection);
+  DoMovement: function (name, chunk, dir, rate, ignoreCollision, maintainFacingDirection) {
+    DoMovement(name, chunk, dir, rate, ignoreCollision, maintainFacingDirection);
   },
   ProcessMovements: function () {
     ProcessMovements();
@@ -173,9 +173,11 @@ function ProcessMovements(){
   }
 };
 
-function DoMovement(name, chunk, dir, rate, faceDir) {
-if (rate == 6){faceDir = false}
+function DoMovement(name, chunk, dir, rate, ignoreCollision, maintainFacingDirection) {
+  //if (rate == 6){faceDir = false}
   //Only objects with a letter before thier id can be moved
+  if (ignoreCollision == null){ignoreCollision = false};
+  if (maintainFacingDirection == null){maintainFacingDirection = true};
   var db, nameType
   switch(name[0]){
     case "n":
@@ -216,11 +218,14 @@ if (rate == 6){faceDir = false}
     cellname = ''+x+'.'+y+''
   };
 
-  if (faceDir == false){
+  if (maintainFacingDirection == false){
     dir = db[nameType][name].dir;
   };
-
-  if (db[nameType][name].state !== "dead" ){
+  if (ignoreCollision == true){
+    db[nameType][name].pos = cellname;
+    db[nameType][name].dir = dir;
+  }
+  if (db[nameType][name].state !== "dead" && ignoreCollision == false ){
     Collission(cellname, db[nameType][name].w, db[nameType][name].h, function(result){
       if (result[0] == false){
         db[nameType][name].pos = cellname;

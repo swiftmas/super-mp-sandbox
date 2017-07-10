@@ -1,1 +1,21 @@
-{"sword1": {"damage": 25, "state": 3, "type": 18, "velocity": 4}, "bow1": {"damage": 10, "state": 13, "startState":13, "distance": 10, "type": 18, "velocity": 4, "projectile": true}}
+{
+  "sword1": {
+    "damage": 25,
+    "state": 3,
+    "type": 18,
+    "velocity": 4,
+    "h": 6,
+    "w": 3
+  },
+  "bow1": {
+    "damage": 10,
+    "state": 13,
+    "startState": 13,
+    "distance": 10,
+    "type": 18,
+    "velocity": 4,
+    "projectile": true,
+    "h": 6,
+    "w": 3
+  }
+}
