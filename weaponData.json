@@ -11,9 +11,9 @@
     "damage": 10,
     "state": 13,
     "startState": 13,
-    "distance": 10,
+    "distance": 4,
     "type": 18,
-    "velocity": 4,
+    "velocity": 6,
     "projectile": true,
     "h": 6,
     "w": 3

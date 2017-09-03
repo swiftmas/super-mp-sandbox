@@ -63,18 +63,30 @@ function npccontroller() {
         if (cdn.hasOwnProperty(npc)) {
             /////////////////////////////IF NORMAL///////////////
             if (cdn[npc].state == "000") {
-                alertrange(npc, chunk, 25);
-                var closetarget = getSurroundings(npc, chunk, 25);
-                if (closetarget.length > 1 && closetarget[1] > 8) {
+                alertrange(npc, chunk, 30);
+                var closetarget = getSurroundings(npc, chunk, 30);
+                if(closetarget.length > 1 && closetarget[1] < 30 && globals.weaponData[cdn[npc].slot1].projectile){
+		    dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
+                    if (cdn[npc].dir == dirToFace[0]) {
+                        combat.attack(npc, chunk, "attack1");
+                    }
+                    else if(dirToFace[2] < 4) {
+                        cdn[npc].dir = dirToFace[0];
+                    }
+		    else {
+			general.DoMovement(npc, chunk, dirToFace[1], 2)
+		    };
+		}
+                else if (closetarget.length > 1 && closetarget[1] > 8) {
                     moveNpcTo(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
                 else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
-                    if (cdn[npc].dir == dirToFace) {
+                    if (cdn[npc].dir == dirToFace[0]) {
                         combat.attack(npc, chunk, "attack1");
                     }
                     else {
-                        cdn[npc].dir = dirToFace;
+                        cdn[npc].dir = dirToFace[0];
                     };
                 } else if (cdn[npc].pos !== cdn[npc].origin){
                     //headhome(npc);
@@ -303,7 +315,6 @@ function isspaceclear(coord) {
     var gn = coredata.npcs;
     for (var npc in gn) {
         if (gn.hasOwnProperty(npc)) {
-            console.log(gn[npc].pos, coord)
             if (gn[npc].pos == coord) {
                 return false
             }
@@ -355,19 +366,38 @@ function dirToTarget(npc, chunk, tarx, tary) {
     var npcpos = coredata.chunks[chunk].npcs[npc].pos.split(".");
     var npcx = npcpos[0];
     var npcy = npcpos[1];
+    var newcoords = [];
     if (npcx > tarx) {
-        return "8";
+	var newcoord = Math.abs(npcx-tarx);
+	newcoords.push([newcoord, "8"]);
+        //return "8";
     }
     else if (npcx < tarx) {
-        return "4";
+	var newcoord = Math.abs(npcx-tarx);
+	newcoords.push([newcoord, "4"]);
+        //return "4";
     }
-    else if (npcy > tary) {
-        return "2";
+    if (npcy > tary) {
+	var newcoord = Math.abs(npcy-tary);
+	newcoords.push([newcoord, "2"]);
+        //return "2";
     }
     else if (npcy < tary) {
-        return "6";
+	var newcoord = Math.abs(npcy-tary);
+	newcoords.push([newcoord, "6"]);
+        //return "6";
     }
+    if (newcoords.length > 1) {
+        var tar = newcoords.sort().reverse()
+	console.log(newcoords, tar)
+        return [tar[0][1], tar[1][1], tar[1][0]]
+    }    
+    else if (newcoords.length == 1){
+        var tar = newcoords.sort().reverse()
+	console.log(newcoords, tar)
+        return [tar[0][1], "2", 2];
+    } 
     else {
-        return "2";
+	return ["2", "2", 2]
     };
 };
