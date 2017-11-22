@@ -68,7 +68,7 @@ function npccontroller() {
                 if(closetarget.length > 1 && closetarget[1] < 30 && globals.weaponData[cdn[npc].slot1].projectile){
 		    dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
-                        combat.attack(npc, chunk, "attack1");
+                        combat.attack(npc, chunk, "attack2");
                     }
                     else if(dirToFace[2] < 4) {
                         cdn[npc].dir = dirToFace[0];

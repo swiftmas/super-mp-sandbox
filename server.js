@@ -41,7 +41,7 @@ var server = http.createServer(function(request, response){
     switch(path){
         case '/':
             response.writeHead(200, {'Content-Type': 'text/html'});
-            response.write('hello world');
+            response.write('hello world <a href="session.html" style="size: 54px;">click here to start the game </a>');
             response.end();
             break;
         case '/socket.html':
