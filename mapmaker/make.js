@@ -21,13 +21,22 @@ div.style.position = "absolute";
 div.style.left = "0px";
 div.style.right = "0px";
 div.style.background = "blue";
-document.getElementById("layer").appendChild(div);
+document.getElementById("pointer").appendChild(div);
 
 
 
 document.getElementById("input_open").addEventListener('input', function (e) {
     onOpenChange(e);
 });
+
+
+function rco(j) {
+	return (j * sizemultiplier);
+};
+
+function rchalf(j){
+	return rco(j/2)
+}
 
 function onOpenChange(event) {
     var reader = new FileReader();
@@ -39,19 +48,17 @@ function onReaderLoad(event){
     chunks = JSON.parse(event.target.result);
 		drawmap()
 }
-function rco(j) {
-	return (j * sizemultiplier);
-};
+
 
 document.getElementById("map").addEventListener("mousemove", function(event) {
-  var x = Math.ceil((event.pageX - document.getElementById("map").offsetLeft) / sizemultiplier);
-  var y = Math.ceil((event.pageY - document.getElementById("map").offsetTop) / sizemultiplier);
+  var x = Math.ceil((event.pageX - 15 - document.getElementById("map").offsetLeft) / sizemultiplier);
+  var y = Math.ceil((event.pageY - 15 - document.getElementById("map").offsetTop) / sizemultiplier);
 	document.getElementById("selector").style.top = ((y * sizemultiplier) + document.getElementById("map").offsetTop) + "px";
 	document.getElementById("selector").style.left = ((x * sizemultiplier) + document.getElementById("map").offsetLeft) + "px";
 	document.getElementById("selector").style.width = sizemultiplier + "px";
 	document.getElementById("selector").style.height = sizemultiplier + "px";
   coor = x + "." + y;
-  document.getElementById("selector").innerHTML = coor;;
+  document.getElementById("coor").innerHTML = coor;;
 });
 
 
@@ -61,7 +68,8 @@ document.getElementById("sizemultiplier").addEventListener("keyup", function(eve
 
 
 document.getElementById("map").addEventListener("mousedown", function(event) {
-	drawmap();
+	document.getElementById("jsonEditor").style.display = "contents"
+	document.getElementById("jsonEditor").innerHTML = "<text-area>This is a box</text-area>"
  });
 
 document.getElementById("map").addEventListener("mouseup", function(event) {
@@ -82,17 +90,40 @@ function drawmap(){
 	document.getElementById("dimensions").innerHTML = "Dimensions:" + (maptex1.width) + " by " + (maptex1.height);
 	if (chunks != undefined) {
 		for (chunk in chunks){
+			pos = chunk.split(".")
+			ctx.beginPath();
+			ctx.strokeStyle="grey";
+			ctx.lineWidth="4";
+			ctx.rect(rco(pos[0] - 32),rco(pos[1] - 32),rco(64),rco(64));
+			ctx.stroke();
+
 			for (entity in chunks[chunk].entities){
-				console.log(entity)
-				pos = chunks[chunk].entities[entity].pos.split(".")
-				 ctx.stroke();
- 				ctx.rect(pos[0]*sizemultiplier,pos[1]*sizemultiplier,chunks[chunk].entities[entity].h*sizemultiplier,chunks[chunk].entities[entity].w*sizemultiplier);
+				obj = chunks[chunk].entities[entity];
+				pos = obj.pos.split(".");
+				ctx.beginPath();
+				ctx.strokeStyle="blue";
+				ctx.lineWidth="2";
+ 				ctx.rect(rco(pos[0] - (obj.w/2)),rco(pos[1] - (obj.h/2)),rco(obj.w),rco(obj.h));
+				ctx.stroke();
+
 			}
 			for (npc in chunks[chunk].npcs){
-				console.log(npc)
-				pos = chunks[chunk].npcs[npc].pos.split(".")
-				 ctx.stroke();
- 				ctx.rect(pos[0]*sizemultiplier,pos[1]*sizemultiplier,chunks[chunk].npcs[npc].h*sizemultiplier,chunks[chunk].npcs[npc].w*sizemultiplier);
+				obj = chunks[chunk].npcs[npc];
+				pos = obj.pos.split(".");
+				ctx.beginPath();
+				ctx.strokeStyle="red";
+				ctx.lineWidth="2";
+				ctx.rect(rco(pos[0] - (obj.w/2)),rco(pos[1] - (obj.h/2)),rco(obj.w),rco(obj.h));
+				ctx.stroke();
+			}
+			for (collider in chunks[chunk].colliders){
+				obj = chunks[chunk].colliders[collider];
+				pos = obj.pos.split(".");
+				ctx.beginPath();
+				ctx.strokeStyle="orange";
+				ctx.lineWidth="2";
+				ctx.rect(rco(pos[0] - (obj.w/2)),rco(pos[1] - (obj.h/2)),rco(obj.w),rco(obj.h));
+				ctx.stroke();
 			}
 		}
 	}

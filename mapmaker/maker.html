@@ -24,12 +24,24 @@ body{
   background-image: url("../static/bot.png");
   background-size: 100%;
 }
+#layer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 20px;
+  background-color: lightblue;
+}
+.boxsizingBorder {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
 
 </style>
 <body>
   <div id="button_open" class="button">
       <span>Open a JSON file</span>
-      <input id="input_open" class="input_file" type="file" onchange="onOpenChange(e)">
+      <input id="input_open" class="input_file" type="file">
   </div>
 </select>
 Select map
@@ -40,8 +52,9 @@ Select map
 <canvas id='map' width="64" height="64">
 </canvas>
 
-<p id='coor'></p>
-<div id="layer">...</div>
+
+<div id="pointer"></div>
+<div id="layer"><text-area id="jsonEditor"></text-area><br><p id='coor'></p></div>
 
 <script src="make.js"></script>
 
