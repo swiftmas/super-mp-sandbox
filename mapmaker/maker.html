@@ -3,9 +3,11 @@
 
 <html lang="en">
 <head>
+
+
   <meta charset="utf-8">
 
-  <title>jscripttest</title>
+  <title>MapMaker</title>
 
 </head>
 
@@ -19,19 +21,28 @@ body{
   -ms-interpolation-mode: nearest-neighbor;
 }
 #map {
-  background-image: url("../static/zeldaProt.png");
+  background-image: url("../static/bot.png");
   background-size: 100%;
 }
 
 </style>
 <body>
-<h3> Dimensions: <input placeholder="4x4" id='input'><br> output: <i id="out"></i></h3>
+  <div id="button_open" class="button">
+      <span>Open a JSON file</span>
+      <input id="input_open" class="input_file" type="file" onchange="onOpenChange(e)">
+  </div>
+</select>
+Select map
+<input type='file' accept='image/*' onchange='openFile(event)'><br>
+<h3 id="dimensions"> Dimensions: </h3> <h3>Zoom:</h3><input id="sizemultiplier">
 <button id='start'>Start/Restart</button>
-
+<br>
 <canvas id='map' width="64" height="64">
 </canvas>
 
 <p id='coor'></p>
+<div id="layer">...</div>
+
 <script src="make.js"></script>
 
 </body>

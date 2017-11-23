@@ -1,200 +1,100 @@
 //VARS -------//////////////////////////////////////////////////////////
 var json = {}
 var map = document.getElementById("map");
+var maptex1 = new Image();
+maptex1.src = '../static/bot.png';
 var ctx = map.getContext("2d");
+map.width = maptex1.width * 16;
+map.height = maptex1.height * 16;
+var chunks;
 var coor;
-mouse = "up";
-oldloc = "none";
+var drawEntities = true;
+var drawNpcs = true;
+var drawColliders = true;
+var sizemultiplier = 4;
+
+var div = document.createElement("div");
+div.style.width = sizemultiplier + "px";
+div.style.height = sizemultiplier + "px";
+div.id = "selector"
+div.style.position = "absolute";
+div.style.left = "0px";
+div.style.right = "0px";
+div.style.background = "blue";
+document.getElementById("layer").appendChild(div);
 
 
+
+document.getElementById("input_open").addEventListener('input', function (e) {
+    onOpenChange(e);
+});
+
+function onOpenChange(event) {
+    var reader = new FileReader();
+    reader.onload = onReaderLoad;
+    reader.readAsText(event.target.files[0]);
+}
+function onReaderLoad(event){
+    //alert(event.target.result);
+    chunks = JSON.parse(event.target.result);
+		drawmap()
+}
 function rco(j) {
-	return (j * 16) - 16;
-};
-
-function aco(axis, location) {
-	if (axis == "y"){
-	return ((location * 16) - 16 + document.getElementById("map").offsetTop);
-	} else if (axis == "x"){
-	return ((location * 16) - 16 + document.getElementById("map").offsetLeft);
-	};
-};
-
-function cco(axis, location){
-	if (axis == "y"){
-	return Math.ceil((location - document.getElementById("map").offsetTop)/16);
-	} else if (axis == "x"){
-	return Math.ceil((location - document.getElementById("map").offsetLeft)/16);
-	};
+	return (j * sizemultiplier);
 };
 
 document.getElementById("map").addEventListener("mousemove", function(event) {
-  var x = Math.ceil((event.pageX - document.getElementById("map").offsetLeft) / 16);
-  var y = Math.ceil((event.pageY - document.getElementById("map").offsetTop) / 16);
+  var x = Math.ceil((event.pageX - document.getElementById("map").offsetLeft) / sizemultiplier);
+  var y = Math.ceil((event.pageY - document.getElementById("map").offsetTop) / sizemultiplier);
+	document.getElementById("selector").style.top = ((y * sizemultiplier) + document.getElementById("map").offsetTop) + "px";
+	document.getElementById("selector").style.left = ((x * sizemultiplier) + document.getElementById("map").offsetLeft) + "px";
+	document.getElementById("selector").style.width = sizemultiplier + "px";
+	document.getElementById("selector").style.height = sizemultiplier + "px";
   coor = x + "." + y;
-  document.getElementById("coor").innerHTML = coor;;
+  document.getElementById("selector").innerHTML = coor;;
 });
 
-window.onkeyup = function(e) {
-   var key = e.keyCode ? e.keyCode : e.which;
 
-   if (key == 70) {
-       draw = "draw";
-   }else if (key == 68) {
-       draw == "delete";
-   }
-}
+document.getElementById("sizemultiplier").addEventListener("keyup", function(event) {
+	sizemultiplier = document.getElementById("sizemultiplier").value
+});
+
 
 document.getElementById("map").addEventListener("mousedown", function(event) {
-  mouse = "down";
-});
+	drawmap();
+ });
 
 document.getElementById("map").addEventListener("mouseup", function(event) {
   mouse = "up";
 });
 
-setInterval(function(){
-  if (mouse == "down" && coor != oldloc){
-    oldloc = coor;
-  	if (draw == "delete"){
-  		delete json[coor];
-  		drawmap();
-    } else if (draw == "draw") {
-  		json[coor] = 1;
-      drawmap();
-  	};
-  };
-}, 5);
 
+document.getElementById("start").addEventListener('click', function(event) { drawmap() });
 
-document.getElementById("input").addEventListener('keyup', function(event) { setdim() });
-
-function setdim() {
-  var theIn = document.getElementById('input').value;
-	json = {}
-  if (theIn.split('x').length > 1 && theIn.split('x')[1].length > 0) {
-    for (var x = 1; x <= theIn.split('x')[0]; x++) {
-			for (var y = 1; y <= theIn.split('x')[1]; y++) {
-				coor = x + "." + y
-				if (x == 1){ json[coor] = 1;}
-				else if (y == 1 ){ json[coor] = 1;}
-				else if (x == theIn.split('x')[0]){ json[coor] = 1;}
-				else if (y == theIn.split('x')[1]){ json[coor] = 1;}
-			}
-		};
-		document.querySelector("#map").width = parseInt(theIn.split('x')[0]*16);
-		document.querySelector("#map").height = parseInt(theIn.split('x')[1]*16);
-		drawmap();
-  } else {
-		json = ''
-	};
-	//PRINT THE JSON OF MAP
-  //document.getElementById("out").innerHTML = JSON.stringify(json, null, 2);
-
-};
 
 //----------------------------------------------------------------------------------------------------
 function drawmap(){
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	collElements = [];
-	for (var key in json) {
-		if (json[key] == 1){
-			collElements.push(key);
-		};
-	};
-	for (var i = 0; i < collElements.length; i++) {
-		ctx.fillStyle = "#e3e3e3";
-		ctx.fillRect(rco(collElements[i].split('.')[0]), rco(collElements[i].split('.')[1]), 16, 16);
-	};
-};
-
-document.getElementById("start").addEventListener("click", function(event) {
-	makePlayer();
-  document.getElementById("out").innerHTML = JSON.stringify(json, null, 2);
-});
-
-function makePlayer() {
-	var myLayer = document.createElement('div');
-	myLayer.id = 'player';
-	myLayer.style.position = 'absolute';
-	myLayer.style.left = aco('x', 2)+ 1 + "px";
-	myLayer.style.top = aco('y', 2)+ 1 + "px";
-	myLayer.style.width = '14px';
-	myLayer.style.height = '14px';
-	myLayer.style.backgroundColor = "red";
-	document.body.appendChild(myLayer);
-};
-
-document.body.addEventListener("keydown", function(event) {
-getinput(event);
-});
-
-function getinput(e) {
-
-    e = e || window.event;
-
-    if (e.keyCode == '38') {
-    		console.log("up triggered")
-        move('up')
-    }
-    else if (e.keyCode == '192') {
-    		document.getElementById("out").innerHTML = JSON.stringify(json, null, 2);
-    }
-    else if (e.keyCode == '40') {
-        move('down')
-    }
-    else if (e.keyCode == '37') {
-       move('left')
-    }
-    else if (e.keyCode == '39') {
-       move('right')
-    }
-
-};
-
-function move(dir) {
-	if (dir == "up"){
-		x = cco('x', document.getElementById("player").offsetLeft)
-		y = cco('y', document.getElementById("player").offsetTop) - 1
-		cellname = ''+x+'.'+y+''
-		console.log(x,y,cellname,json[cellname])
-		if (json[cellname] == 1) {
-			console.log('no go')
-		} else {
-			document.getElementById("player").style.top = parseInt(document.getElementById("player").style.top) - 16 + "px"
-		};
-	};
-	if (dir == "down"){
-		x = cco('x', document.getElementById("player").offsetLeft)
-		y = cco('y', document.getElementById("player").offsetTop) + 1
-		cellname = ''+x+'.'+y+''
-		console.log(x,y,cellname,json[cellname])
-		if (json[cellname] == 1) {
-			console.log('no go')
-		} else {
-			document.getElementById("player").style.top = parseInt(document.getElementById("player").style.top) + 16 + "px";
-		};
-	};
-	if (dir == "left"){
-		x = cco('x', document.getElementById("player").offsetLeft) - 1
-		y = cco('y', document.getElementById("player").offsetTop)
-		cellname = ''+x+'.'+y+''
-		console.log(x,y,cellname,json[cellname])
-		if (json[cellname] == 1) {
-			console.log('no go')
-		} else {
-			document.getElementById("player").style.left = parseInt(document.getElementById("player").style.left) - 16 + "px";
-		};
-	};
-	if (dir == "right"){
-		x = cco('x', document.getElementById("player").offsetLeft) + 1
-		y = cco('y', document.getElementById("player").offsetTop)
-		cellname = ''+x+'.'+y+''
-		console.log(x,y,cellname,json[cellname])
-		if (json[cellname] == 1) {
-			console.log('no go')
-		} else {
-			document.getElementById("player").style.left = parseInt(document.getElementById("player").style.left) + 16 + "px";
-		};
-	};
+	ctx.drawImage(maptex1, 0, 0, maptex1.width * sizemultiplier, maptex1.height * sizemultiplier)
+	map.width = maptex1.width * sizemultiplier;
+	map.height = maptex1.height * sizemultiplier;
+	document.getElementById("dimensions").innerHTML = "Dimensions:" + (maptex1.width) + " by " + (maptex1.height);
+	if (chunks != undefined) {
+		for (chunk in chunks){
+			for (entity in chunks[chunk].entities){
+				console.log(entity)
+				pos = chunks[chunk].entities[entity].pos.split(".")
+				 ctx.stroke();
+ 				ctx.rect(pos[0]*sizemultiplier,pos[1]*sizemultiplier,chunks[chunk].entities[entity].h*sizemultiplier,chunks[chunk].entities[entity].w*sizemultiplier);
+			}
+			for (npc in chunks[chunk].npcs){
+				console.log(npc)
+				pos = chunks[chunk].npcs[npc].pos.split(".")
+				 ctx.stroke();
+ 				ctx.rect(pos[0]*sizemultiplier,pos[1]*sizemultiplier,chunks[chunk].npcs[npc].h*sizemultiplier,chunks[chunk].npcs[npc].w*sizemultiplier);
+			}
+		}
+	}
 
 };
