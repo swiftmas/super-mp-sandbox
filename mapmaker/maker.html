@@ -32,7 +32,6 @@ body{
   height: 80vh;
   padding: 20px;
   display: block;
-  line-height: 5px;
   background-color: lightblue;
 }
 
@@ -40,7 +39,7 @@ textarea {
   resize: both;
   text-align: left;
   width: 100%;
-  height: 50%;
+  height: 30%;
 }
 
 .boxsizingBorder {
@@ -57,7 +56,8 @@ textarea {
   </div>
 </select>
 Select map
-<input type='file' accept='image/*' onchange='openFile(event)'><br>
+<input type='file' accept='image/*' onchange='openFile(event)'><button onclick="addchunks()">Fill Map with more Chunks</button>
+<br>
 <h3 id="dimensions"> Dimensions: </h3> <h3>Zoom:</h3><input id="sizemultiplier">
 <button id='start'>Start/Restart</button>
 <br>
@@ -82,6 +82,12 @@ Select map
 <textarea id="jsonEditor" class="boxsizingBorder"> lol</textarea><br>
 
 <button onclick="changeJson()">save</button>
+<button onclick="addItem('npcs')">Create NPC at chunk</button>
+<button onclick="addItem('colliders')">Create Collider at chunk</button>
+<button onclick="addItem('entities')">Create Entity at chunk</button>
+<button onclick="if(confirm('Are you sure you want to remove? \n' + itemPath)) removeItem()">Delete Item/Chunk</button>
+<button onclick="download()">Export JSON</button><br>
+<p id='chunkDetails'></p> </br>
 
 </div>
 

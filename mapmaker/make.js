@@ -6,7 +6,7 @@ maptex1.src = '../static/bot.png';
 var ctx = map.getContext("2d");
 map.width = maptex1.width * 16;
 map.height = maptex1.height * 16;
-var chunks;
+var chunks = {}
 var coor;
 var drawbool = {};
 var itemPath = []
@@ -27,10 +27,32 @@ div.style.background = "blue";
 document.getElementById("pointer").appendChild(div);
 
 
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4();
+}
 
 function rco(j) {
 	return (j * sizemultiplier);
 };
+
+function select(type, chunkID, name){
+	if (type == "chunk"){
+		document.getElementById("jsonEditor").value = name;
+		document.getElementById("itemDetails").innerHTML = "Chunk - " + name
+		document.getElementById("chunkDetails").innerHTML = JSON.stringify(chunks[chunkID], null, 2);
+		itemPath = [type, chunkID, name]
+	} else {
+		document.getElementById("jsonEditor").value = JSON.stringify(chunks[chunkID][type][name], null, 2);
+		document.getElementById("itemDetails").innerHTML = "Chunk - " + chunkID + " :: " + type + " - " + name;
+		document.getElementById("chunkDetails").innerHTML = ""
+		itemPath = [type, chunkID, name]
+	}
+}
 
 function rchalf(j){
 	return rco(j/2)
@@ -67,6 +89,43 @@ function getDist(destination) {
   if (Math.abs(distx) > Math.abs(disty)){ greaterDir = xdir } else { greaterDir = ydir };
   return [trueDist, distx, disty, xdir, ydir, greaterDir];
 };
+
+function addchunks(){
+	wide = parseFloat(maptex1.width / 64)
+	high = parseFloat(maptex1.height / 64)
+	console.log(wide, high);
+	for (var x = 0; x < wide; x++){
+		for (var y = 0; y < high; y++){
+			var chunkname = (x * 64 - 32) + "." + (y * 64 - 32)
+			if (! chunks.hasOwnProperty(chunkname)){
+					chunks[chunkname] = {"npcs":{}, "colliders":{}, "entities":{}, "attacks":[]}
+			}
+		}
+	}
+	drawmap();
+}
+function addItem(type){
+	var newguid = guid();
+	console.log(newguid, JSON.stringify({"pos": itemPath[1], "w": 4, "h": 4}));
+	chunks[itemPath[1]][type][newguid] = {"pos": itemPath[1], "w": 4, "h": 4};
+	select(type, itemPath[1], newguid);
+	drawmap();
+}
+
+function removeItem(){
+	if (itemPath[0] == "chunk"){
+		delete chunks[itemPath[2]];
+		document.getElementById("itemDetails").innerHTML = "Chunk Removed"
+	} else {
+		delete chunks[itemPath[1]][itemPath[0]][itemPath[2]]
+		document.getElementById("itemDetails").innerHTML = "Item Removed";
+	}
+	drawmap();
+}
+
+function download() {
+	alert(JSON.stringify(chunks))
+}
 
 function changeJson(){
 	if (itemPath[0] == "chunk"){
@@ -137,10 +196,10 @@ document.getElementById("map").addEventListener("mousedown", function(event) {
 			if (drawbool.showChunks == true){
 				var pos = chunk
 				dist = getDist(pos)
-				if (dist[0] < nearest){
+				if (dist[0] <= nearest){
 					nearest = dist[0]
 					type = "chunk"
-					chunkID = "none"
+					chunkID = chunk
 					name = chunk
 					itemPath = [type, chunkID, name]
 				}
@@ -150,7 +209,7 @@ document.getElementById("map").addEventListener("mousedown", function(event) {
 					var obj = chunks[chunk].entities[entity];
 					var pos = obj.pos;
 					dist = getDist(pos)
-					if (dist[0] < nearest){
+					if (dist[0] <= nearest){
 						nearest = dist[0]
 						type = "entities"
 						chunkID = chunk
@@ -164,7 +223,7 @@ document.getElementById("map").addEventListener("mousedown", function(event) {
 					var obj = chunks[chunk].npcs[npc];
 					var pos = obj.pos;
 					dist = getDist(pos)
-					if (dist[0] < nearest){
+					if (dist[0] <= nearest){
 						nearest = dist[0]
 						console.log(dist[0])
 						type = "npcs"
@@ -179,7 +238,7 @@ document.getElementById("map").addEventListener("mousedown", function(event) {
 					var obj = chunks[chunk].colliders[collider];
 					var pos = obj.pos;
 					dist = getDist(pos)
-					if (dist[0] < nearest){
+					if (dist[0] <= nearest){
 						nearest = dist[0]
 						type = "colliders"
 						chunkID = chunk
@@ -190,14 +249,7 @@ document.getElementById("map").addEventListener("mousedown", function(event) {
 			}
 		}
 	}
-	if (type == "chunk"){
-		document.getElementById("jsonEditor").value = name;
-		document.getElementById("itemDetails").innerHTML = "Chunk - " + name
-
-	} else {
-		document.getElementById("jsonEditor").value = JSON.stringify(chunks[chunkID][type][name], null, 2);
-		document.getElementById("itemDetails").innerHTML = "Chunk - " + chunkID + " :: " + type + " - " + name;
-	}
+ select(type, chunkID, name)
 
 });
 
