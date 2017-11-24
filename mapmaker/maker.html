@@ -26,11 +26,23 @@ body{
 }
 #layer {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
+  width: 25%;
+  height: 80vh;
   padding: 20px;
+  display: block;
+  line-height: 5px;
   background-color: lightblue;
 }
+
+textarea {
+  resize: both;
+  text-align: left;
+  width: 100%;
+  height: 50%;
+}
+
 .boxsizingBorder {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -54,7 +66,24 @@ Select map
 
 
 <div id="pointer"></div>
-<div id="layer"><text-area id="jsonEditor"></text-area><br><p id='coor'></p></div>
+<div id="layer">
+
+<b>X.Y Coords</b>
+<p id='coor'></p> </br> <br>
+<b>Show:</b> </br>
+<label>Chunks</label><input type="checkbox" checked="true" id="showChunks" name="chunks"><br>
+<label>Npcs</label><input type="checkbox" checked="true" id="showNpcs" name="npcs"><br>
+<label>Colliders</label><input type="checkbox" checked="true" id="showColliders" name="colliders"><br>
+<label>Entities</label><input type="checkbox" checked="true" id="showEntities" name="entities">
+<br>
+<br>
+<br>
+<b>Details:</b> <p id="itemDetails"></p>
+<textarea id="jsonEditor" class="boxsizingBorder"> lol</textarea><br>
+
+<button onclick="changeJson()">save</button>
+
+</div>
 
 <script src="make.js"></script>
 
