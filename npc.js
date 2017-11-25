@@ -31,6 +31,7 @@ function npccontroller() {
               });
 
             }
+            // moves npcs from chunk to chunk as they move so they dont dissappear with chunk de-activation
             if (surroundings[0] !== chunk){
               console.log("MOVE THIS NPC!!");
               coredata.chunks[surroundings[0]].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
@@ -65,18 +66,19 @@ function npccontroller() {
             if (cdn[npc].state == "000") {
                 alertrange(npc, chunk, 30);
                 var closetarget = getSurroundings(npc, chunk, 30);
-                if(closetarget.length > 1 && closetarget[1] < 30 && globals.weaponData[cdn[npc].slot1].projectile){
-		    dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
-                    if (cdn[npc].dir == dirToFace[0]) {
-                        combat.attack(npc, chunk, "attack2");
+                if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 8 && cdn[npc].slot2 != undefined && globals.weaponData[cdn[npc].slot2].projectile){
+                    console.log("does this even work???")
+  	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
+                    if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
+                      combat.attack(npc, chunk, "attack2");
                     }
                     else if(dirToFace[2] < 4) {
-                        cdn[npc].dir = dirToFace[0];
+                      cdn[npc].dir = dirToFace[0];
                     }
-		    else {
-			general.DoMovement(npc, chunk, dirToFace[1], 2)
-		    };
-		}
+  	                else {
+  		                general.DoMovement(npc, chunk, dirToFace[1], 2)
+  	                };
+		            }
                 else if (closetarget.length > 1 && closetarget[1] > 8) {
                     moveNpcTo(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
@@ -391,12 +393,12 @@ function dirToTarget(npc, chunk, tarx, tary) {
         var tar = newcoords.sort().reverse()
 	console.log(newcoords, tar)
         return [tar[0][1], tar[1][1], tar[1][0]]
-    }    
+    }
     else if (newcoords.length == 1){
         var tar = newcoords.sort().reverse()
 	console.log(newcoords, tar)
         return [tar[0][1], "2", 2];
-    } 
+    }
     else {
 	return ["2", "2", 2]
     };

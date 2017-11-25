@@ -2,6 +2,7 @@
   "sword1": {
     "damage": 25,
     "state": 3,
+    "stateWdamage": 3,
     "type": 18,
     "velocity": 4,
     "h": 6,
@@ -11,7 +12,20 @@
     "damage": 10,
     "state": 13,
     "startState": 13,
+    "stateWdamage": 0,
     "distance": 4,
+    "type": 18,
+    "velocity": 6,
+    "projectile": true,
+    "h": 6,
+    "w": 3
+  },
+  "spell1": {
+    "damage": 15,
+    "state": 23,
+    "startState": 23,
+    "stateWdamage": 0,
+    "distance": 3,
     "type": 18,
     "velocity": 6,
     "projectile": true,

@@ -26,7 +26,7 @@ function processAttackQueue(){
     delete attackQueue[inst];
   }
 };
-// This is the processing section. All attacks are placed in coredate. this allows for attacks to have timeouts that are not tied to the player. this is to handle animations and damageOverTime affects.
+// This is the processing section. All attacks are placed in coredata. this allows for attacks to have timeouts that are not tied to the player. this is to handle animations and damageOverTime affects.
 function processAttacks(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
@@ -35,13 +35,16 @@ function processAttacks(){
       //console.log(JSON.stringify(db[attack]));
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
-        if (db[attack].distance > 0){ db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true)} else { removes.push(attack); break};
         dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false);
-
+        if (db[attack].distance > 0){
+          db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true)
+        } else {
+           removes.push(attack); break
+        };
       }
       if (db[attack].state <= 0){ removes.push(attack); break};
 
-      if (db[attack].state == 3){
+      if (db[attack].state == db[attack].stateWdamage){
         dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false);
       }
     };
@@ -88,6 +91,7 @@ function attack(attacker, chunk, attacktype){
         break;
     };
     if (attackData != undefined && attackData.hasOwnProperty("damage")){
+      //Exists because i'm making a copy of the data to transform and push into an attack. Not because i've lost my mind.
       attackData = JSON.parse(JSON.stringify(attackData))
     } else {return};
     //GET ATTaCK DIRECTION
@@ -148,6 +152,10 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       if (nameType == "colliders"){break;};
       if (db[nameType][name].hasOwnProperty("team")){ if (db[nameType][name].team == ownerTeam) {break;}};
       db[nameType][name].health = db[nameType][name].health - damage
+      if (db[nameType][name].health > 0 && owner[0] == "p"){
+        if(owner[0] == "p"){ ownerTeam = coredata.players[owner].alerttimer += 10} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].alerttimer += 10}
+      }
+
       attack.distance = 0;
       general.DoMovement(name, chunk, direction, 6, false, false);
       if (db[nameType][name].health <= 0){

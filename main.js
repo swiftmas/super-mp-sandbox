@@ -44,7 +44,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"0", "health": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1" , "origin": "40.50", "closeChunks": [], "h": 3, "w": 3};
+	newplayerdata[playername] = {"pos":"40.50", "dir": "2", "state":"0", "health": 100, "alerttimer": 60000000, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "40.50", "closeChunks": [], "h": 3, "w": 3};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
