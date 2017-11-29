@@ -106,9 +106,9 @@ function addchunks(){
 }
 function addItem(type){
 	var newguid = guid();
-	console.log(newguid, JSON.stringify({"pos": itemPath[1], "w": 4, "h": 4}));
-	chunks[itemPath[1]][type][newguid] = {"pos": itemPath[1], "w": 4, "h": 4};
-	select(type, itemPath[1], newguid);
+	console.log(type.charAt(0) + newguid, JSON.stringify({"pos": itemPath[1], "w": 4, "h": 4}));
+	chunks[itemPath[1]][type][type.charAt(0) + newguid] = {"pos": itemPath[1], "w": 4, "h": 4};
+	select(type, itemPath[1], type.charAt(0) + newguid);
 	drawmap();
 }
 
