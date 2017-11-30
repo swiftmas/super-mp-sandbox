@@ -76,6 +76,7 @@ function draw(){
 		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
 		//Get all sprite locations
 		db = coredata;
+		db.sort(function(a,b){return a.split(".")[4] - b.split(".")[4]})
 		for (var code in db){
 			blk = db[code].split(".");
 			//Draw each sprite
