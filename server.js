@@ -228,9 +228,6 @@ listener.sockets.on('connection', function(socket){
 ////// INIT ////////////
 
 // For every Client data event (this is where we recieve movement)////////////
-  socket.on('movement', function(data){
-    moveQueue[data[0]] = data;
-  });
 
 // This listens for new players ////////
   socket.on('add_player', function(data){
@@ -261,6 +258,12 @@ listener.sockets.on('connection', function(socket){
         } else {
           interact.startDialog(data[0]);
         };
+        break;
+      case null:
+        moveQueue[data[0]] = data;
+        break;
+      default:
+        moveQueue[data[0]] = data;
         break;
     };
   });

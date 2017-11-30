@@ -161,19 +161,20 @@ function control(action){
 	if (action == currentDir){return};
 	switch (action){
 		case "2":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
 			break;
 		case "4":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "4"]); } else { selector = selector }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "4"]); } else { selector = selector }
 			break;
 		case "6":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "6"]); } else { if (selector < 4){selector += 1}  }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "6"]); } else { if (selector < 4){selector += 1}  }
 			break;
 		case "8":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, "8"]); } else { selector = selector }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "8"]); } else { selector = selector }
 			break;
 		case "null":
-			if(controlState == "character"){	socket.emit('movement', [userplayer, null]); } else { selector = selector  }
+			if(controlState == "character"){socket.emit('action', [userplayer, null]);}
+			console.log("I sent that null")
 			break;
 		case "interact":
 			if(controlState == "character"){
