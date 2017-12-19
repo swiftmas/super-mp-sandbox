@@ -259,7 +259,12 @@ listener.sockets.on('connection', function(socket){
           interact.startDialog(data[0]);
         };
         break;
-      case null:
+      case "attacknull":
+        data[1] = null
+        //moveQueue[data[0]] = data;
+        break;
+      case "movenull":
+        data[1] = null
         moveQueue[data[0]] = data;
         break;
       default:

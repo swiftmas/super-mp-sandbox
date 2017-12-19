@@ -173,8 +173,12 @@ function control(action){
 		case "8":
 			if(controlState == "character"){	socket.emit('action', [userplayer, "8"]); } else { selector = selector }
 			break;
-		case "null":
-			if(controlState == "character"){socket.emit('action', [userplayer, null]);}
+		case "movenull":
+			if(controlState == "character"){socket.emit('action', [userplayer, "movenull"]);}
+			console.log("I sent that null")
+			break;
+		case "attacknull":
+			if(controlState == "character"){socket.emit('action', [userplayer, "attacknull"]);}
 			console.log("I sent that null")
 			break;
 		case "interact":
@@ -246,13 +250,23 @@ document.onkeydown= function(event) {
 		if (key == 39){ event.preventDefault(); control("4") };
 		if (key == 40){ event.preventDefault(); control("6") };
 		if (key == 37){ event.preventDefault(); control("8") };
-		currentDirKey = key;
+		console.log(key)
+		if ([78, 74, 77].indexOf(key) == -1){
+			currentDirKey = key;
+			console.log("woop")
+		}
 };
 
 
 document.onkeyup= function(event) {
 		var key= (event || window.event).keyCode;
-		if (key == currentDirKey){ currentDirKey = null; control("null")};
+		if (key == currentDirKey){
+			currentDirKey = null;
+			currentDir = null;
+			control("movenull");
+		} else if ([78, 74, 77].indexOf(key) > -1){
+			control("attacknull");
+		};
 };
 
 
