@@ -67,10 +67,9 @@ function npccontroller() {
                 alertrange(npc, chunk, 30);
                 var closetarget = getSurroundings(npc, chunk, 30);
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 8 && cdn[npc].slot2 != undefined && globals.weaponData[cdn[npc].slot2].projectile){
-                    console.log("does this even work???")
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
-                      combat.attack(npc, chunk, "attack2");
+                      combat.addEffect(npc, chunk, "attack2");
                     }
                     else if(dirToFace[2] < 4) {
                       cdn[npc].dir = dirToFace[0];
@@ -85,7 +84,7 @@ function npccontroller() {
                 else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
-                        combat.attack(npc, chunk, "attack1");
+                        combat.addEffect(npc, chunk, "attack1");
                     }
                     else {
                         cdn[npc].dir = dirToFace[0];
@@ -391,12 +390,10 @@ function dirToTarget(npc, chunk, tarx, tary) {
     }
     if (newcoords.length > 1) {
         var tar = newcoords.sort().reverse()
-	console.log(newcoords, tar)
         return [tar[0][1], tar[1][1], tar[1][0]]
     }
     else if (newcoords.length == 1){
         var tar = newcoords.sort().reverse()
-	console.log(newcoords, tar)
         return [tar[0][1], "2", 2];
     }
     else {

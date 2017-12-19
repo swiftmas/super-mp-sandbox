@@ -1,5 +1,6 @@
 {
   "sword1": {
+    "offset": 6,
     "damage": 25,
     "state": 3,
     "stateWdamage": 3,
@@ -9,6 +10,7 @@
     "w": 3
   },
   "bow1": {
+    "offset": 6,
     "damage": 10,
     "state": 13,
     "startState": 13,
@@ -21,6 +23,7 @@
     "w": 3
   },
   "spell1": {
+    "offset": 6,
     "damage": 15,
     "state": 23,
     "startState": 23,

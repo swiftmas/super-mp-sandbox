@@ -162,7 +162,7 @@ setInterval(function(){
     npcs.alerttimedown();
     general.ProcessMovements();
     combat.processAttackQueue();
-    combat.processAttacks();
+    combat.processEffects();
     //npcs.npccontroller();
     //npcs.alerttimedown();
 

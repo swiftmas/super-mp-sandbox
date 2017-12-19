@@ -175,11 +175,9 @@ function control(action){
 			break;
 		case "movenull":
 			if(controlState == "character"){socket.emit('action', [userplayer, "movenull"]);}
-			console.log("I sent that null")
 			break;
 		case "attacknull":
 			if(controlState == "character"){socket.emit('action', [userplayer, "attacknull"]);}
-			console.log("I sent that null")
 			break;
 		case "interact":
 			if(controlState == "character"){
@@ -250,10 +248,8 @@ document.onkeydown= function(event) {
 		if (key == 39){ event.preventDefault(); control("4") };
 		if (key == 40){ event.preventDefault(); control("6") };
 		if (key == 37){ event.preventDefault(); control("8") };
-		console.log(key)
 		if ([78, 74, 77].indexOf(key) == -1){
 			currentDirKey = key;
-			console.log("woop")
 		}
 };
 
@@ -337,5 +333,5 @@ tc.on("panleft", function(ev){
 });
 map.addEventListener('touchend', touchend, false);
 function touchend(ev){
-	control("null")
+	control("movenull")
 };

@@ -4,14 +4,16 @@ coredata = globals.coredata;
 collmap = globals.collmap;
 mapchange = globals.mapchange;
 attackQueue = globals.attackQueue;
+activeAttacksQueue = globals.activeAttacksQueue;
+
 
 ///// Exports ///////////////////////////
 module.exports = {
-  attack: function (attacker, chunk, attacktype) {
-    attack(attacker, chunk, attacktype);
+  addEffect: function (attacker, chunk, attacktype) {
+    addEffect(attacker, chunk, attacktype);
   },
-  processAttacks: function () {
-    processAttacks();
+  processEffects: function () {
+    processEffects();
   },
   processAttackQueue: function () {
     processAttackQueue();
@@ -22,12 +24,102 @@ module.exports = {
 /// Gets attacks from queue (players only) and makes them happen
 function processAttackQueue(){
   for (var inst in attackQueue){
-    attack(inst, "none", attackQueue[inst])
+    console.log(inst);
+    if (activeAttacksQueue.hasOwnProperty(inst)){
+      console.log("exists")
+      var data = activeAttacksQueue[inst];
+      data.inputtype = attackQueue[inst];
+    } else {
+      console.log("creating")
+      activeAttacksQueue[inst] = {"inputtype": attackQueue[inst][1], "attacktype": attackQueue[inst], "chunk": "none"};
+    };
     delete attackQueue[inst];
   }
+  processActiveAttacks();
 };
+
+function processActiveAttacks(){
+  for (var inst in activeAttacksQueue){
+    // if this is new then we setup the data
+    if (Object.keys(activeAttacksQueue[inst]).length == 3){
+      attackData = activeAttacksQueue[inst]
+      console.log(inst, attackData.chunk, attackData.attacktype)
+      // Cleanup Data Model
+      var db, nameType;
+      switch(inst[0]){
+        case "n":
+          nameType = "npcs"
+          db = coredata.chunks[chunk]
+          break;
+        case "p":
+          nameType = "players"
+          db = coredata
+          attackData.chunk = db[nameType][inst].closeChunks[0]
+          break;
+        case "e":
+          nameType = "entities"
+          db = coredata.chunks[chunk]
+          break;
+      }
+      // SET at as the variable for either players or other data types
+      var at = db[nameType];
+      // RESET PLAYER TO START POSITION IF HE IS DEAD
+      if (at[inst].state > 60){at[inst].pos = at[inst].origin; at[inst].state = 0; at[inst].health = 100; return; };
+      // Get weapon attack data based on slot.
+      switch(attackData.attacktype){
+        //merges attack data from weapon to attack data object
+        case "attack1":
+          for (var k in globals.weaponData[at[inst].slot1]) attackData[k] = globals.weaponData[at[inst].slot1][k];
+          break;
+        case "attack2":
+          for (var k in globals.weaponData[at[inst].slot2]) attackData[k] = globals.weaponData[at[inst].slot2][k];
+          break;
+        case "attack3":
+          for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
+          break;
+      };
+      if (attackData != undefined && attackData.hasOwnProperty("damage")){
+        //Exists because i'm making a copy of the data to transform and push into an attack. Not because i've lost my mind.
+        RawAttackData = JSON.parse(JSON.stringify(attackData))
+      } else {return};
+      //GET ATTaCK DIRECTION
+      var distance = attackData.offset;
+      var atdir = at[inst].dir;
+      var atorig = at[inst].pos.split(".");
+      var atpos = "";
+      if (atdir == "2"){
+      	var nx = parseInt(atorig[0])
+      	var ny = parseInt(atorig[1]) - distance
+      	atpos = nx + "." + ny
+      } else if (atdir == "6") {
+  		  var nx = parseInt(atorig[0])
+      	var ny = parseInt(atorig[1]) + distance
+      	atpos = nx + "." + ny
+      } else if (atdir == "8") {
+      	var nx = parseInt(atorig[0]) - distance
+      	var ny = parseInt(atorig[1])
+      	atpos = nx + "." + ny
+      } else if (atdir == "4") {
+      	var nx = parseInt(atorig[0]) + distance
+      	var ny = parseInt(atorig[1])
+      	atpos = nx + "." + ny
+      };
+      if (at[inst].state < 10) {
+        situationalData = {"pos": atpos, "dir": atdir, "owner": inst, "chunk": attackData.chunk}
+        for (var attrname in situationalData) { RawAttackData[attrname] = situationalData[attrname]; }
+        console.log(RawAttackData)
+        coredata.chunks[attackData.chunk].attacks.push(RawAttackData);
+        at[inst].state = 13 /// Keep for now but eventaully this will be per weapon.
+
+      };
+      delete activeAttacksQueue[inst];
+    } // This is where we add the else for if its not a new queue item :)
+  }
+}
+
+
 // This is the processing section. All attacks are placed in coredata. this allows for attacks to have timeouts that are not tied to the player. this is to handle animations and damageOverTime affects.
-function processAttacks(){
+function processEffects(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
     var removes = [];
@@ -54,7 +146,7 @@ function processAttacks(){
   }
 };
 
-function attack(attacker, chunk, attacktype){
+function addEffect(attacker, chunk, attacktype){
     console.log(attacker, chunk, attacktype)
     // Cleanup Data Model
     var distance = 6
