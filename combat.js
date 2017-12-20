@@ -109,7 +109,7 @@ function processActiveAttacks(){
         for (var attrname in situationalData) { RawAttackData[attrname] = situationalData[attrname]; }
         console.log(RawAttackData)
         coredata.chunks[attackData.chunk].attacks.push(RawAttackData);
-        at[inst].state = 13 /// Keep for now but eventaully this will be per weapon.
+        at[inst].state = attackData.ownerStartState /// Keep for now but eventaully this will be per weapon.
 
       };
       delete activeAttacksQueue[inst];
