@@ -3,6 +3,8 @@ var combat = require('./combat.js');
 var coredata = globals.coredata;
 var collmap = globals.collmap;
 var general = require('./general.js');
+activeAttacksQueue = globals.activeAttacksQueue;
+
 
 ///// Exports ///////////////////////////
 module.exports = {
@@ -69,7 +71,7 @@ function npccontroller() {
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 8 && cdn[npc].slot2 != undefined && globals.weaponData[cdn[npc].slot2].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
-                      combat.addEffect(npc, chunk, "attack2");
+                      activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk};
                     }
                     else if(dirToFace[2] < 4) {
                       cdn[npc].dir = dirToFace[0];
@@ -84,7 +86,7 @@ function npccontroller() {
                 else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
-                        combat.addEffect(npc, chunk, "attack1");
+                      activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk}; 
                     }
                     else {
                         cdn[npc].dir = dirToFace[0];

@@ -49,7 +49,7 @@ function processActiveAttacks(){
       switch(inst[0]){
         case "n":
           nameType = "npcs"
-          db = coredata.chunks[chunk]
+          db = coredata.chunks[attackData.chunk]
           break;
         case "p":
           nameType = "players"
@@ -58,7 +58,7 @@ function processActiveAttacks(){
           break;
         case "e":
           nameType = "entities"
-          db = coredata.chunks[chunk]
+          db = coredata.chunks[attackData.chunk]
           break;
       }
       // SET at as the variable for either players or other data types
