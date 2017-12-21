@@ -127,9 +127,9 @@ function processEffects(){
       //console.log(JSON.stringify(db[attack]));
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
-        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false);
+        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
         if (db[attack].distance > 0){
-          db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true)
+          db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true, db[attack].pushback)
         } else {
            removes.push(attack); break
         };
@@ -137,7 +137,7 @@ function processEffects(){
       if (db[attack].state <= 0){ removes.push(attack); break};
 
       if (db[attack].state == db[attack].stateWdamage){
-        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false);
+        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
       }
     };
     for (var rem in removes){
@@ -218,7 +218,7 @@ function addEffect(attacker, chunk, attacktype){
 
 };
 
-function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire){
+function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
 
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
@@ -249,7 +249,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       }
 
       attack.distance = 0;
-      general.DoMovement(name, chunk, direction, 6, false, false);
+      general.DoMovement(name, chunk, direction, pushback, false, false);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
 

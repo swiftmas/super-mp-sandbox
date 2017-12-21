@@ -8,7 +8,8 @@
     "type": 18,
     "velocity": 4,
     "h": 6,
-    "w": 3
+    "w": 3,
+    "pushback": 6
   },
   "bow1": {
     "offset": 6,
@@ -22,7 +23,8 @@
     "velocity": 6,
     "projectile": true,
     "h": 6,
-    "w": 3
+    "w": 3,
+    "pushback": 4
   },
   "spell1": {
     "offset": 6,
@@ -36,6 +38,7 @@
     "velocity": 6,
     "projectile": true,
     "h": 6,
-    "w": 3
+    "w": 3,
+    "pushback": 4
   }
 }
