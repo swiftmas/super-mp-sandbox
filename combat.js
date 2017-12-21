@@ -31,7 +31,7 @@ function processAttackQueue(){
       data.inputtype = attackQueue[inst];
     } else {
       console.log("creating")
-      activeAttacksQueue[inst] = {"inputtype": attackQueue[inst][1], "attacktype": attackQueue[inst], "chunk": "none"};
+      activeAttacksQueue[inst] = {"inputtype": attackQueue[inst][1], "attacktype": attackQueue[inst], "chunk": "none", "keydown": 0};
     };
     delete attackQueue[inst];
   }
@@ -41,7 +41,7 @@ function processAttackQueue(){
 function processActiveAttacks(){
   for (var inst in activeAttacksQueue){
     // if this is new then we setup the data
-    if (Object.keys(activeAttacksQueue[inst]).length == 3){
+    if (Object.keys(activeAttacksQueue[inst]).length == 4){
       attackData = activeAttacksQueue[inst]
       console.log(inst, attackData.chunk, attackData.attacktype)
       // Cleanup Data Model

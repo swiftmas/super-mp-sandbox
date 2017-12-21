@@ -1,5 +1,6 @@
 {
   "sword1": {
+    "charged": false,
     "offset": 6,
     "damage": 25,
     "state": 3,
@@ -12,11 +13,16 @@
     "pushback": 6
   },
   "bow1": {
+    "charged": true,
+    "chargingOwnerState": 17,
+    "chargingAnimLength":  3,
+    "minimumCharge": 3,
+    "chargeOffset": 0,
     "offset": 6,
     "damage": 10,
     "state": 13,
     "startState": 13,
-    "ownerStartState": 17,
+    "releaseOwnerState": 17,
     "stateWdamage": 0,
     "distance": 4,
     "type": 18,
