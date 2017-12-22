@@ -54,16 +54,16 @@ function add_player(team){
 
 function charAlg(code){
 	block = code.split(".");
-	yvalue = ((block[0] -1) * 32) + (((block[1]/2) - 1) * 8);
-	anims = [0, 24, 48, 72, 96, 120, 144]
+	yvalue = ((block[0] -1) * 64) + (((block[1]/2) - 1) * 16);
+	anims = [0, 48, 96, 144, 192, 240, 288]
 	if (block[2] < 10){
-		xvalue = anims[0] + (block[2] * 8);
+		xvalue = anims[0] + (block[2] * 16);
 	}
 	if (block[2] < 100 && block[2] > 9 ){
 		prts=block[2].split("")
-		xvalue = anims[prts[0]] + (prts[1] * 8);
+		xvalue = anims[prts[0]] + (prts[1] * 16);
 	}
-	return [charsprites,xvalue,yvalue,8,8];
+	return [charsprites,xvalue,yvalue,16,16];
 }
 
 function draw(){
@@ -71,9 +71,10 @@ function draw(){
 	if ( userplayer !== null ){
 		//CLEAN canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		ctx.font='6px tiny';
+		ctx.font='8px tiny';
+		ctx.textAlign="left";
 		// DRAW map ///////////////////////////////////
-		ctx.drawImage(map1, 32 - campos[0] , 32 - campos[1])
+		ctx.drawImage(map1, (32 - campos[0])*2 , (32 - campos[1])*2)
 		//Get all sprite locations
 		db = coredata;
 		db.sort(function(a,b){return a.split(".")[4] - b.split(".")[4]})
@@ -82,13 +83,13 @@ function draw(){
 			//Draw each sprite
 			if (db[code].length > 0){
 				image2draw = charAlg(db[code]);
-				image2draw.push(blk[3] - campos[0] + 28, blk[4] - campos[1] + 26, 8, 8);
+				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
 
 			};
 		};
 		// Draw the top layer of the map
-		ctx.drawImage(map2, 32 - campos[0] , 32 - campos[1])
+		ctx.drawImage(map2, (32 - campos[0])*2 , (32 - campos[1])*2)
 
 		//////////////////// TIME OF DAY SHADERS //////////////////////
 		if (serverTime < 3400 && serverTime > 3000){
@@ -96,7 +97,7 @@ function draw(){
 			percent = (40 - ((serverTime - 3000)/10))/100
 			style = "rgba(0,21,211," + percent + ")"
 			ctx.fillStyle=style;
-			ctx.fillRect(0,0,64,64);
+			ctx.fillRect(0,0,128,128);
 			ctx.globalCompositeOperation = "source-over";
 		}
 
@@ -105,7 +106,7 @@ function draw(){
 			percent = 0.4
 			style = "rgba(0,21,211," + percent + ")"
 			ctx.fillStyle=style;
-			ctx.fillRect(0,0,64,64);
+			ctx.fillRect(0,0,128,128);
 			ctx.globalCompositeOperation = "source-over";
 		}
 
@@ -114,38 +115,42 @@ function draw(){
 			percent = ((serverTime)/10)/100
 			style = "rgba(0,21,211," + percent + ")"
 			ctx.fillStyle=style;
-			ctx.fillRect(0,0,64,64);
+			ctx.fillRect(0,0,128,128);
 			ctx.globalCompositeOperation = "source-over";
 		}
 
 		//////////// UI stuff ////////////////////
 		ctx.fillStyle= "grey";
-		ctx.fillRect(1,1, 10,3)
+		ctx.fillRect(1,1, 20,7)
 		ctx.fillStyle= "#00ff38";
-		ctx.fillRect(1,1, Math.round(playerHealth/10),3)
-		ctx.fillText(Math.floor(serverTime/100), 14, 5);
-		ctx.fillText(selector, 24, 5);
+		ctx.fillRect(1,1, Math.round(playerHealth/10)*2,7)
+		ctx.fillText(Math.floor(serverTime/100), 26, 8);
 
 		if (dialog != null){
 			ctx.fillStyle= "rgba(15,15,15,0.85)"
-			ctx.fillRect(0,36,64,28);
+			ctx.fillRect(0,74,128,64);
 			ctx.fillStyle= "grey";
-			ctx.fillText(dialog[0], 3, 42);
-			ctx.fillText(dialog[1], 3, 47);
-			ctx.fillText(dialog[2], 3, 52);
-			ctx.fillText(dialog[3], 3, 57);
-			ctx.fillText(dialog[4], 3, 62);
-			ctx.fillText(">", -1, 42 + (5*selector));
+			ctx.fillText(dialog[0], 3, 84);
+			ctx.fillText(dialog[1], 3, 94);
+			ctx.fillText(dialog[2], 3, 104);
+			ctx.fillText(dialog[3], 3, 114);
+			ctx.fillText(dialog[4], 3, 124);
+			ctx.fillText(">", -1, 84 + (10*selector));
 		}
 
 		// If server message, display now
 		if (serverMessage != null){
+			var message = serverMessage.split("|");
+			ctx.textAlign="center";
 			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
 			ctx.fillStyle=style;
-			ctx.fillRect(0,0,64,64);
+			ctx.fillRect(0,0,128,128);
 			style = "rgba(255,255,255," + serverMessageTimer/20 + ")"
 			ctx.fillStyle=style;
-			ctx.fillText(serverMessage, 5, 28);
+			ctx.font='8px small';
+			ctx.fillText(message[0], 64, 62);
+			ctx.font='8px tiny';
+			ctx.fillText(message[1], 64, 72);
 			serverMessageTimer -= 1;
 			if (serverMessageTimer <= 0) {
 				serverMessageTimer = 0;

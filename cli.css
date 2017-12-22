@@ -4,7 +4,12 @@ p{
 
 @font-face {
     font-family: "tiny";
-    src: url("static/TinyRegular.woff") format('woff');
+    src: url("static/tiny.woff") format('woff');
+}
+
+@font-face {
+    font-family: "small";
+    src: url("static/small.woff") format('woff');
 }
 
 canvas, img {
@@ -34,5 +39,3 @@ body {
 h1 {
   font-size: 500%;
 }
-
-
