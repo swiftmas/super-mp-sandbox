@@ -71,7 +71,10 @@ function npccontroller() {
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 8 && cdn[npc].slot2 != undefined && globals.weaponData[cdn[npc].slot2].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
-                      activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": -1};
+                      if (!(activeAttacksQueue.hasOwnProperty(npc))){
+                        activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": -1};
+                        console.log(JSON.stringify(activeAttacksQueue))
+                      }
                     }
                     else if(dirToFace[2] < 4) {
                       cdn[npc].dir = dirToFace[0];
@@ -86,7 +89,10 @@ function npccontroller() {
                 else if (closetarget[1] <= 8) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
-                      activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": -1}; 
+                      if (!(activeAttacksQueue.hasOwnProperty(npc))){
+                        activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": -1};
+                        console.log(JSON.stringify(activeAttacksQueue))
+                      }
                     }
                     else {
                         cdn[npc].dir = dirToFace[0];
