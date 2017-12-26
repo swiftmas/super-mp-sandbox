@@ -24,15 +24,12 @@ module.exports = {
 /// Gets attacks from queue (players only) and makes them happen
 function processAttackQueue(){
   for (var inst in attackQueue){
-    console.log(inst);
     if (activeAttacksQueue.hasOwnProperty(inst)){
-      console.log("exists")
       var data = activeAttacksQueue[inst];
       data.inputtype = attackQueue[inst];
-    } else {
-      console.log("creating")
-      activeAttacksQueue[inst] = {"inputtype": attackQueue[inst][1], "attacktype": attackQueue[inst], "chunk": "none"};
-    };
+    } else if (attackQueue[inst] != null && coredata.players[inst].state < 10){
+      activeAttacksQueue[inst] = {"inputtype": attackQueue[inst], "attacktype": attackQueue[inst], "chunk": "none", "keydown": 0};
+    } else if (coredata.players[inst].state > 60){coredata.players[inst].pos = coredata.players[inst].origin; coredata.players[inst].state = 0; coredata.players[inst].health = 100; return; };
     delete attackQueue[inst];
   }
   processActiveAttacks();
@@ -40,31 +37,41 @@ function processAttackQueue(){
 
 function processActiveAttacks(){
   for (var inst in activeAttacksQueue){
+    var attackData = activeAttacksQueue[inst]
+    // Cleanup Data Model
+    var db, nameType;
+    switch(inst[0]){
+      case "n":
+        nameType = "npcs"
+        // unfortunate fix for moving npcs out of a chunk in the middle of a tick when i need to refernce thier position The top if moves on if the player died and the open chunk was closed, the second if simply looks for the npc in a closeby chunk if he is no longer at his home chunk.
+        if (coredata.chunks.hasOwnProperty(attackData.chunk)){
+          if ( !(coredata.chunks[attackData.chunk].npcs.hasOwnProperty(inst))){
+            for (chunk in coredata.chunks){
+              if (coredata.chunks[chunk].npcs.hasOwnProperty(inst)){
+                attackData.chunk = chunk;
+              }
+            }
+          }
+        } else { console.log("Chunk of attacking NPC was lost, removing attacks"); delete activeAttacksQueue[inst]; continue;}
+        db = coredata.chunks[attackData.chunk]
+        break;
+      case "p":
+        nameType = "players"
+        db = coredata
+        attackData.chunk = db[nameType][inst].closeChunks[0]
+        break;
+      case "e":
+        nameType = "entities"
+        db = coredata.chunks[attackData.chunk]
+        break;
+    }
+    // SET at as the variable for either players or other data types
+    var at = db[nameType];
+    console.log(inst, attackData.chunk, attackData.attacktype, attackData.keydown, attackData.chargeHardMaximum, " from ", attackData.chargeMinimum)
+
+
     // if this is new then we setup the data
-    if (Object.keys(activeAttacksQueue[inst]).length == 3){
-      attackData = activeAttacksQueue[inst]
-      console.log(inst, attackData.chunk, attackData.attacktype)
-      // Cleanup Data Model
-      var db, nameType;
-      switch(inst[0]){
-        case "n":
-          nameType = "npcs"
-          db = coredata.chunks[attackData.chunk]
-          break;
-        case "p":
-          nameType = "players"
-          db = coredata
-          attackData.chunk = db[nameType][inst].closeChunks[0]
-          break;
-        case "e":
-          nameType = "entities"
-          db = coredata.chunks[attackData.chunk]
-          break;
-      }
-      // SET at as the variable for either players or other data types
-      var at = db[nameType];
-      // RESET PLAYER TO START POSITION IF HE IS DEAD
-      if (at[inst].state > 60){at[inst].pos = at[inst].origin; at[inst].state = 0; at[inst].health = 100; return; };
+    if (Object.keys(activeAttacksQueue[inst]).length == 4 ){
       // Get weapon attack data based on slot.
       switch(attackData.attacktype){
         //merges attack data from weapon to attack data object
@@ -78,42 +85,108 @@ function processActiveAttacks(){
           for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
           break;
       };
-      if (attackData != undefined && attackData.hasOwnProperty("damage")){
-        //Exists because i'm making a copy of the data to transform and push into an attack. Not because i've lost my mind.
-        RawAttackData = JSON.parse(JSON.stringify(attackData))
-      } else {return};
+      if (inst[0] == "n" ){attackData.chargeHardMaximum = attackData.chargeMinimum};
+    } else {
+      attackData.keydown ++
+    };
+      // IF CHARGE OVER or attack is instant
+    var ChargeSufficientForRelease = false
+    if (attackData.charged && attackData.attacktype != attackData.inputtype && attackData.chargeMinimum <= attackData.keydown){
+      ChargeSufficientForRelease = true;
+    } else if (attackData.charged && attackData.chargeMinimum > attackData.keydown && attackData.attacktype != attackData.inputtype){
+      delete activeAttacksQueue[inst];
+    }
+    if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
       //GET ATTaCK DIRECTION
-      var distance = attackData.offset;
+      var distance = attackData.releaseOffset;
       var atdir = at[inst].dir;
       var atorig = at[inst].pos.split(".");
       var atpos = "";
       if (atdir == "2"){
-      	var nx = parseInt(atorig[0])
-      	var ny = parseInt(atorig[1]) - distance
-      	atpos = nx + "." + ny
+        var nx = parseInt(atorig[0])
+        var ny = parseInt(atorig[1]) - distance
+        atpos = nx + "." + ny
       } else if (atdir == "6") {
-  		  var nx = parseInt(atorig[0])
-      	var ny = parseInt(atorig[1]) + distance
-      	atpos = nx + "." + ny
+        var nx = parseInt(atorig[0])
+        var ny = parseInt(atorig[1]) + distance
+        atpos = nx + "." + ny
       } else if (atdir == "8") {
-      	var nx = parseInt(atorig[0]) - distance
-      	var ny = parseInt(atorig[1])
-      	atpos = nx + "." + ny
+        var nx = parseInt(atorig[0]) - distance
+        var ny = parseInt(atorig[1])
+        atpos = nx + "." + ny
       } else if (atdir == "4") {
-      	var nx = parseInt(atorig[0]) + distance
-      	var ny = parseInt(atorig[1])
-      	atpos = nx + "." + ny
+        var nx = parseInt(atorig[0]) + distance
+        var ny = parseInt(atorig[1])
+        atpos = nx + "." + ny
       };
-      if (at[inst].state < 10) {
-        situationalData = {"pos": atpos, "dir": atdir, "owner": inst, "chunk": attackData.chunk}
-        for (var attrname in situationalData) { RawAttackData[attrname] = situationalData[attrname]; }
-        console.log(RawAttackData)
-        coredata.chunks[attackData.chunk].attacks.push(RawAttackData);
-        at[inst].state = attackData.ownerStartState /// Keep for now but eventaully this will be per weapon.
+      var situationalData = new Object()
+      situationalData.pos = atpos
+      situationalData.dir = atdir
+      situationalData.owner = inst
+      situationalData.chunk = attackData.chunk
+      situationalData.damage = attackData.releaseDamage
+      situationalData.state =  attackData.releaseState
+      situationalData.startState = attackData.releaseState
+      situationalData.stateWdamage = attackData.releaseDamageAtState
+      situationalData.type = attackData.releaseType
+      situationalData.h =  attackData.rh
+      situationalData.w = attackData.rw
+      situationalData.pushback = attackData.releasePushback
+      if (attackData.projectile){
+      situationalData.projectile = attackData.projectile
+      situationalData.state = attackData.projectileState
+      situationalData.startState = attackData.projectileState
+      situationalData.distance = attackData.projectileDistance
+      situationalData.type = attackData.projectileType
+      situationalData.velocity = attackData.projectileVelocity
+      };
+      coredata.chunks[attackData.chunk].attacks.push(situationalData);
+      at[inst].state = attackData.releaseOwnerState
 
-      };
       delete activeAttacksQueue[inst];
-    } // This is where we add the else for if its not a new queue item :)
+    } else { // if charge is still ongoing
+      /////////// CHARGE //////////////////////////
+
+      if ( attackData.keydown == 0 || attackData.keydown % 3 === 0){
+        var distance = attackData.releaseOffset;
+        var atdir = at[inst].dir;
+        var atorig = at[inst].pos.split(".");
+        var atpos = "";
+        if (atdir == "2"){
+          var nx = parseInt(atorig[0])
+          var ny = parseInt(atorig[1]) - distance
+          atpos = nx + "." + ny
+        } else if (atdir == "6") {
+          var nx = parseInt(atorig[0])
+          var ny = parseInt(atorig[1]) + distance
+          atpos = nx + "." + ny
+        } else if (atdir == "8") {
+          var nx = parseInt(atorig[0]) - distance
+          var ny = parseInt(atorig[1])
+          atpos = nx + "." + ny
+        } else if (atdir == "4") {
+          var nx = parseInt(atorig[0]) + distance
+          var ny = parseInt(atorig[1])
+          atpos = nx + "." + ny
+        };
+        var situationalData = new Object()
+        situationalData.pos = atpos
+        situationalData.dir = atdir
+        situationalData.owner = inst
+        situationalData.chunk = attackData.chunk
+        situationalData.damage = attackData.chargeDamage
+        situationalData.state =  attackData.chargeState
+        situationalData.startState = attackData.chargeState
+        situationalData.stateWdamage = attackData.releaseDamageAtState
+        situationalData.type = attackData.chargeType
+        situationalData.h = attackData.rh
+        situationalData.w = attackData.rw
+        situationalData.pushback = attackData.releasePushback
+        coredata.chunks[attackData.chunk].attacks.push(situationalData);
+        at[inst].state = attackData.chargeOwnerState // setting player state due to attack
+      }
+    };
+     // This is where we add the else for if its not a new queue item :)
   }
 }
 
@@ -124,7 +197,6 @@ function processEffects(){
     var db = coredata.chunks[chunk].attacks;
     var removes = [];
     for (var attack = db.length -1; attack >= 0; attack--){
-      //console.log(JSON.stringify(db[attack]));
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
         dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
@@ -136,7 +208,7 @@ function processEffects(){
       }
       if (db[attack].state <= 0){ removes.push(attack); break};
 
-      if (db[attack].state == db[attack].stateWdamage){
+      if (db[attack].state == db[attack].stateWdamage || db[attack].stateWdamage == -1){
         dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
       }
     };
@@ -146,80 +218,9 @@ function processEffects(){
   }
 };
 
-function addEffect(attacker, chunk, attacktype){
-    console.log(attacker, chunk, attacktype)
-    // Cleanup Data Model
-    var distance = 6
-    var db, nameType, attackData;
-    switch(attacker[0]){
-      case "n":
-        nameType = "npcs"
-        db = coredata.chunks[chunk]
-        break;
-      case "p":
-        nameType = "players"
-        db = coredata
-        chunk = db[nameType][attacker].closeChunks[0]
-        break;
-      case "e":
-        nameType = "entities"
-        db = coredata.chunks[chunk]
-        break;
-    }
-    // SET at as the variable for either players or other data types
-    var at = db[nameType];
-    // RESET PLAYER TO START POSITION IF HE IS DEAD
-    if (at[attacker].state > 60){at[attacker].pos = at[attacker].origin; at[attacker].state = 0; at[attacker].health = 100; return; };
-    // Get weapon attack data based on slot.
-    switch(attacktype){
-      case "attack1":
-        attackData = globals.weaponData[at[attacker].slot1];
-        break;
-      case "attack2":
-        attackData = globals.weaponData[at[attacker].slot2];
-        break;
-      case "attack3":
-        attackData = globals.weaponData[at[attacker].slot3];
-        break;
-    };
-    if (attackData != undefined && attackData.hasOwnProperty("damage")){
-      //Exists because i'm making a copy of the data to transform and push into an attack. Not because i've lost my mind.
-      attackData = JSON.parse(JSON.stringify(attackData))
-    } else {return};
-    //GET ATTaCK DIRECTION
-    var atdir = at[attacker].dir;
-    var atorig = at[attacker].pos.split(".");
-    var atpos = "";
-    if (atdir == "2"){
-    	var nx = parseInt(atorig[0])
-    	var ny = parseInt(atorig[1]) - distance
-    	atpos = nx + "." + ny
-    } else if (atdir == "6") {
-		  var nx = parseInt(atorig[0])
-    	var ny = parseInt(atorig[1]) + distance
-    	atpos = nx + "." + ny
-    } else if (atdir == "8") {
-    	var nx = parseInt(atorig[0]) - distance
-    	var ny = parseInt(atorig[1])
-    	atpos = nx + "." + ny
-    } else if (atdir == "4") {
-    	var nx = parseInt(atorig[0]) + distance
-    	var ny = parseInt(atorig[1])
-    	atpos = nx + "." + ny
-    };
-    if (at[attacker].state < 10) {
-      situationalData = {"pos": atpos, "dir": atdir, "owner": attacker, "chunk": chunk}
-      for (var attrname in situationalData) { attackData[attrname] = situationalData[attrname]; }
-      console.log(attackData)
-      coredata.chunks[chunk].attacks.push(attackData);
-      at[attacker].state = 13 /// Keep for now but eventaully this will be per weapon.
-
-    };
-
-};
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-
+  console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   if (damage == null){damage = 25;};
@@ -234,7 +235,6 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       at = {"h": h, "w": w}
       break;
   }
-  console.log(direction)
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
       var name = result[1][hit][0]
@@ -244,6 +244,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       if (nameType == "colliders"){break;};
       if (db[nameType][name].hasOwnProperty("team")){ if (db[nameType][name].team == ownerTeam) {break;}};
       db[nameType][name].health = db[nameType][name].health - damage
+      if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
+        delete activeAttacksQueue[name];
+      }
       if (db[nameType][name].health > 0 && owner[0] == "p"){
         if(owner[0] == "p"){ ownerTeam = coredata.players[owner].alerttimer += 10} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].alerttimer += 10}
       }
@@ -252,7 +255,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       general.DoMovement(name, chunk, direction, pushback, false, false);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
-
+        if (activeAttacksQueue.hasOwnProperty(name)){
+          delete activeAttacksQueue[name];
+        }
       };
     };
   });

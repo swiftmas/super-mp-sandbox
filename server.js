@@ -27,10 +27,13 @@ var server = http.createServer(function(request, response){
                 if (path.slice(-3) == "jpg"){
                     response.writeHead(200, {"Content-Type": "image/jpg"});
                 };
-                if (path.slice(-2) == ".html"){
+                if (path.slice(-4) == "html"){
                     response.writeHead(200, {"Content-Type": "text/html"});
                 };
                 if (path.slice(-2) == "js"){
+                    response.writeHead(200, {"Content-Type": "text/html"});
+                };
+                if (path.slice(-4) == "woff"){
                     response.writeHead(200, {"Content-Type": "text/html"});
                 };
                 response.write(data, "utf8");
@@ -242,35 +245,37 @@ listener.sockets.on('connection', function(socket){
 
 // Listens for attacks ////// !!!!!! NEEDS FUNCTION OUSIDE OF LISTENER  !!!!!!!!///////////////////////////
   socket.on('action', function(data) {
-    switch (data[1]){
-      case "attack1":
-        attackQueue[data[0]] =  "attack1";
-        break;
-      case "attack2":
-        attackQueue[data[0]] =  "attack2";
-        break;
-      case "attack3":
-        attackQueue[data[0]] =  "attack3";
-        break;
-      case "interact":
-        if (data[2] !== null){
-          interact.getDialog(data[0], data[2]);
-        } else {
-          interact.startDialog(data[0]);
-        };
-        break;
-      case "attacknull":
-        data[1] = null
-        //moveQueue[data[0]] = data;
-        break;
-      case "movenull":
-        data[1] = null
-        moveQueue[data[0]] = data;
-        break;
-      default:
-        moveQueue[data[0]] = data;
-        break;
-    };
+    if (coredata.players.hasOwnProperty(data[0])){
+      switch (data[1]){
+        case "attack1":
+          attackQueue[data[0]] =  "attack1";
+          break;
+        case "attack2":
+          attackQueue[data[0]] =  "attack2";
+          break;
+        case "attack3":
+          attackQueue[data[0]] =  "attack3";
+          break;
+        case "interact":
+          if (data[2] !== null){
+            interact.getDialog(data[0], data[2]);
+          } else {
+            interact.startDialog(data[0]);
+          };
+          break;
+        case "attacknull":
+          attackQueue[data[0]] = null;
+          //moveQueue[data[0]] = data;
+          break;
+        case "movenull":
+          data[1] = null
+          moveQueue[data[0]] = data;
+          break;
+        default:
+          moveQueue[data[0]] = data;
+          break;
+      };
+    }
   });
 // Listens for disconnects
   socket.on('disconnect', function() {

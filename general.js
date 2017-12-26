@@ -37,7 +37,7 @@ function ProcessTime(){
   if (globals.time == 3000){
     console.log("Night has fallen. The darkness chills you");
     globals.serverPause = true;
-    globals.serverMessage = "Night has fallen. The darkness chills you"
+    globals.serverMessage = "NIGHT HAS FALLEN | The darkness chills you"
     globals.ChangeDayNight("night");
     coredata.chunks = {}
   }
@@ -50,7 +50,7 @@ function ProcessTime(){
   if (globals.time == 0){
     console.log("Day has broken. the light blesses you");
     globals.serverPause = true;
-    globals.serverMessage = "Day has broken. the light blesses you"
+    globals.serverMessage = "DAY HAS BROKEN | the light blesses you"
     globals.ChangeDayNight("day");
     coredata.chunks = {}
     globals.time = 6000;
