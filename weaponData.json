@@ -41,7 +41,7 @@
     "chargeMinimum": 3,
     "chargeMaximum": 6,
     "chargeHardMaximum": -10,
-    "chargeDamageMultiplier": 1,
+    "chargeDamageMultiplier": 3,
     "chargeDistanceMultiplier": 1,
     "chargeOffset": 0,
     "chargeState": 13,
@@ -62,7 +62,7 @@
     "projectileVelocity": 6,
     "ph": 7,
     "pw": 3,
-    "projectilePushback": 4,
+    "projectilePushback": 3,
     "projectileEndAnim": 13
   },
   "spell1": {
@@ -74,7 +74,7 @@
     "chargeMinimum": 3,
     "chargeMaximum": 6,
     "chargeHardMaximum": -10,
-    "chargeDamageMultiplier": 1,
+    "chargeDamageMultiplier": 5,
     "chargeDistanceMultiplier": 1,
     "chargeOffset": 6,
     "chargeState": 23,

@@ -85,7 +85,7 @@ function processActiveAttacks(){
           for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
           break;
       };
-      if (inst[0] == "n" ){attackData.chargeHardMaximum = attackData.chargeMinimum};
+      if (inst[0] == "n" ){attackData.chargeHardMaximum = attackData.chargeMaximum};
     } else {
       attackData.keydown ++
     };
@@ -98,6 +98,8 @@ function processActiveAttacks(){
     }
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
       //GET ATTaCK DIRECTION
+      var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.keydown
+      var projectileDistance = attackData.projectileDistance + attackData.chargeDistanceMultiplier * attackData.keydown
       var distance = attackData.releaseOffset;
       var atdir = at[inst].dir;
       var atorig = at[inst].pos.split(".");
@@ -124,7 +126,7 @@ function processActiveAttacks(){
       situationalData.dir = atdir
       situationalData.owner = inst
       situationalData.chunk = attackData.chunk
-      situationalData.damage = attackData.releaseDamage
+      situationalData.damage = damage
       situationalData.state =  attackData.releaseState
       situationalData.startState = attackData.releaseState
       situationalData.stateWdamage = attackData.releaseDamageAtState
@@ -136,7 +138,7 @@ function processActiveAttacks(){
       situationalData.projectile = attackData.projectile
       situationalData.state = attackData.projectileState
       situationalData.startState = attackData.projectileState
-      situationalData.distance = attackData.projectileDistance
+      situationalData.distance = projectileDistance
       situationalData.type = attackData.projectileType
       situationalData.velocity = attackData.projectileVelocity
       };
@@ -146,7 +148,6 @@ function processActiveAttacks(){
       delete activeAttacksQueue[inst];
     } else { // if charge is still ongoing
       /////////// CHARGE //////////////////////////
-
       if ( attackData.keydown == 0 || attackData.keydown % 3 === 0){
         var distance = attackData.releaseOffset;
         var atdir = at[inst].dir;
@@ -199,7 +200,9 @@ function processEffects(){
     for (var attack = db.length -1; attack >= 0; attack--){
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
-        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
+        if (!(db[attack].hasOwnProperty("done"))){
+          dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
+        }
         if (db[attack].distance > 0){
           db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true, db[attack].pushback)
         } else {
@@ -251,7 +254,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
         if(owner[0] == "p"){ ownerTeam = coredata.players[owner].alerttimer += 10} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].alerttimer += 10}
       }
 
-      attack.distance = 0;
+      attack.distance = 1;
+      attack.velocity = attack.pushback;
+      attack.done = true;
       general.DoMovement(name, chunk, direction, pushback, false, false);
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
