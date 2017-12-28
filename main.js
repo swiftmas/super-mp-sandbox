@@ -44,7 +44,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 100, "alerttimer": 60000000, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 3, "w": 3};
+	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 15000, "alerttimer": 60000000, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 3, "w": 3};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -188,7 +188,7 @@ function control(action){
 			if(controlState == "character"){
 				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
 			} else {
-				if (dialogPointers == "exit"){
+				if (dialogPointers == "exit" || dialogPointers[selector] == "exit"){
 					selector = 0;
 					dialogPointers = [null, null, null, null, null];
 					dialog = null;

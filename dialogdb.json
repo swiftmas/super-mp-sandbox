@@ -3,18 +3,18 @@
     "start": {
       "textVariations": [
         [
-          "what",
-          "do",
-          "you",
-          "want",
-          "?"
+          "",
+          "",
+          "What do you want?",
+          "",
+          ""
         ],
         [
-          "Why",
-          "are you",
-          "Talking",
-          "To me",
-          "?"
+          "",
+          "",
+          "  ...  ",
+          "",
+          ""
         ]
       ],
       "pointers": ["exit"],
