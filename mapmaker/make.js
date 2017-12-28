@@ -265,14 +265,14 @@ document.getElementById("start").addEventListener('click', function(event) { dra
 function drawmap(){
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	collElements = [];
-	ctx.drawImage(maptex1, 0, 0, maptex1.width * sizemultiplier, maptex1.height * sizemultiplier)
-	map.width = maptex1.width * sizemultiplier;
-	map.height = maptex1.height * sizemultiplier;
+	ctx.drawImage(maptex1, 0, 0, maptex1.width * sizemultiplier, maptex1.height * sizemultiplier);
+	map.width = (maptex1.width * sizemultiplier)/2;
+	map.height = (maptex1.height * sizemultiplier)/2;
 	document.getElementById("dimensions").innerHTML = "Dimensions:" + (maptex1.width) + " by " + (maptex1.height);
 	if (chunks != undefined) {
 		for (chunk in chunks){
 			if (drawbool.showChunks == true){
-				pos = chunk.split(".")
+				pos = chunk.split(".");
 				ctx.beginPath();
 				ctx.strokeStyle="grey";
 				ctx.lineWidth="4";
