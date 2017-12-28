@@ -245,7 +245,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       var nameType = result[1][hit][2]
       if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){break;};
-      if (db[nameType][name].hasOwnProperty("team")){ if ( attack.releaseDamage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {break;}};
+      if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {break;}};
       db[nameType][name].health = db[nameType][name].health - damage
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
         delete activeAttacksQueue[name];

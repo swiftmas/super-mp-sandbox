@@ -74,7 +74,7 @@
     "chargeMinimum": 3,
     "chargeMaximum": 6,
     "chargeHardMaximum": -10,
-    "chargeDamageMultiplier": 5,
+    "chargeDamageMultiplier": -5,
     "chargeDistanceMultiplier": 1,
     "chargeOffset": 6,
     "chargeState": 23,
