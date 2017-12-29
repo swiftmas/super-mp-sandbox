@@ -197,7 +197,7 @@ function processEffects(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
     var removes = [];
-    for (var attack = db.length -1; attack >= 0; attack--){
+    for (var attack = 0; attack < db.length; attack++){
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
         if (!(db[attack].hasOwnProperty("done"))){
