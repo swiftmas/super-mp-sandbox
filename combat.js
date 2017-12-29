@@ -121,7 +121,7 @@ function processActiveAttacks(){
         var ny = parseInt(atorig[1])
         atpos = nx + "." + ny
       };
-      var situationalData = new Object()
+      var situationalData = {}
       situationalData.pos = atpos
       situationalData.dir = atdir
       situationalData.owner = inst
@@ -170,7 +170,7 @@ function processActiveAttacks(){
           var ny = parseInt(atorig[1])
           atpos = nx + "." + ny
         };
-        var situationalData = new Object()
+        var situationalData = {}
         situationalData.pos = atpos
         situationalData.dir = atdir
         situationalData.owner = inst
