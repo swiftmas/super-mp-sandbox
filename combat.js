@@ -121,7 +121,7 @@ function processActiveAttacks(){
         var ny = parseInt(atorig[1])
         atpos = nx + "." + ny
       };
-      var situationalData = {}
+      var situationalData = new Object()
       situationalData.pos = atpos
       situationalData.dir = atdir
       situationalData.owner = inst
@@ -170,7 +170,7 @@ function processActiveAttacks(){
           var ny = parseInt(atorig[1])
           atpos = nx + "." + ny
         };
-        var situationalData = {}
+        var situationalData = new Object()
         situationalData.pos = atpos
         situationalData.dir = atdir
         situationalData.owner = inst
@@ -189,7 +189,6 @@ function processActiveAttacks(){
     };
      // This is where we add the else for if its not a new queue item :)
   }
-  processEffects();
 }
 
 
@@ -197,9 +196,8 @@ function processActiveAttacks(){
 function processEffects(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
-    console.log(db)
     var removes = [];
-    for (var attack = 0; attack < db.length; attack++){
+    for (var attack = db.length -1; attack >= 0; attack--){
       if (db[attack].projectile){
         if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
         if (!(db[attack].hasOwnProperty("done"))){
@@ -208,10 +206,10 @@ function processEffects(){
         if (db[attack].distance > 0){
           db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true, db[attack].pushback)
         } else {
-           removes.push(attack); break
+           db.splice(attack, 1); break;
         };
       }
-      if (db[attack].state <= 0){ removes.push(attack); break};
+      if (db[attack].state <= 0){ db.splice(attack, 1); break;};
 
       if (db[attack].state == db[attack].stateWdamage || db[attack].stateWdamage == -1){
         dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
@@ -225,7 +223,7 @@ function processEffects(){
 
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-  //console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
+  console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   if (damage == null){damage = 25;};
