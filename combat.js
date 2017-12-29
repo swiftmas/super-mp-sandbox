@@ -189,6 +189,7 @@ function processActiveAttacks(){
     };
      // This is where we add the else for if its not a new queue item :)
   }
+  processEffects();
 }
 
 
