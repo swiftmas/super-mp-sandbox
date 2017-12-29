@@ -196,6 +196,7 @@ function processActiveAttacks(){
 function processEffects(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
+    console.log(db)
     var removes = [];
     for (var attack = 0; attack < db.length; attack++){
       if (db[attack].projectile){
@@ -223,7 +224,7 @@ function processEffects(){
 
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-  console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
+  //console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   if (damage == null){damage = 25;};
