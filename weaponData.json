@@ -66,7 +66,7 @@
     "projectilePushback": 3,
     "projectileEndAnim": 13
   },
-  "Spell_Of_Healing1": {
+  "Orb_Of_Healing1": {
     "interruptible": false,
     "charged": true,
     "chargeType": 18,
@@ -92,7 +92,7 @@
     "releasePushback": 0,
     "projectile": true,
     "projectileState": 23,
-    "projectileDistance": 15,
+    "projectileDistance": 35,
     "projectileType": 18,
     "projectileVelocity": 0,
     "ph": 4,

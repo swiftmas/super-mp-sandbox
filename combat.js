@@ -67,7 +67,7 @@ function processActiveAttacks(){
     }
     // SET at as the variable for either players or other data types
     var at = db[nameType];
-    console.log(inst, attackData.chunk, attackData.attacktype, attackData.keydown, attackData.chargeHardMaximum, " from ", attackData.chargeMinimum)
+    console.log(inst, "Attacks with: ", attackData.attacktype, attackData.keydown, attackData.chargeHardMaximum, " from ", attackData.chargeMinimum)
 
 
     // if this is new then we setup the data
@@ -98,8 +98,13 @@ function processActiveAttacks(){
     }
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
       //GET ATTaCK DIRECTION
-      var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.keydown
-      var projectileDistance = attackData.projectileDistance + attackData.chargeDistanceMultiplier * attackData.keydown
+      if (attackData.keydown > attackData.chargeMaximum){
+        var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.chargeMaximum
+        var projectileDistance = attackData.projectileDistance + attackData.chargeDistanceMultiplier * attackData.chargeMaximum
+      } else {
+        var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.keydown
+        var projectileDistance = attackData.projectileDistance + attackData.chargeDistanceMultiplier * attackData.keydown
+      };
       var distance = attackData.releaseOffset;
       var atdir = at[inst].dir;
       var atorig = at[inst].pos.split(".");
@@ -223,7 +228,7 @@ function processEffects(){
 
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-  console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
+  //console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   if (damage == null){damage = 25;};
