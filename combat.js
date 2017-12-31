@@ -262,7 +262,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       attack.distance = 1;
       attack.velocity = attack.pushback;
       attack.done = true;
-      general.DoMovement(name, chunk, direction, pushback, false, false);
+      if (db[nameType][name].immoveable == null){
+        general.DoMovement(name, chunk, direction, pushback, false, false);
+      };
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
         if (activeAttacksQueue.hasOwnProperty(name)){

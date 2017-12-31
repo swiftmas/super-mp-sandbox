@@ -36,27 +36,23 @@ function ProcessTime(){
   };
   if (globals.time == 3000){
     console.log("Night has fallen. The darkness chills you");
-    globals.serverPause = true;
+    //globals.serverPause = true;
     globals.serverMessage = "NIGHT HAS FALLEN | The darkness chills you"
-    globals.ChangeDayNight("night");
+    listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
+    //globals.ChangeDayNight("night");
     coredata.chunks = {}
-  }
-  if (globals.time == 2960){
-    globals.serverPause = false;
   }
   if (globals.time == 300){
     console.log("Day is near");
   }
   if (globals.time == 0){
     console.log("Day has broken. the light blesses you");
-    globals.serverPause = true;
+    //globals.serverPause = true;
     globals.serverMessage = "DAY HAS BROKEN | the light blesses you"
-    globals.ChangeDayNight("day");
+    listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
+    //globals.ChangeDayNight("day");
     coredata.chunks = {}
     globals.time = 6000;
-  }
-  if (globals.time == 5960){
-    globals.serverPause = false;
   }
 }
 

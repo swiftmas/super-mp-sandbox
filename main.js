@@ -10,6 +10,7 @@ var coredata = {};
 var TeamSelected = null;
 var serverMessage = null;
 var serverMessageTimer = 0;
+var serverMessageWindow = 0;
 var serverTime = 6000
 var dialog = null;
 var dialogPointers = [null, null, null, null, null];
@@ -140,9 +141,15 @@ function draw(){
 
 		// If server message, display now
 		if (serverMessage != null){
+			if (serverMessageWindow > 20){
+				serverMessageTimer += 1
+			} else {
+				serverMessageTimer -= 1
+			}
+			serverMessageWindow -= 1
 			var message = serverMessage.split("|");
 			ctx.textAlign="center";
-			style = "rgba(15,15,15," + serverMessageTimer/10 + ")"
+			style = "rgba(15,15,15," + serverMessageTimer/40 + ")"
 			ctx.fillStyle=style;
 			ctx.fillRect(0,0,128,128);
 			style = "rgba(255,255,255," + serverMessageTimer/20 + ")"
@@ -151,10 +158,10 @@ function draw(){
 			ctx.fillText(message[0], 64, 62);
 			ctx.font='8px tiny';
 			ctx.fillText(message[1], 64, 72);
-			serverMessageTimer -= 1;
 			if (serverMessageTimer <= 0) {
 				serverMessageTimer = 0;
 				serverMessage = null;
+			console.log(serverMessageTimer)
 			}
 		}
 	};
@@ -293,8 +300,8 @@ socket.on('serverMessage', function(data) {
 	serverMessage = data.message;
 	serverTime = data.time;
 	console.log("serverMessage:", serverMessage);
-	if (serverMessageTimer <= 10) { serverMessageTimer += 2 };
-	draw(coredata);
+	serverMessageTimer = 0;
+	serverMessageWindow = 40;
 });
 
 socket.on('camera', function(data) {

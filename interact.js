@@ -26,11 +26,11 @@ function getDialog(interacter, path){
   }
   if (path[0] == "swap"){
     console.log("swapping path: " + path)
-    curItem = coredata.players[interacter][path[5]];
+    var curItem = coredata.players[interacter][path[5]];
     coredata.players[interacter][path[5]] = coredata.chunks[path[1]][path[2]][path[3]][path[4]]
     coredata.chunks[path[1]][path[2]][path[3]][path[4]] = curItem
-    var verbage = ["-- " + path[3] +"'s Corpse --", coredata.chunks[path[1]][path[2]][path[3]].slot1, coredata.chunks[path[1]][path[2]][path[3]].slot2, coredata.chunks[path[1]][path[2]][path[3]].slot3, "-- Exit --"]
-    var pointers = [null,["loot", path[1], path[2], path[3], "slot1"],["loot", path[1], path[2], path[3], "slot2"],["loot", path[1], path[2], path[3], "slot3"],"exit"]
+    var verbage = ["","Your " + curItem, "has been replaced with", coredata.players[interacter][path[5]], ""]
+    var pointers = [null,null,null,null,null]
     listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
     return;
   }
@@ -73,7 +73,14 @@ function startDialog(interacter){
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
       if (chunk == "none"){ break } else { db = coredata.chunks[chunk]}
-      if (nameType == "colliders" || nameType == "entities"){break;};
+      if (nameType == "colliders"){break;};
+      if (nameType == "entities" && db[nameType][name].slot1 != null){
+        if (db[nameType][name].state < 60){db[nameType][name].state = 67}
+        var verbage = ["-- Large Chest --", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "-- Exit --"]
+        var pointers = [null,["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
+        listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
+        break;
+      } else if (nameType == "entities"){break;};
       if (db[nameType][name].state >= 60 ){
         var verbage = ["-- " + name +"'s Corpse --", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "-- Exit --"]
         var pointers = [null,["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
