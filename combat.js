@@ -67,11 +67,11 @@ function processActiveAttacks(){
     }
     // SET at as the variable for either players or other data types
     var at = db[nameType];
-    console.log(inst, "Attacks with: ", attackData.attacktype, attackData.keydown, attackData.chargeHardMaximum, " from ", attackData.chargeMinimum)
 
 
     // if this is new then we setup the data
     if (Object.keys(activeAttacksQueue[inst]).length == 4 ){
+      console.log(inst, "Attacks with: ", attackData.attacktype)
       // Get weapon attack data based on slot.
       switch(attackData.attacktype){
         //merges attack data from weapon to attack data object
@@ -94,6 +94,8 @@ function processActiveAttacks(){
     if (attackData.charged && attackData.attacktype != attackData.inputtype && attackData.chargeMinimum <= attackData.keydown){
       ChargeSufficientForRelease = true;
     } else if (attackData.charged && attackData.chargeMinimum > attackData.keydown && attackData.attacktype != attackData.inputtype){
+      console.log("charge hadnt sufficient chill points")
+
       delete activeAttacksQueue[inst];
     }
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
@@ -139,6 +141,16 @@ function processActiveAttacks(){
       situationalData.h =  attackData.rh
       situationalData.w = attackData.rw
       situationalData.pushback = attackData.releasePushback
+      if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.releaseManaCost){
+        delete activeAttacksQueue[inst];
+        situationalData.damage = 0
+        situationalData.stateWdamage = 0
+        situationalData.type =  attackData.chargeFailType
+        situationalData.state =  attackData.chargeFaileState
+        situationalData.pushback = 0
+        coredata.chunks[attackData.chunk].attacks.push(situationalData);
+        continue;
+      }
       if (attackData.release == true){coredata.chunks[attackData.chunk].attacks.push(situationalData)}
       if (attackData.projectile){
       situationalData.projectile = attackData.projectile
@@ -147,6 +159,7 @@ function processActiveAttacks(){
       situationalData.distance = projectileDistance
       situationalData.type = attackData.projectileType
       situationalData.velocity = attackData.projectileVelocity
+      situationalData.pushback = attackData.projectilePushback
       };
       coredata.chunks[attackData.chunk].attacks.push(situationalData);
       at[inst].state = attackData.releaseOwnerState
@@ -155,7 +168,7 @@ function processActiveAttacks(){
     } else { // if charge is still ongoing
       /////////// CHARGE //////////////////////////
       if ( attackData.keydown == 0 || attackData.keydown % 3 === 0){
-        var distance = attackData.releaseOffset;
+        var distance = attackData.chargeOffset;
         var atdir = at[inst].dir;
         var atorig = at[inst].pos.split(".");
         var atpos = "";
@@ -184,13 +197,25 @@ function processActiveAttacks(){
         situationalData.damage = attackData.chargeDamage
         situationalData.state =  attackData.chargeState
         situationalData.startState = attackData.chargeState
-        situationalData.stateWdamage = attackData.releaseDamageAtState
+        situationalData.stateWdamage = attackData.chargeDamageAtState
         situationalData.type = attackData.chargeType
-        situationalData.h = attackData.rh
-        situationalData.w = attackData.rw
+        situationalData.h = attackData.ch
+        situationalData.w = attackData.cw
         situationalData.pushback = attackData.releasePushback
+        if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic){
+          console.log("OOM")
+          delete activeAttacksQueue[inst];
+          situationalData.damage = 0
+          situationalData.stateWdamage = 0
+          situationalData.type =  attackData.chargeFailType
+          situationalData.state =  attackData.chargeFaileState
+          situationalData.pushback = 0
+          coredata.chunks[attackData.chunk].attacks.push(situationalData);
+          continue;
+        }
         coredata.chunks[attackData.chunk].attacks.push(situationalData);
         at[inst].state = attackData.chargeOwnerState // setting player state due to attack
+        if (attackData.keydown < attackData.chargeMaximum)at[inst].mana -= attackData.chargeManaPerTic
       }
     };
      // This is where we add the else for if its not a new queue item :)

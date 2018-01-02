@@ -181,7 +181,7 @@ setInterval(function(){
       var state = dp[player].state;
       var dir = dp[player].dir
       //position player camera!
-      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health])
+      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana])
       playerDatas.push(code + "." + dir + "." + state + "." + pos);
     }
 

@@ -45,7 +45,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 140, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 3, "w": 3};
+	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 3, "w": 3};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -121,12 +121,17 @@ function draw(){
 		}
 
 		//////////// UI stuff ////////////////////
+		//Health
 		ctx.fillStyle= "grey";
 		ctx.fillRect(1,1, 20,7)
 		ctx.fillStyle= "#00ff38";
-		ctx.fillRect(1,1, Math.round(playerHealth/10)*2,7)
-		ctx.fillText(Math.floor(serverTime/100), 26, 8);
-
+		ctx.fillRect(1,1, Math.round((playerHealth/playerMaxHealth)*20),7)
+		ctx.fillStyle= "grey";
+		ctx.fillRect(24,1, 20,7)
+		ctx.fillStyle= "#850E14";
+		ctx.fillRect(24,1, Math.round((playerMana/playerMaxMana)*20),7)
+		ctx.fillText(Math.floor(serverTime/100), 46, 8);
+		//Dialog
 		if (dialog != null){
 			ctx.fillStyle= "rgba(15,15,15,0.85)"
 			ctx.fillRect(0,74,128,64);
@@ -307,6 +312,9 @@ socket.on('serverMessage', function(data) {
 socket.on('camera', function(data) {
 		campos = data[0].split(".");
 		playerHealth = data[1]
+		playerMaxHealth = data[2]
+		playerMana = data[3]
+		playerMaxMana = data[4]
 });
 
 socket.on('getdata', function(data){
