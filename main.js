@@ -84,7 +84,7 @@ function draw(){
 			//Draw each sprite
 			if (db[code].length > 0){
 				image2draw = charAlg(db[code]);
-				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
+				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 27)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
 
 			};
