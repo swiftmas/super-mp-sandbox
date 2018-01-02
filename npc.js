@@ -72,7 +72,7 @@ function npccontroller() {
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
-                        activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": -1};
+                        activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": 0};
                         console.log(JSON.stringify(activeAttacksQueue))
                       }
                     }
@@ -90,7 +90,7 @@ function npccontroller() {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
-                        activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": -1};
+                        activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": 0};
                         console.log(JSON.stringify(activeAttacksQueue))
                       }
                     }

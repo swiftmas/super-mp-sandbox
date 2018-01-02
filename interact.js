@@ -42,7 +42,7 @@ function getDialog(interacter, path){
 
 
 function startDialog(interacter){
-  var distance = 6;
+  var distance = 4;
   var player = coredata.players[interacter]
   var interacterTeam = player.team;
   var direction = player.dir;
@@ -51,36 +51,37 @@ function startDialog(interacter){
   switch(direction){
     case "2":
       atpos[1] = parseInt(atpos[1]) - distance
-      at = {"h": 6, "w": 3}
+      at = {"h": 6, "w": 6}
       break;
     case "6":
       atpos[1] = parseInt(atpos[1]) + distance
-      at = {"h": 6, "w": 3}
+      at = {"h": 6, "w": 6}
       break;
     case "4":
-      at = {"h": 3, "w": 6}
+      at = {"h": 6, "w": 6}
       atpos[0] = parseInt(atpos[0]) + distance
       break;
     case "8":
       atpos[0] = parseInt(atpos[0]) - distance
-      at = {"h": 3, "w": 6}
+      at = {"h": 6, "w": 6}
       break;
   }
   atpos = atpos.join(".");
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
+      console.log(result[1][hit])
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
-      if (chunk == "none"){ break } else { db = coredata.chunks[chunk]}
-      if (nameType == "colliders"){break;};
+      if (chunk == "none"){ continue } else { db = coredata.chunks[chunk]}
+      if (nameType == "colliders"){continue;};
       if (nameType == "entities" && db[nameType][name].slot1 != null){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
         var verbage = ["-- Large Chest --", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "-- Exit --"]
         var pointers = [null,["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         break;
-      } else if (nameType == "entities"){break;};
+      } else if (nameType == "entities"){ console.log("nothing to interact with");continue;};
       if (db[nameType][name].state >= 60 ){
         var verbage = ["-- " + name +"'s Corpse --", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "-- Exit --"]
         var pointers = [null,["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]

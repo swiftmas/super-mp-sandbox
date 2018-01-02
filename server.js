@@ -281,7 +281,12 @@ listener.sockets.on('connection', function(socket){
   socket.on('disconnect', function() {
     console.log(this.id + "Disconnected");
     var cleanid = this.id
-    if (typeof coredata.players["p"+cleanid] !== undefined){
+    if (typeof coredata.players["p"+cleanid] !== undefined && coredata.players.hasOwnProperty("p"+cleanid)){
+        //var newnpc = coredata.chunks[coredata.players["p"+cleanid].closeChunks[0]].npcs;
+        //newnpc["p"+cleanid] = {}
+        //for(var k in coredata.players["p"+cleanid]) {newnpc["p"+cleanid][k]=coredata.players["p"+cleanid][k]};
+        //newnpc["p"+cleanid].state = 63
+        //newnpc["p"+cleanid].chunk = coredata.players["p"+cleanid].closeChunks[0]
         delete coredata.players["p" + cleanid];
         console.log("cleaned up " + cleanid)
     };

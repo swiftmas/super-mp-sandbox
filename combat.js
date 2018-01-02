@@ -139,6 +139,7 @@ function processActiveAttacks(){
       situationalData.h =  attackData.rh
       situationalData.w = attackData.rw
       situationalData.pushback = attackData.releasePushback
+      if (attackData.release == true){coredata.chunks[attackData.chunk].attacks.push(situationalData)}
       if (attackData.projectile){
       situationalData.projectile = attackData.projectile
       situationalData.state = attackData.projectileState
