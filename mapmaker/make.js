@@ -124,7 +124,8 @@ function removeItem(){
 }
 
 function download() {
-	alert(JSON.stringify(chunks))
+  document.getElementById('jsonExport').style.display = "block";
+	document.getElementById('exportContent').innerHTML = JSON.stringify(chunks)
 }
 
 function changeJson(){

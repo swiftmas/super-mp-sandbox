@@ -71,7 +71,7 @@ function processActiveAttacks(){
 
     // if this is new then we setup the data
     if (Object.keys(activeAttacksQueue[inst]).length == 4 ){
-      console.log(inst, "Attacks with: ", attackData.attacktype)
+      console.log(inst, "Attacks with: ", attackData)
       // Get weapon attack data based on slot.
       switch(attackData.attacktype){
         //merges attack data from weapon to attack data object
@@ -93,6 +93,10 @@ function processActiveAttacks(){
     var ChargeSufficientForRelease = false
     if (attackData.charged && attackData.attacktype != attackData.inputtype && attackData.chargeMinimum <= attackData.keydown){
       ChargeSufficientForRelease = true;
+    } else if (attackData.charged && attackData.chargeMinimum == attackData.chargeHardMaximum && attackData.chargeMinimum > attackData.keydown) {
+      ChargeSufficientForRelease = false
+    } else if (attackData.charged && attackData.chargeMinimum == attackData.chargeHardMaximum && attackData.chargeMinimum <= attackData.keydown) {
+      ChargeSufficientForRelease = true
     } else if (attackData.charged && attackData.chargeMinimum > attackData.keydown && attackData.attacktype != attackData.inputtype){
       console.log("charge hadnt sufficient chill points")
 
@@ -100,11 +104,13 @@ function processActiveAttacks(){
     }
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
       //GET ATTaCK DIRECTION
-      if (attackData.keydown > attackData.chargeMaximum){
+      if (attackData.charged && attackData.keydown > attackData.chargeMaximum){
         var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.chargeMaximum
+        var projectileDamage = attackData.projectileDamage + attackData.chargeDamageMultiplier * attackData.chargeMaximum
         var projectileDistance = attackData.projectileDistance + attackData.chargeDistanceMultiplier * attackData.chargeMaximum
       } else {
         var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.keydown
+        var projectileDamage = attackData.projectileDamage + attackData.chargeDamageMultiplier * attackData.keydown
         var projectileDistance = attackData.projectileDistance + attackData.chargeDistanceMultiplier * attackData.keydown
       };
       var distance = attackData.releaseOffset;
@@ -150,18 +156,21 @@ function processActiveAttacks(){
         situationalData.pushback = 0
         coredata.chunks[attackData.chunk].attacks.push(situationalData);
         continue;
+      } else if (at[inst].hasOwnProperty("mana")){
+        at[inst].mana -= attackData.releaseManaCost;
       }
-      if (attackData.release == true){coredata.chunks[attackData.chunk].attacks.push(situationalData)}
+      if (attackData.release){coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)))}
       if (attackData.projectile){
       situationalData.projectile = attackData.projectile
       situationalData.state = attackData.projectileState
       situationalData.startState = attackData.projectileState
+      situationalData.damage = projectileDamage
       situationalData.distance = projectileDistance
       situationalData.type = attackData.projectileType
       situationalData.velocity = attackData.projectileVelocity
       situationalData.pushback = attackData.projectilePushback
-      };
       coredata.chunks[attackData.chunk].attacks.push(situationalData);
+      };
       at[inst].state = attackData.releaseOwnerState
 
       delete activeAttacksQueue[inst];
@@ -254,7 +263,7 @@ function processEffects(){
 
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-  //console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage")
+  console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage. Projectile:", attack.projectile)
   var ownerTeam
   if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
   if (damage == null){damage = 25;};
@@ -277,6 +286,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){break;};
       if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {break;}};
+      if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth)
       db[nameType][name].health = db[nameType][name].health - damage
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
         delete activeAttacksQueue[name];

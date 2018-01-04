@@ -19,8 +19,8 @@ function getDialog(interacter, path){
   if (path[0] == "loot"){
     console.log("looting path: " + path)
     path.splice(0,1,"swap")
-    var verbage = ["-- Replace With: --", coredata.players[interacter].slot1, coredata.players[interacter].slot2, coredata.players[interacter].slot3, "-- Exit --"]
-    var pointers = [null,path.concat(["slot1"]),path.concat(["slot2"]),path.concat(["slot3"]),"exit"]
+    var verbage = ["== Your Equipped: ==", coredata.players[interacter].slot1, coredata.players[interacter].slot2, coredata.players[interacter].slot3, "<"]
+    var pointers = ["exit",path.concat(["slot1"]),path.concat(["slot2"]),path.concat(["slot3"]),"exit"]
     listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
     return;
   }
@@ -77,14 +77,14 @@ function startDialog(interacter){
       if (nameType == "colliders"){continue;};
       if (nameType == "entities" && db[nameType][name].slot1 != null){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
-        var verbage = ["-- Large Chest --", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "-- Exit --"]
-        var pointers = [null,["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
+        var verbage = ["== Chest ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]
+        var pointers = ["exit",["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         break;
       } else if (nameType == "entities"){ console.log("nothing to interact with");continue;};
       if (db[nameType][name].state >= 60 ){
-        var verbage = ["-- " + name +"'s Corpse --", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "-- Exit --"]
-        var pointers = [null,["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
+        var verbage = ["== " + name +"'s Corpse ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]
+        var pointers = ["exit",["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         break;
       }
