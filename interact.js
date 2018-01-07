@@ -75,6 +75,16 @@ function startDialog(interacter){
       var nameType = result[1][hit][2]
       if (chunk == "none"){ continue } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){continue;};
+      if (nameType == "entities" && db[nameType][name].hasOwnProperty("grave")){
+        var verbage = ["You have marked","This grave.",". . . ","You will respawn here","If you die."]
+        var pointers = ["exit"];
+        listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
+        db[nameType][name].state = 67;
+        coredata.players[interacter].health = coredata.players[interacter].maxHealth;
+        var newpos = db[nameType][name].pos.split(".")[0] + "." + (parseInt(db[nameType][name].pos.split(".")[1]) + 6);
+        coredata.players[interacter].origin = newpos;
+        break;
+      }
       if (nameType == "entities" && db[nameType][name].slot1 != null){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
         var verbage = ["== Chest ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]

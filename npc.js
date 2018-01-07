@@ -76,17 +76,17 @@ function npccontroller() {
                         console.log(JSON.stringify(activeAttacksQueue))
                       }
                     }
-                    else if(dirToFace[2] < 4) {
+                    else if(dirToFace[2] < 6) {
                       cdn[npc].dir = dirToFace[0];
                     }
   	                else {
   		                general.DoMovement(npc, chunk, dirToFace[1], 2)
   	                };
 		            }
-                else if (closetarget.length > 1 && closetarget[1] > 8) {
+                else if (closetarget.length > 1 && closetarget[1] > 5) {
                     moveNpcTo(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
-                else if (closetarget[1] <= 8) {
+                else if (closetarget[1] <= 6) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){

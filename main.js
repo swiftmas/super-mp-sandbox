@@ -45,7 +45,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 3, "w": 3};
+	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -84,7 +84,7 @@ function draw(){
 			//Draw each sprite
 			if (db[code].length > 0){
 				image2draw = charAlg(db[code]);
-				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 27)*2, 16, 16);
+				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
 
 			};

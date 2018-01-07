@@ -99,7 +99,6 @@ function processActiveAttacks(){
       ChargeSufficientForRelease = true
     } else if (attackData.charged && attackData.chargeMinimum > attackData.keydown && attackData.attacktype != attackData.inputtype){
       console.log("charge hadnt sufficient chill points")
-
       delete activeAttacksQueue[inst];
     }
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
@@ -147,19 +146,25 @@ function processActiveAttacks(){
       situationalData.h =  attackData.rh
       situationalData.w = attackData.rw
       situationalData.pushback = attackData.releasePushback
-      if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.releaseManaCost){
-        delete activeAttacksQueue[inst];
-        situationalData.damage = 0
-        situationalData.stateWdamage = 0
-        situationalData.type =  attackData.chargeFailType
-        situationalData.state =  attackData.chargeFaileState
-        situationalData.pushback = 0
-        coredata.chunks[attackData.chunk].attacks.push(situationalData);
+      if (attackData.release){
+        if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.releaseManaCost){
+          delete activeAttacksQueue[inst];
+          situationalData.damage = 0
+          situationalData.stateWdamage = 0
+          situationalData.type =  attackData.chargeFailType
+          situationalData.state =  attackData.chargeFaileState
+          situationalData.pushback = 0
+          coredata.chunks[attackData.chunk].attacks.push(situationalData);
+          continue;
+        } else if (at[inst].hasOwnProperty("mana")){
+          at[inst].mana -= attackData.releaseManaCost;
+        }
+        coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)))
+        attackData.release = false;
+        at[inst].state = attackData.releaseOwnerState
         continue;
-      } else if (at[inst].hasOwnProperty("mana")){
-        at[inst].mana -= attackData.releaseManaCost;
       }
-      if (attackData.release){coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)))}
+
       if (attackData.projectile){
       situationalData.projectile = attackData.projectile
       situationalData.state = attackData.projectileState
@@ -170,10 +175,11 @@ function processActiveAttacks(){
       situationalData.velocity = attackData.projectileVelocity
       situationalData.pushback = attackData.projectilePushback
       coredata.chunks[attackData.chunk].attacks.push(situationalData);
-      };
-      at[inst].state = attackData.releaseOwnerState
-
       delete activeAttacksQueue[inst];
+      } else {
+      delete activeAttacksQueue[inst];
+      };
+
     } else { // if charge is still ongoing
       /////////// CHARGE //////////////////////////
       if ( attackData.keydown == 0 || attackData.keydown % 3 === 0){
@@ -263,9 +269,21 @@ function processEffects(){
 
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-  console.log(owner, "attacked at: ", atpos, "for: ", damage, "damage. Projectile:", attack.projectile)
+  console.log(owner, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
   var ownerTeam
-  if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].team} else {ownerTeam = null}
+  if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){
+    ownerdb = coredata.chunks[chunk].npcs[owner]
+    ownerTeam = ownerdb.team
+    if (coredata.chunks.hasOwnProperty(chunk)){
+      if ( !(coredata.chunks[chunk].npcs.hasOwnProperty(owner))){
+        for (otherchunk in coredata.chunks){
+          if (coredata.chunks[otherchunk].npcs.hasOwnProperty(owner)){
+            chunk = otherchunk;
+          }
+        }
+      }
+    } else { console.log("Chunk of attacking NPC was lost, moving on without doing damage"); return;}
+  } else {ownerTeam = null}
   if (damage == null){damage = 25;};
   var at
   switch (direction){
@@ -283,9 +301,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
-      if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
-      if (nameType == "colliders"){break;};
-      if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {break;}};
+      if (chunk == "none"){ db = coredata; console.log("p attacked: ", atpos, at.w, at.h)} else { db = coredata.chunks[chunk]}
+      if (nameType == "colliders"){continue;};
+      if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {continue;}};
       if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth)
       db[nameType][name].health = db[nameType][name].health - damage
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){

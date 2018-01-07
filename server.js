@@ -257,6 +257,7 @@ listener.sockets.on('connection', function(socket){
           attackQueue[data[0]] =  "attack3";
           break;
         case "interact":
+          moveQueue[data[0]] = [data[0], null];
           if (data[2] !== null){
             interact.getDialog(data[0], data[2]);
           } else {
