@@ -269,11 +269,10 @@ function processEffects(){
 
 
 function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendlyFire, pushback){
-  console.log(owner, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
   var ownerTeam
-  if(owner[0] == "p"){ ownerTeam = coredata.players[owner].team} else if (owner[0] == "n"){
-    ownerdb = coredata.chunks[chunk].npcs[owner]
-    ownerTeam = ownerdb.team
+  if(owner[0] == "p"){
+    ownerTeam = coredata.players[owner].team
+  } else if (owner[0] == "n"){
     if (coredata.chunks.hasOwnProperty(chunk)){
       if ( !(coredata.chunks[chunk].npcs.hasOwnProperty(owner))){
         for (otherchunk in coredata.chunks){
@@ -283,7 +282,10 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
         }
       }
     } else { console.log("Chunk of attacking NPC was lost, moving on without doing damage"); return;}
+    ownerdb = coredata.chunks[chunk].npcs[owner]
+    ownerTeam = ownerdb.team
   } else {ownerTeam = null}
+  console.log(owner, " of team: ",ownerTeam, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
   if (damage == null){damage = 25;};
   var at
   switch (direction){
@@ -301,7 +303,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
-      if (chunk == "none"){ db = coredata; console.log("p attacked: ", atpos, at.w, at.h)} else { db = coredata.chunks[chunk]}
+      if (chunk == "none"){ db = coredata} else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){continue;};
       if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {continue;}};
       if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth)
@@ -310,8 +312,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
         delete activeAttacksQueue[name];
       }
       if (db[nameType][name].health > 0 && owner[0] == "p"){
-        if(owner[0] == "p"){ ownerTeam = coredata.players[owner].alerttimer += 10} else if (owner[0] == "n"){ ownerTeam = coredata.chunks[chunk].npcs[owner].alerttimer += 10}
+        if(owner[0] == "p"){ coredata.players[owner].alerttimer += 10} else if (owner[0] == "n"){ coredata.chunks[chunk].npcs[owner].alerttimer += 10}
       }
+      if (name == owner){console.log("HOLY POOP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!888888888888888888888888888", ownerTeam, owner)}
 
       attack.distance = 1;
       attack.velocity = attack.pushback;
