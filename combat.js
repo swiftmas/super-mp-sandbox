@@ -339,6 +339,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       };
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
+	if (name[0] == "p"){
+		listener.sockets.connected[name.slice(1)].emit('serverMessage', {"message": "YOU HAVE DIED", "time": globals.time})
+	}
         if (activeAttacksQueue.hasOwnProperty(name)){
           delete activeAttacksQueue[name];
         }
