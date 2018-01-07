@@ -21,6 +21,7 @@ function getDialog(interacter, path){
     var verbage = ["","","Consumed" + coredata.chunks[path[1]][path[2]][path[3]][path[4]],"",""]
     consumable = coredata.chunks[path[1]][path[2]][path[3]][path[4]].split(" ")
     coredata.players[interacter][consumable[1]] += parseInt(consumable[0])
+    coredata.chunks[path[1]][path[2]][path[3]][path[4]] = "-";
     var pointers = [null,null,null,null,null]
     listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
     return;
