@@ -93,7 +93,7 @@ function processActiveAttacks(){
       if ( typeof cooldown !== "undefined"){
         console.log("hit cooldown", cooldown)
         if (cooldown[0] < globals.dayint || cooldown[1] - attackData.cooldown >= globals.time){
-          break;
+          console.log("")
         }else{
         delete activeAttacksQueue[inst];
         continue;

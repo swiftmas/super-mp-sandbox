@@ -68,7 +68,7 @@ function npccontroller() {
             if (cdn[npc].state == "000") {
                 alertrange(npc, chunk, 30);
                 var closetarget = getSurroundings(npc, chunk, 30);
-                if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData[cdn[npc].slot2].hasOwnProperty("projectile") && globals.weaponData[cdn[npc].slot2].projectile){
+                if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData.hasOwnProperty(cdn[npc].slot2) && globals.weaponData[cdn[npc].slot2].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
