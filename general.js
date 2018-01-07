@@ -67,6 +67,12 @@ function ProcessChunks(){
             coredata.players[player].closeChunks.push(chunk);
             CurrentChunksInTick.push(chunk);
             if (! coredata.chunks.hasOwnProperty(chunk)){
+              if (typeof globals.chunkdata[chunk].lastClosed !== undefined && globals.chunkdata[chunk].lastClosed < globals.dayint - 2){
+                var resetChunkdata = JSON.parse(fs.readFileSync("./daychunks.json"))
+                console.log("chunk refreshed from file after timout of 2 days")
+                for (var k in resetChunkdata[chunk]) globals.chunkdata[chunk][k] =resetChunkdata[chunk][k];
+                delete resetChunkdata;
+              }
               coredata.chunks[chunk] = globals.chunkdata[chunk];
               console.log("New chunk added: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
             };
@@ -77,6 +83,7 @@ function ProcessChunks(){
   for (var chunk in coredata.chunks){
     if (CurrentChunksInTick.indexOf(chunk) == -1){
       delete coredata.chunks[chunk];
+      globals.chunkdata[chunk].lastClosed = globals.dayint;
       console.log("New chunk removed: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
     }
   }

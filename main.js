@@ -148,7 +148,7 @@ function draw(){
 		if (serverMessage != null){
 			if (serverMessageWindow > 20){
 				serverMessageTimer += 1
-			} else {
+			} else if (playerHealth > 0){
 				serverMessageTimer -= 1
 			}
 			serverMessageWindow -= 1

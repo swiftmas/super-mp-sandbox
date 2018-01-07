@@ -225,7 +225,7 @@
     "chargeFaileState":0,
     "chargeFailType": 0,
     "chargeHitState": -1,
-    "chargeOwnerState": 17,
+    "chargeOwnerState": 23,
     "chargeAnimLength":  3,
     "chargeMinimum": 3,
     "chargeMaximum": 6,
