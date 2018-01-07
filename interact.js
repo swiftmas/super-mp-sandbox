@@ -16,6 +16,13 @@ module.exports = {
 };
 
 function getDialog(interacter, path){
+  if (path[0] == "consumable"){
+    console.log("consumable path: " + path)
+    var verbage = ["== Your Equipped: ==", coredata.players[interacter].slot1, coredata.players[interacter].slot2, coredata.players[interacter].slot3, "<"]
+    var pointers = [null,null,null,null,null]
+    listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
+    return;
+  }
   if (path[0] == "loot"){
     console.log("looting path: " + path)
     path.splice(0,1,"swap")
@@ -76,7 +83,7 @@ function startDialog(interacter){
       if (chunk == "none"){ continue } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){continue;};
       if (nameType == "entities" && db[nameType][name].hasOwnProperty("grave")){
-        var verbage = ["You have marked","This grave.",". . . ","You will respawn here","If you die."]
+        var verbage = ["You have bound","yourself to this grave.",". . . ","You will respawn here","If you die."]
         var pointers = ["exit"];
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         db[nameType][name].state = 67;
@@ -88,13 +95,21 @@ function startDialog(interacter){
       if (nameType == "entities" && db[nameType][name].slot1 != null){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
         var verbage = ["== Chest ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]
-        var pointers = ["exit",["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
+        var thing = db[nameType][name];
+        if (thing.slot1.indexOf("mana") !== -1 || thing.slot1.indexOf("health") !== -1 || thing.slot1.indexOf("gold") !== -1){var loot1 = "consumable"}else{var loot1 = "loot"}
+        if (thing.slot2.indexOf("mana") !== -1 || thing.slot2.indexOf("health") !== -1 || thing.slot2.indexOf("gold") !== -1){var loot2 = "consumable"}else{var loot2 = "loot"}
+        if (thing.slot3.indexOf("mana") !== -1 || thing.slot3.indexOf("health") !== -1 || thing.slot3.indexOf("gold") !== -1){var loot3 = "consumable"}else{var loot3 = "loot"}
+        var pointers = ["exit",[loot1, chunk, nameType, name, "slot1"],[loot2, chunk, nameType, name, "slot2"],[loot3, chunk, nameType, name, "slot3"],"exit"]
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         break;
       } else if (nameType == "entities"){ console.log("nothing to interact with");continue;};
       if (db[nameType][name].state >= 60 ){
         var verbage = ["== " + name +"'s Corpse ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]
-        var pointers = ["exit",["loot", chunk, nameType, name, "slot1"],["loot", chunk, nameType, name, "slot2"],["loot", chunk, nameType, name, "slot3"],"exit"]
+        var thing = db[nameType][name];
+        if (thing.slot1.indexOf("mana") !== -1 || thing.slot1.indexOf("health") !== -1 || thing.slot1.indexOf("gold") !== -1){var loot1 = "consumable"}else{var loot1 = "loot"}
+        if (thing.slot2.indexOf("mana") !== -1 || thing.slot2.indexOf("health") !== -1 || thing.slot2.indexOf("gold") !== -1){var loot2 = "consumable"}else{var loot2 = "loot"}
+        if (thing.slot3.indexOf("mana") !== -1 || thing.slot3.indexOf("health") !== -1 || thing.slot3.indexOf("gold") !== -1){var loot3 = "consumable"}else{var loot3 = "loot"}
+        var pointers = ["exit",[loot1, chunk, nameType, name, "slot1"],[loot2, chunk, nameType, name, "slot2"],[loot3, chunk, nameType, name, "slot3"],"exit"]
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         break;
       }
