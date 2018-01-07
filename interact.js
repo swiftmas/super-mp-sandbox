@@ -18,7 +18,9 @@ module.exports = {
 function getDialog(interacter, path){
   if (path[0] == "consumable"){
     console.log("consumable path: " + path)
-    var verbage = ["== Your Equipped: ==", coredata.players[interacter].slot1, coredata.players[interacter].slot2, coredata.players[interacter].slot3, "<"]
+    var verbage = ["","","Consumed" + coredata.chunks[path[1]][path[2]][path[3]][path[4]],"",""]
+    consumable = coredata.chunks[path[1]][path[2]][path[3]][path[4]].split(" ")
+    coredata.players[interacter][consumable[1]] += parseInt(consumable[0])
     var pointers = [null,null,null,null,null]
     listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
     return;
