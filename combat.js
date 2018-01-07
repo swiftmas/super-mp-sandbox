@@ -85,7 +85,20 @@ function processActiveAttacks(){
           for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
           break;
       };
-      if (inst[0] == "n" ){attackData.chargeHardMaximum = attackData.chargeMaximum};
+      if (inst[0] == "n" ){
+        attackData.chargeHardMaximum = attackData.chargeMaximum
+        attackData.cooldown = attackData.npcCooldown
+      };
+      var cooldown = at[inst]["slot" + attackData.attacktype[-1]+"cooldown" ]
+      if ( typeof cooldown !== "undefined"){
+        console.log("hit cooldown", cooldown)
+        if (cooldown[0] < globals.dayint || cooldown[1] - attackData.cooldown >= globals.time){
+          break;
+        }else{
+        delete activeAttacksQueue[inst];
+        continue;
+        };
+      }
     } else {
       attackData.keydown ++
     };
@@ -176,8 +189,10 @@ function processActiveAttacks(){
       situationalData.pushback = attackData.projectilePushback
       coredata.chunks[attackData.chunk].attacks.push(situationalData);
       delete activeAttacksQueue[inst];
+      at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
       } else {
       delete activeAttacksQueue[inst];
+      at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
       };
 
     } else { // if charge is still ongoing

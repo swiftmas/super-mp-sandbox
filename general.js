@@ -46,9 +46,10 @@ function ProcessTime(){
     console.log("Day is near");
   }
   if (globals.time == 0){
-    console.log("Day has broken. the light blesses you");
+    console.log("Day " + globals.dayint +" has broken. the light blesses you");
+    globals.dayint += 1;
     //globals.serverPause = true;
-    globals.serverMessage = "DAY HAS BROKEN | the light blesses you"
+    globals.serverMessage = "DAY " + globals.dayint +" HAS BROKEN | the light blesses you"
     listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
     //globals.ChangeDayNight("day");
     coredata.chunks = {}

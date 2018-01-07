@@ -1,5 +1,7 @@
 {
   "sword1": {
+    "cooldown": 0,
+    "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
     "omnidirectional:": false,
@@ -37,8 +39,8 @@
     "releaseEffects": [],
     "releaseManaCost": 0,
     "releasePushback": 6,
-    "rh": 8,
-    "rw": 6,
+    "rh": 6,
+    "rw": 4,
     "projectile": false,
     "projectileState": 0,
     "projectileType": 0,
@@ -51,6 +53,8 @@
     "pw": 0
   },
   "Giant's Greatsword": {
+    "cooldown": 0,
+    "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
     "omnidirectional:": false,
@@ -88,7 +92,7 @@
     "releaseEffects": [],
     "releaseManaCost": 0,
     "releasePushback": 6,
-    "rh": 7,
+    "rh": 6,
     "rw": 4,
     "projectile": true,
     "projectileState": 3,
@@ -102,6 +106,8 @@
     "pw": 4
   },
   "bow1": {
+    "cooldown": 0,
+    "npcCooldown": 5,
     "interruptible": true,
     "effectsSelf": false,
     "omnidirectional:": false,
@@ -113,7 +119,7 @@
     "chargeFaileState":0,
     "chargeFailType": 0,
     "chargeHitState": -1,
-    "chargeOwnerState": 17,
+    "chargeOwnerState": 24,
     "chargeAnimLength":  3,
     "chargeMinimum": 3,
     "chargeMaximum": 6,
@@ -153,6 +159,8 @@
     "pw": 3
   },
   "Orb_Of_Healing1": {
+    "cooldown": 0,
+    "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
     "omnidirectional:": false,
@@ -204,6 +212,8 @@
     "pw": 4
   },
   "spell1": {
+    "cooldown": 0,
+    "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
     "omnidirectional:": false,
