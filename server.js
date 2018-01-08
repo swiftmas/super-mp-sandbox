@@ -188,7 +188,7 @@ setInterval(function(){
     for (var player in coredata.players){
       var datas = [];
       for (var chunk in coredata.players[player].closeChunks){
-        //console.log(JSON.stringify(coredata.players[player].closeChunks), coredata.players[player].closeChunks[chunk], coredata.chunks);
+        //NPCS
         var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
         for ( var npc in dp){
           var code = dp[npc].team;

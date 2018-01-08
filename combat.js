@@ -253,6 +253,7 @@ function processActiveAttacks(){
         } else {
           at[inst].state = attackData.chargeOwnerState
         }
+        if (attackData.keydown < attackData.chargeMaximum)at[inst].mana -= attackData.chargeManaPerTic
       }
     };
   }
