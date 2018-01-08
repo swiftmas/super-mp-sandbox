@@ -36,11 +36,8 @@ function ProcessTime(){
   };
   if (globals.time == 3000){
     console.log("Night has fallen. The darkness chills you");
-    //globals.serverPause = true;
     globals.serverMessage = "NIGHT HAS FALLEN | The darkness chills you"
     listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
-    //globals.ChangeDayNight("night");
-    coredata.chunks = {}
   }
   if (globals.time == 300){
     console.log("Day is near");
@@ -48,11 +45,8 @@ function ProcessTime(){
   if (globals.time == 0){
     console.log("Day " + globals.dayint +" has broken. the light blesses you");
     globals.dayint += 1;
-    //globals.serverPause = true;
     globals.serverMessage = "DAY " + globals.dayint +" HAS BROKEN | the light blesses you"
     listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
-    //globals.ChangeDayNight("day");
-    coredata.chunks = {}
     globals.time = 6000;
   }
 }
