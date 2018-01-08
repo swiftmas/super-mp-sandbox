@@ -200,7 +200,8 @@ function processActiveAttacks(){
 
     } else { // if charge is still ongoing
       /////////// CHARGE //////////////////////////
-      if ( attackData.keydown == 0 || attackData.keydown % 3 === 0){
+      if ( attackData.keydown == 0 || attackData.keydown % attackData.chargeAnimLength === 0){
+        console.log("kd: ",attackData.keydown)
         var distance = attackData.chargeOffset;
         var atdir = at[inst].dir;
         var atorig = at[inst].pos.split(".");
@@ -248,15 +249,12 @@ function processActiveAttacks(){
         }
         coredata.chunks[attackData.chunk].attacks.push(situationalData);
         if (attackData.keydown >= 3 && attackData.chargeOwnerAnimOnce){
-            attackData.chargeOwnerAnimIsFrozen = true
+            at[inst].state = attackData.chargeOwnerAnimEnd
         } else {
-          at[inst].state = attackData.chargeOwnerState // setting player state due to attack
+          at[inst].state = attackData.chargeOwnerState
         }
-        if (attackData.keydown < attackData.chargeMaximum)at[inst].mana -= attackData.chargeManaPerTic
       }
     };
-    if (attackData.chargeOwnerAnimIsFrozen){at[inst].state = attackData.chargeOwnerState - attackData.chargeAnimLength + 1}
-
   }
 }
 
