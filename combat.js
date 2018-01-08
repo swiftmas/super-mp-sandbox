@@ -247,11 +247,16 @@ function processActiveAttacks(){
           continue;
         }
         coredata.chunks[attackData.chunk].attacks.push(situationalData);
-        at[inst].state = attackData.chargeOwnerState // setting player state due to attack
+        if (attackData.keydown >= 3 && attackData.chargeOwnerAnimOnce){
+            attackData.chargeOwnerAnimIsFrozen = true
+        } else {
+          at[inst].state = attackData.chargeOwnerState // setting player state due to attack
+        }
         if (attackData.keydown < attackData.chargeMaximum)at[inst].mana -= attackData.chargeManaPerTic
       }
     };
-     // This is where we add the else for if its not a new queue item :)
+    if (attackData.chargeOwnerAnimIsFrozen){at[inst].state = attackData.chargeOwnerState - attackData.chargeAnimLength + 1}
+
   }
 }
 
