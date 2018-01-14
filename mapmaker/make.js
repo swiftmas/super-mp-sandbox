@@ -112,6 +112,44 @@ function addItem(type){
 	drawmap();
 }
 
+function move(dir){
+  var chunkID = itemPath[1];
+  var type = itemPath[0];
+  var name = itemPath[2];
+
+  var newpos = chunks[chunkID][type][name].pos
+  switch (dir){
+    case "left":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var x = (parseInt(item[0])-1)
+      newpos = x+"."+item[1];
+      break;
+    case "right":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var x = (parseInt(item[0])+1)
+      newpos = x+"."+item[1];
+      break;
+    case "up":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var y = (parseInt(item[1])-1)
+      newpos = item[0]+"."+y;
+      break;
+    case "down":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var y = (parseInt(item[1])+1)
+      newpos = item[0]+"."+y;
+      break;
+  }
+  chunks[chunkID][type][name].pos = newpos
+  chunks[chunkID][type][name].chunk = chunkID
+  if (chunks[chunkID][type][name].hasOwnProperty("origin")){
+    chunks[chunkID][type][name].origin = newpos
+  }
+  drawmap();
+  document.getElementById("jsonEditor").value = JSON.stringify(chunks[chunkID][type][name], null, 2);
+
+}
+
 function removeItem(){
 	if (itemPath[0] == "chunk"){
 		delete chunks[itemPath[2]];
@@ -182,6 +220,10 @@ document.getElementById("showEntities").addEventListener('click', function(event
 document.getElementById("showNpcs").addEventListener('click', function(event) { drawTrueFalse("showNpcs") });
 document.getElementById("showColliders").addEventListener('click', function(event) { drawTrueFalse("showColliders") });
 
+document.getElementById("left").addEventListener('click', function(event) { move("left") });
+document.getElementById("right").addEventListener('click', function(event) { move("right") });
+document.getElementById("up").addEventListener('click', function(event) { move("up") });
+document.getElementById("down").addEventListener('click', function(event) { move("down") });
 
 
 
