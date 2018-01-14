@@ -17,7 +17,320 @@
           ""
         ]
       ],
-      "pointers": ["exit"],
+      "pointers": [
+        "exit"
+      ],
+      "actions": []
+    }
+  },
+  "Vora": {
+    "0": {
+      "textVariations": [
+        [
+          "",
+          "I doubt you ",
+          "remember much",
+          "...",
+          " "
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "1"
+        ],
+        [
+          "Vora",
+          "1"
+        ],
+        [
+          "Vora",
+          "1"
+        ],
+        [
+          "Vora",
+          "1"
+        ]
+      ],
+      "actions": []
+    },
+    "1": {
+      "textVariations": [
+        [
+          "",
+          "You came to me in ",
+          "death and I have",
+          "brought you new life.",
+          " "
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ]
+      ],
+      "actions": []
+    },
+    "2": {
+      "textVariations": [
+        [
+          "All I ask is you",
+          "complete one favor.",
+          "-- A Favor?",
+          "-- Where Am I?",
+          "-- Who are you?"
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "3"
+        ],
+        [
+          "Vora",
+          "where1"
+        ],
+        [
+          "Vora",
+          "who1"
+        ]
+      ],
+      "actions": []
+    },
+    "3": {
+      "textVariations": [
+        [
+          "Visit the kingdom of ",
+          "the southwest. Give",
+          "King Feron this gift",
+          "for me.",
+          ""
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "4"
+        ],
+        [
+          "Vora",
+          "4"
+        ],
+        [
+          "Vora",
+          "4"
+        ],
+        [
+          "Vora",
+          "4"
+        ],
+        [
+          "Vora",
+          "4"
+        ]
+      ],
+      "actions": []
+    },
+    "4": {
+      "textVariations": [
+        [
+          "-- recieved a gold",
+          "sphere with strange ",
+          "runes on it. -- ",
+          "",
+          " "
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "5"
+        ],
+        [
+          "Vora",
+          "5"
+        ],
+        [
+          "Vora",
+          "5"
+        ],
+        [
+          "Vora",
+          "5"
+        ],
+        [
+          "Vora",
+          "5"
+        ]
+      ],
+      "actions": []
+    },
+    "5": {
+      "textVariations": [
+        [
+          "He need only know",
+          "That it is from",
+          "an old friend.",
+          "",
+          ""
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "6"
+        ],
+        [
+          "Vora",
+          "6"
+        ],
+        [
+          "Vora",
+          "6"
+        ],
+        [
+          "Vora",
+          "6"
+        ],
+        [
+          "Vora",
+          "6"
+        ]
+      ],
+      "actions": []
+    },
+    "6": {
+      "textVariations": [
+        [
+          "Now go, but be wary",
+          "Thieves have made",
+          "refuge of these",
+          "woods.",
+          ""
+        ]
+      ],
+      "pointers": [
+        "exit"
+      ],
+      "actions": []
+    },
+    "where1": {
+      "textVariations": [
+        [
+          "You are in the center",
+          "of the stolen forest.",
+          "This pool is it's ",
+          "heart . . . ",
+          ""
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ]
+      ],
+      "actions": []
+    },
+    "who1": {
+      "textVariations": [
+        [
+          "They call me Vora,",
+          "But I am of little ",
+          "importance to you.",
+          "",
+          ""
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ],
+        [
+          "Vora",
+          "2"
+        ]
+      ],
+      "actions": []
+    },
+    "start": {
+      "textVariations": [
+        [
+          "",
+          "",
+          "Weary Travelor",
+          "...",
+          ">"
+        ]
+      ],
+      "pointers": [
+        [
+          "Vora",
+          "0"
+        ],
+        [
+          "Vora",
+          "0"
+        ],
+        [
+          "Vora",
+          "0"
+        ],
+        [
+          "Vora",
+          "0"
+        ]
+      ],
       "actions": []
     }
   },
@@ -68,7 +381,7 @@
           "of these woods.",
           "keep safe!"
         ],
-	[
+        [
           "lel I dont",
           "even know man",
           "High as a kite",

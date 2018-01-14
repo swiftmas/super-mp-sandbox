@@ -79,7 +79,6 @@ function startDialog(interacter){
   atpos = atpos.join(".");
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
-      console.log(result[1][hit])
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
@@ -116,14 +115,18 @@ function startDialog(interacter){
         listener.sockets.connected[interacter.slice(1)].emit('dialog', [verbage, pointers]);
         break;
       }
-      if (db[nameType][name].hasOwnProperty("team")){ if (db[nameType][name].team == interacterTeam) {
-        getDialog(interacter, ["TeamStandard", "start"])
-        console.log("WHT", name)
-      } else {
-        getDialog(interacter, ["NonTeamStandard", "start"])
-        console.log("WHT", name)
-      }};
-
+      if (db[nameType][name].hasOwnProperty("team")){
+        if (db[nameType][name].hasOwnProperty("properName")){
+          getDialog(interacter, [db[nameType][name].properName, "start"])
+          console.log("GetSpeachWith", name, db[nameType][name].properName)
+        } else if (db[nameType][name].team == interacterTeam) {
+          getDialog(interacter, ["TeamStandard", "start"])
+          console.log("GetSpeachWith", name)
+        }else{
+          getDialog(interacter, ["NonTeamStandard", "start"])
+          console.log("GetSpeachWith", name)
+        }
+      };
     };
   });
 };

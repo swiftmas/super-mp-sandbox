@@ -75,7 +75,7 @@ function draw(){
 		ctx.font='8px tiny';
 		ctx.textAlign="left";
 		// DRAW map ///////////////////////////////////
-		ctx.drawImage(map1, (32 - campos[0])*2 , (32 - campos[1])*2)
+		ctx.drawImage(map1, (32 - campos[0])*2 , (34 - campos[1])*2)
 		//Get all sprite locations
 		db = coredata;
 		db.reverse();

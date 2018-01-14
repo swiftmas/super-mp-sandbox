@@ -71,7 +71,7 @@ function processActiveAttacks(){
 
     // if this is new then we setup the data
     if (Object.keys(activeAttacksQueue[inst]).length == 4 ){
-      console.log(inst, "Attacks with: ", attackData)
+      //console.log(inst, "Attacks with: ", attackData)
       // Get weapon attack data based on slot.
       switch(attackData.attacktype){
         //merges attack data from weapon to attack data object
@@ -324,7 +324,6 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
   }
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
-      console.log(result[1][hit])
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
