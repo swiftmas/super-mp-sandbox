@@ -1,6 +1,6 @@
 //// IMG /////////////////////////////////////////////////////////////
 map1 = new Image();
-map1.src = '/static/bot.png';
+map1.src = '/static/untitled.png';
 map2 = new Image();
 map2.src = '/static/top.png';
 ///////////////////////////////////////////

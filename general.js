@@ -49,9 +49,22 @@ function ProcessChunks(){
   var CurrentChunksInTick = []
   for (var player in coredata.players) {
       coredata.players[player].closeChunks = [];
-      for (var chunk in globals.chunkdata){
+      //Doing math to get surrounding chunk names rather than loop through all chunks, cause no body got time for that.
+      var ppos = coredata.players[player].pos.split(".")
+      var currentChunk = [(parseInt(ppos[0]/128)*128)+64,(parseInt(ppos[1]/128)*128)+64]
+      var chunkBelow=[(parseInt(ppos[0]/128)*128)+64,(parseInt(ppos[1]/128)*128) - 64]
+      var chunkAbove=[(parseInt(ppos[0]/128)*128)+64,(parseInt(ppos[1]/128)*128) + 192]
+      var centerChunks=[currentChunk, chunkAbove, chunkBelow]
+      var surroundingChunks = []
+      for (var c = 0; c < centerChunks.length; c++){
+        var cc = centerChunks[c]
+        surroundingChunks[cc[0]+"."+cc[1]]={}
+        surroundingChunks[cc[0]-128+"."+cc[1]]={}
+        surroundingChunks[cc[0]+128+"."+cc[1]]={}
+      }
+      for (var chunk in surroundingChunks){
         getDist(coredata.players[player].pos, chunk, function(result) {
-          if (Math.abs(result[1]) < 70 && Math.abs(result[2]) < 70){
+          if (Math.abs(result[1]) < 110 && Math.abs(result[2]) < 110){
             coredata.players[player].closeChunks.push(chunk);
             CurrentChunksInTick.push(chunk);
             if (! coredata.chunks.hasOwnProperty(chunk)){
@@ -84,7 +97,7 @@ function Collission(location, width, height, callback){
   collideableParts = chunkParts.concat(["colliders", "players"])
   for (var chunk in coredata.chunks){
     getDist(location, chunk, function(result){
-      if (Math.abs(result[1]) < (64 + (width/2)) && Math.abs(result[2]) < (64 + (height/2))){
+      if (Math.abs(result[1]) < (128 + (width/2)) && Math.abs(result[2]) < (128 + (height/2))){
         for (var part in collideableParts){
           if (collideableParts[part] == "players" && playersHaveBeenRun !== true){var db = coredata[collideableParts[part]]; playersHaveBeenRun = true; chunk = "none"} else {var db = coredata.chunks[chunk][collideableParts[part]]};
           for (var item in db){

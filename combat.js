@@ -85,13 +85,16 @@ function processActiveAttacks(){
           for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
           break;
       };
+      if (attackData.hasOwnProperty("release") == false){
+        delete activeAttacksQueue[inst];
+        continue;
+      }
       if (inst[0] == "n" ){
         attackData.chargeHardMaximum = attackData.chargeMaximum
         attackData.cooldown = attackData.npcCooldown
       };
       var cooldown = at[inst]["slot" + attackData.attacktype[-1]+"cooldown" ]
       if ( typeof cooldown !== "undefined"){
-        console.log("hit cooldown", cooldown)
         if (cooldown[0] < globals.dayint || cooldown[1] - attackData.cooldown >= globals.time){
           console.log("")
         }else{
@@ -201,7 +204,6 @@ function processActiveAttacks(){
     } else { // if charge is still ongoing
       /////////// CHARGE //////////////////////////
       if ( attackData.keydown == 0 || attackData.keydown % attackData.chargeAnimLength === 0){
-        console.log("kd: ",attackData.keydown)
         var distance = attackData.chargeOffset;
         var atdir = at[inst].dir;
         var atorig = at[inst].pos.split(".");
@@ -307,7 +309,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
     ownerdb = coredata.chunks[chunk].npcs[owner]
     ownerTeam = ownerdb.team
   } else {ownerTeam = null}
-  console.log(owner, " of team: ",ownerTeam, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
+  //console.log(owner, " of team: ",ownerTeam, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
   if (damage == null){damage = 25;};
   var at
   switch (direction){
@@ -322,6 +324,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
   }
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
+      console.log(result[1][hit])
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]

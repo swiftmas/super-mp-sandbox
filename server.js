@@ -222,7 +222,7 @@ setInterval(function(){
     }
   } else { listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})}
   ticklength = (new Date().getTime()) - tickstart
-  if ( ticklength > 10){console.log(ticklength)}
+  if ( ticklength > 50){console.log(ticklength)}
 }, 100);
 
 ///// Per Connectoin /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -45,7 +45,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"140.150", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"775.760", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -354,5 +354,7 @@ tc.on("panleft", function(ev){
 });
 map.addEventListener('touchend', touchend, false);
 function touchend(ev){
+	currentDirKey = null;
+	currentDir = null;
 	control("movenull")
 };

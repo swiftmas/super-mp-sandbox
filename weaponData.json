@@ -164,6 +164,7 @@
     "ph": 3,
     "pw": 3
   },
+  "-":{},
   "Orb_Of_Healing1": {
     "cooldown": 0,
     "npcCooldown": 5,

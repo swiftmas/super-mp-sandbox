@@ -2,7 +2,7 @@
 var json = {}
 var map = document.getElementById("map");
 var maptex1 = new Image();
-maptex1.src = '../static/bot.png';
+maptex1.src = '../static/untitled.png';
 var ctx = map.getContext("2d");
 map.width = maptex1.width * 16;
 map.height = maptex1.height * 16;
@@ -91,12 +91,12 @@ function getDist(destination) {
 };
 
 function addchunks(){
-	wide = parseFloat(maptex1.width / 64)
-	high = parseFloat(maptex1.height / 64)
+	wide = parseFloat(maptex1.width / 128)
+	high = parseFloat(maptex1.height / 128)
 	console.log(wide, high);
-	for (var x = 0; x < wide; x++){
-		for (var y = 0; y < high; y++){
-			var chunkname = (x * 64 - 32) + "." + (y * 64 - 32)
+	for (var x = 1; x < wide; x++){
+		for (var y = 1; y < high; y++){
+			var chunkname = (x * 128 - 64) + "." + (y * 128 - 64)
 			if (! chunks.hasOwnProperty(chunkname)){
 					chunks[chunkname] = {"npcs":{}, "colliders":{}, "entities":{}, "attacks":[]}
 			}
@@ -277,7 +277,7 @@ function drawmap(){
 				ctx.beginPath();
 				ctx.strokeStyle="grey";
 				ctx.lineWidth="4";
-				ctx.rect(rco(pos[0] - 32),rco(pos[1] - 32),rco(64),rco(64));
+				ctx.rect(rco(pos[0] - 64),rco(pos[1] - 64),rco(128),rco(128));
 				ctx.stroke();
 			}
 			if (drawbool.showEntities == true){
