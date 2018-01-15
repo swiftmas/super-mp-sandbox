@@ -23,6 +23,38 @@
       "actions": []
     }
   },
+  "sign": {
+    "start": {
+      "textVariations": [
+        [
+          "--",
+          "Sign is no longer  ",
+          "Ledgible. ",
+          "--",
+          ""
+        ]
+      ],
+      "pointers": [
+        "exit"
+      ],
+      "actions": []
+    },
+    "graveTooltip": {
+      "textVariations": [
+        [
+          "== TIP ==",
+          "Graves can be marked",
+          "Almost like checkpoints. ",
+          "You will respawn there ",
+          "if you die."
+        ]
+      ],
+      "pointers": [
+        "exit"
+      ],
+      "actions": []
+    }
+  },
   "Vora": {
     "0": {
       "textVariations": [
@@ -223,7 +255,7 @@
     "6": {
       "textVariations": [
         [
-          "Now go, but be wary",
+          "Now go, but be wary.",
           "Thieves have made",
           "refuge of these",
           "woods.",

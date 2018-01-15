@@ -190,6 +190,7 @@ function processActiveAttacks(){
       situationalData.type = attackData.projectileType
       situationalData.velocity = attackData.projectileVelocity
       situationalData.pushback = attackData.projectilePushback
+      situationalData.projectileEndAnim = attackData.projectileEndAnim
       coredata.chunks[attackData.chunk].attacks.push(situationalData);
       delete activeAttacksQueue[inst];
       at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
@@ -340,9 +341,12 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       }
       if (name == owner){console.log("HOLY POOP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!888888888888888888888888888", ownerTeam, owner)}
 
+      if (attack.hasOwnProperty("projectileEndAnim")){
       attack.distance = 1;
+      attack.state = attack.projectileEndAnim;
       attack.velocity = attack.pushback;
       attack.done = true;
+      };
       if (db[nameType][name].immoveable == null){
         general.DoMovement(name, chunk, direction, pushback, false, false);
       };

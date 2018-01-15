@@ -84,6 +84,7 @@ function startDialog(interacter){
       var nameType = result[1][hit][2]
       if (chunk == "none"){ continue } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){continue;};
+      if (db[nameType][name].hasOwnProperty("singleMessage")){ getDialog(interacter, [db[nameType][name].properName, db[nameType][name].singleMessage]) };
       if (nameType == "entities" && db[nameType][name].hasOwnProperty("grave")){
         var verbage = ["You have bound","yourself to this grave.",". . . ","You will respawn here","If you die."]
         var pointers = ["exit"];

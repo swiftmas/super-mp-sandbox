@@ -251,11 +251,11 @@ resize();
 
 document.onkeydown= function(event) {
 		var key= (event || window.event).keyCode;
-		if (key == 78){ control("attack1"); return };
-		if (key == 74){ control("attack2"); return };
-		if (key == 77){ control("attack3"); return };
+		if (key == 74){ control("attack1"); return };
+		if (key == 75){ control("attack2"); return };
+		if (key == 76){ control("attack3"); return };
 		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
-		if (key == 75){ control("interact"); return };
+		if (key == 73){ control("interact"); return };
 		//wasd
 		if (key == 87){ control("2") };
 		if (key == 68){ control("4") };
@@ -266,7 +266,7 @@ document.onkeydown= function(event) {
 		if (key == 39){ event.preventDefault(); control("4") };
 		if (key == 40){ event.preventDefault(); control("6") };
 		if (key == 37){ event.preventDefault(); control("8") };
-		if ([78, 74, 77].indexOf(key) == -1){
+		if ([74, 75, 76].indexOf(key) == -1){
 			currentDirKey = key;
 		}
 };
@@ -278,7 +278,7 @@ document.onkeyup= function(event) {
 			currentDirKey = null;
 			currentDir = null;
 			control("movenull");
-		} else if ([78, 74, 77].indexOf(key) > -1){
+		} else if ([74, 75, 76].indexOf(key) > -1){
 			control("attacknull");
 		};
 };

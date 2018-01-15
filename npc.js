@@ -73,7 +73,6 @@ function npccontroller() {
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
                         activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": 0};
-                        console.log(JSON.stringify(activeAttacksQueue))
                       }
                     }
                     else if(dirToFace[2] < 6) {
@@ -91,14 +90,13 @@ function npccontroller() {
                     if (cdn[npc].dir == dirToFace[0]) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
                         activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": 0};
-                        console.log(JSON.stringify(activeAttacksQueue))
                       }
                     }
                     else {
                         cdn[npc].dir = dirToFace[0];
                     };
                 } else if (cdn[npc].pos !== cdn[npc].origin){
-                    //headhome(npc);
+                    headhome(npc, chunk);
                     var none="none";
                 };
             };
@@ -175,10 +173,10 @@ function alertrange(npc, chunk, dist) {
     };
 };
 
-function headhome(npc){
+function headhome(npc, chunk){
     console.log("HEAD HOME!")
-    tar = coredata.npcs[npc].pos.split(".")
-    moveNpcTo(npc, tar[0], tar[1])
+    tar = coredata.chunks[chunk].npcs[npc].origin.split(".")
+    moveNpcTo(npc, chunk, tar[0], tar[1])
 };
 
 function isLineOfSight(orig, target) {
