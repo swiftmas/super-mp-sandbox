@@ -174,9 +174,18 @@ function alertrange(npc, chunk, dist) {
 };
 
 function headhome(npc, chunk){
-    console.log("HEAD HOME!")
     tar = coredata.chunks[chunk].npcs[npc].origin.split(".")
-    moveNpcTo(npc, chunk, tar[0], tar[1])
+    loc = coredata.chunks[chunk].npcs[npc].pos.split(".")
+    general.getDist(coredata.chunks[chunk].npcs[npc].origin, coredata.chunks[chunk].npcs[npc].pos, function(result){
+      if (result[0] > 3) {
+        moveNpcTo(npc, chunk, tar[0], tar[1])
+      } else {
+        if (Math.floor(Math.random() * Math.floor(100) < 2 )){
+          coredata.chunks[chunk].npcs[npc].dir = Math.floor(Math.random()*(4-1+1)+1)*2
+          console.log(coredata.chunks[chunk].npcs[npc].dir)
+        }
+      }
+    });
 };
 
 function isLineOfSight(orig, target) {

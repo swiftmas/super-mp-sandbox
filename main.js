@@ -45,7 +45,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "140.150", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -56,7 +56,7 @@ function add_player(team){
 function charAlg(code){
 	block = code.split(".");
 	yvalue = ((block[0] -1) * 64) + (((block[1]/2) - 1) * 16);
-	anims = [0, 48, 96, 144, 192, 240, 288]
+	anims = [0, 48, 96, 144, 192, 240, 288, 336, 384, 432, 480]
 	if (block[2] < 10){
 		xvalue = anims[0] + (block[2] * 16);
 	}

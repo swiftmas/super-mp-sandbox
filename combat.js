@@ -232,15 +232,20 @@ function processActiveAttacks(){
         situationalData.owner = inst
         situationalData.chunk = attackData.chunk
         situationalData.damage = attackData.chargeDamage
-        situationalData.state =  attackData.chargeState
         situationalData.startState = attackData.chargeState
         situationalData.stateWdamage = attackData.chargeDamageAtState
+        situationalData.state =  attackData.chargeState
         situationalData.type = attackData.chargeType
+        if (attackData.keydown >= attackData.chargeMaximum){
+          situationalData.state =  attackData.chargeMaximumState
+          situationalData.type = attackData.chargeMaximumType
+        }
         situationalData.h = attackData.ch
         situationalData.w = attackData.cw
         situationalData.pushback = attackData.releasePushback
         if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic){
           console.log("OOM")
+          at[inst].mana += attackData.chargeManaPerTic * parseInt(attackData.keydown/attackData.chargeAnimLength)
           delete activeAttacksQueue[inst];
           situationalData.damage = 0
           situationalData.stateWdamage = 0
@@ -256,7 +261,7 @@ function processActiveAttacks(){
         } else {
           at[inst].state = attackData.chargeOwnerState
         }
-        if (attackData.keydown < attackData.chargeMaximum)at[inst].mana -= attackData.chargeManaPerTic
+        if (attackData.keydown < attackData.chargeMaximum){at[inst].mana -= attackData.chargeManaPerTic}
       }
     };
   }
@@ -276,6 +281,7 @@ function processEffects(){
         }
         if (db[attack].distance > 0){
           db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true, db[attack].pushback)
+          if (db[attack].hasOwnProperty("done")){db[attack].velocity = 0;}
         } else {
            db.splice(attack, 1); break;
         };
@@ -341,8 +347,8 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       }
       if (name == owner){console.log("HOLY POOP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!888888888888888888888888888", ownerTeam, owner)}
 
-      if (attack.hasOwnProperty("projectileEndAnim")){
-      attack.distance = 1;
+      if (attack.hasOwnProperty("projectileEndAnim") && !(attack.hasOwnProperty("done"))){
+      attack.distance = 3;
       attack.state = attack.projectileEndAnim;
       attack.velocity = attack.pushback;
       attack.done = true;

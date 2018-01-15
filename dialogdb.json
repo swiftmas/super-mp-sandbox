@@ -62,8 +62,8 @@
           "",
           "I doubt you ",
           "remember much",
-          "...",
-          " "
+          "",
+          " ..."
         ]
       ],
       "pointers": [
@@ -93,7 +93,7 @@
           "You came to me in ",
           "death and I have",
           "brought you new life.",
-          " "
+          " ..."
         ]
       ],
       "pointers": [
@@ -191,7 +191,7 @@
           "sphere with strange ",
           "runes on it. -- ",
           "",
-          " "
+          "..."
         ]
       ],
       "pointers": [
@@ -225,7 +225,7 @@
           "That it is from",
           "an old friend.",
           "",
-          ""
+          "..."
         ]
       ],
       "pointers": [
@@ -273,7 +273,7 @@
           "You are in the center",
           "of the stolen forest.",
           "This pool is it's ",
-          "heart . . . ",
+          "heart.",
           ""
         ]
       ],
@@ -304,9 +304,9 @@
     "who1": {
       "textVariations": [
         [
-          "They call me Vora,",
-          "But I am of little ",
-          "importance to you.",
+          "My name is of little",
+          "importance. I am merely",
+          "the keeper of this grove",
           "",
           ""
         ]
@@ -341,8 +341,8 @@
           "",
           "",
           "Weary Travelor",
-          "...",
-          ">"
+          "",
+          "..."
         ]
       ],
       "pointers": [
@@ -412,13 +412,6 @@
           "Many a tale ",
           "of these woods.",
           "keep safe!"
-        ],
-        [
-          "lel I dont",
-          "even know man",
-          "High as a kite",
-          "all day erry",
-          "Day."
         ]
       ],
       "pointers": [
