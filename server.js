@@ -180,7 +180,7 @@ setInterval(function(){
       var state = dp[player].state;
       var dir = dp[player].dir
       //position player camera!
-      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana])
+      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana],dp[player].slot1, dp[player].slot2, dp[player].slot3)
       playerDatas.push(code + "." + dir + "." + state + "." + pos);
     }
 
@@ -221,7 +221,7 @@ setInterval(function(){
     }
   } else { listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})}
   ticklength = (new Date().getTime()) - tickstart
-  if ( ticklength > 50){console.log(ticklength)}
+  if ( ticklength > 10){console.log(ticklength)}
 }, 100);
 
 ///// Per Connectoin /////////////////////////////////////////////////////////////////////////////////////////////////
