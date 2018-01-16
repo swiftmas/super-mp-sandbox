@@ -2,7 +2,7 @@
 var json = {}
 var map = document.getElementById("map");
 var maptex1 = new Image();
-maptex1.src = '../static/bot.png';
+maptex1.src = '../static/untitled.png';
 var ctx = map.getContext("2d");
 map.width = maptex1.width * 16;
 map.height = maptex1.height * 16;
@@ -91,12 +91,12 @@ function getDist(destination) {
 };
 
 function addchunks(){
-	wide = parseFloat(maptex1.width / 64)
-	high = parseFloat(maptex1.height / 64)
+	wide = parseFloat(maptex1.width / 128)
+	high = parseFloat(maptex1.height / 128)
 	console.log(wide, high);
-	for (var x = 0; x < wide; x++){
-		for (var y = 0; y < high; y++){
-			var chunkname = (x * 64 - 32) + "." + (y * 64 - 32)
+	for (var x = 1; x < wide; x++){
+		for (var y = 1; y < high; y++){
+			var chunkname = (x * 128 - 64) + "." + (y * 128 - 64)
 			if (! chunks.hasOwnProperty(chunkname)){
 					chunks[chunkname] = {"npcs":{}, "colliders":{}, "entities":{}, "attacks":[]}
 			}
@@ -112,6 +112,44 @@ function addItem(type){
 	drawmap();
 }
 
+function move(dir){
+  var chunkID = itemPath[1];
+  var type = itemPath[0];
+  var name = itemPath[2];
+
+  var newpos = chunks[chunkID][type][name].pos
+  switch (dir){
+    case "left":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var x = (parseInt(item[0])-1)
+      newpos = x+"."+item[1];
+      break;
+    case "right":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var x = (parseInt(item[0])+1)
+      newpos = x+"."+item[1];
+      break;
+    case "up":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var y = (parseInt(item[1])-1)
+      newpos = item[0]+"."+y;
+      break;
+    case "down":
+      var item = chunks[chunkID][type][name].pos.split(".")
+      var y = (parseInt(item[1])+1)
+      newpos = item[0]+"."+y;
+      break;
+  }
+  chunks[chunkID][type][name].pos = newpos
+  chunks[chunkID][type][name].chunk = chunkID
+  if (chunks[chunkID][type][name].hasOwnProperty("origin")){
+    chunks[chunkID][type][name].origin = newpos
+  }
+  drawmap();
+  document.getElementById("jsonEditor").value = JSON.stringify(chunks[chunkID][type][name], null, 2);
+
+}
+
 function removeItem(){
 	if (itemPath[0] == "chunk"){
 		delete chunks[itemPath[2]];
@@ -124,7 +162,8 @@ function removeItem(){
 }
 
 function download() {
-	alert(JSON.stringify(chunks))
+  document.getElementById('jsonExport').style.display = "block";
+	document.getElementById('exportContent').innerHTML = JSON.stringify(chunks)
 }
 
 function changeJson(){
@@ -181,6 +220,10 @@ document.getElementById("showEntities").addEventListener('click', function(event
 document.getElementById("showNpcs").addEventListener('click', function(event) { drawTrueFalse("showNpcs") });
 document.getElementById("showColliders").addEventListener('click', function(event) { drawTrueFalse("showColliders") });
 
+document.getElementById("left").addEventListener('click', function(event) { move("left") });
+document.getElementById("right").addEventListener('click', function(event) { move("right") });
+document.getElementById("up").addEventListener('click', function(event) { move("up") });
+document.getElementById("down").addEventListener('click', function(event) { move("down") });
 
 
 
@@ -265,18 +308,18 @@ document.getElementById("start").addEventListener('click', function(event) { dra
 function drawmap(){
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	collElements = [];
-	ctx.drawImage(maptex1, 0, 0, maptex1.width * sizemultiplier, maptex1.height * sizemultiplier)
-	map.width = maptex1.width * sizemultiplier;
-	map.height = maptex1.height * sizemultiplier;
+	ctx.drawImage(maptex1, 0, 0, maptex1.width * sizemultiplier, maptex1.height * sizemultiplier);
+	map.width = (maptex1.width * sizemultiplier)/2;
+	map.height = (maptex1.height * sizemultiplier)/2;
 	document.getElementById("dimensions").innerHTML = "Dimensions:" + (maptex1.width) + " by " + (maptex1.height);
 	if (chunks != undefined) {
 		for (chunk in chunks){
 			if (drawbool.showChunks == true){
-				pos = chunk.split(".")
+				pos = chunk.split(".");
 				ctx.beginPath();
 				ctx.strokeStyle="grey";
 				ctx.lineWidth="4";
-				ctx.rect(rco(pos[0] - 32),rco(pos[1] - 32),rco(64),rco(64));
+				ctx.rect(rco(pos[0] - 64),rco(pos[1] - 64),rco(128),rco(128));
 				ctx.stroke();
 			}
 			if (drawbool.showEntities == true){

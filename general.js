@@ -31,32 +31,17 @@ module.exports = {
 
 function ProcessTime(){
   globals.time -= 1
-  if (globals.time == 3300){
-    console.log("The day grows long");
-  };
   if (globals.time == 3000){
     console.log("Night has fallen. The darkness chills you");
-    globals.serverPause = true;
     globals.serverMessage = "NIGHT HAS FALLEN | The darkness chills you"
-    globals.ChangeDayNight("night");
-    coredata.chunks = {}
-  }
-  if (globals.time == 2960){
-    globals.serverPause = false;
-  }
-  if (globals.time == 300){
-    console.log("Day is near");
+    listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
   }
   if (globals.time == 0){
-    console.log("Day has broken. the light blesses you");
-    globals.serverPause = true;
-    globals.serverMessage = "DAY HAS BROKEN | the light blesses you"
-    globals.ChangeDayNight("day");
-    coredata.chunks = {}
+    console.log("Day " + globals.dayint +" has broken. the light blesses you");
+    globals.dayint += 1;
     globals.time = 6000;
-  }
-  if (globals.time == 5960){
-    globals.serverPause = false;
+    globals.serverMessage = "DAY " + globals.dayint +" HAS BROKEN | the light blesses you"
+    listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
   }
 }
 
@@ -64,12 +49,31 @@ function ProcessChunks(){
   var CurrentChunksInTick = []
   for (var player in coredata.players) {
       coredata.players[player].closeChunks = [];
-      for (var chunk in globals.chunkdata){
+      //Doing math to get surrounding chunk names rather than loop through all chunks, cause no body got time for that.
+      var ppos = coredata.players[player].pos.split(".")
+      var currentChunk = [(parseInt(ppos[0]/128)*128)+64,(parseInt(ppos[1]/128)*128)+64]
+      var chunkBelow=[(parseInt(ppos[0]/128)*128)+64,(parseInt(ppos[1]/128)*128) - 64]
+      var chunkAbove=[(parseInt(ppos[0]/128)*128)+64,(parseInt(ppos[1]/128)*128) + 192]
+      var centerChunks=[currentChunk, chunkAbove, chunkBelow]
+      var surroundingChunks = []
+      for (var c = 0; c < centerChunks.length; c++){
+        var cc = centerChunks[c]
+        surroundingChunks[cc[0]+"."+cc[1]]={}
+        surroundingChunks[cc[0]-128+"."+cc[1]]={}
+        surroundingChunks[cc[0]+128+"."+cc[1]]={}
+      }
+      for (var chunk in surroundingChunks){
         getDist(coredata.players[player].pos, chunk, function(result) {
-          if (Math.abs(result[1]) < 70 && Math.abs(result[2]) < 70){
+          if (Math.abs(result[1]) < 110 && Math.abs(result[2]) < 110){
             coredata.players[player].closeChunks.push(chunk);
             CurrentChunksInTick.push(chunk);
             if (! coredata.chunks.hasOwnProperty(chunk)){
+              if (typeof globals.chunkdata[chunk].lastClosed !== undefined && globals.chunkdata[chunk].lastClosed < globals.dayint - 2){
+                var resetChunkdata = JSON.parse(fs.readFileSync("./daychunks.json"))
+                console.log("chunk refreshed from file after timout of 2 days")
+                for (var k in resetChunkdata[chunk]) globals.chunkdata[chunk][k] =resetChunkdata[chunk][k];
+                delete resetChunkdata;
+              }
               coredata.chunks[chunk] = globals.chunkdata[chunk];
               console.log("New chunk added: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
             };
@@ -80,6 +84,7 @@ function ProcessChunks(){
   for (var chunk in coredata.chunks){
     if (CurrentChunksInTick.indexOf(chunk) == -1){
       delete coredata.chunks[chunk];
+      globals.chunkdata[chunk].lastClosed = globals.dayint;
       console.log("New chunk removed: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
     }
   }
@@ -92,7 +97,7 @@ function Collission(location, width, height, callback){
   collideableParts = chunkParts.concat(["colliders", "players"])
   for (var chunk in coredata.chunks){
     getDist(location, chunk, function(result){
-      if (Math.abs(result[1]) < (64 + (width/2)) && Math.abs(result[2]) < (64 + (height/2))){
+      if (Math.abs(result[1]) < (128 + (width/2)) && Math.abs(result[2]) < (128 + (height/2))){
         for (var part in collideableParts){
           if (collideableParts[part] == "players" && playersHaveBeenRun !== true){var db = coredata[collideableParts[part]]; playersHaveBeenRun = true; chunk = "none"} else {var db = coredata.chunks[chunk][collideableParts[part]]};
           for (var item in db){
@@ -128,6 +133,20 @@ function StateController(){
     if (db[player].state % 10 == 0){
       db[player].state = 0;
     }
+    if (db[player].hasOwnProperty("effects")){
+      for (var effect in db[player].effects){
+        if (db[player].effects[effect] > 0){
+          db[player].effects[effect] -= 1
+        } else {
+          delete db[player].effects[effect]
+        };
+      }
+    };
+    if (db[player].hasOwnProperty("alerttimer")){
+      if (db[player].alerttimer > 0){
+        db[player].alerttimer -= 1
+      }
+    };
   }
   for (var chunk in coredata.chunks){
     for (var part in stateParts){
@@ -142,6 +161,20 @@ function StateController(){
         if (db[item].state % 10 == 0){
           db[item].state = 0;
         }
+        if (db[item].hasOwnProperty("effects")){
+          for (var effect in db[item].effects){
+            if (db[item].effects[effect] > 0){
+              db[item].effects[effect] -= 1
+            } else {
+              delete db[item].effects[effect]
+            }
+          }
+        };
+        if (db[item].hasOwnProperty("alerttimer")){
+          if (db[item].alerttimer > 0){
+            db[item].alerttimer -= 1
+          }
+        };
       }
     }
   }

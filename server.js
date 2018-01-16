@@ -162,7 +162,6 @@ setInterval(function(){
     general.ProcessChunks();
     general.StateController();
     npcs.npccontroller();
-    npcs.alerttimedown();
     general.ProcessMovements();
     combat.processAttackQueue();
     combat.processEffects();
@@ -181,14 +180,14 @@ setInterval(function(){
       var state = dp[player].state;
       var dir = dp[player].dir
       //position player camera!
-      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health])
+      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana],dp[player].slot1, dp[player].slot2, dp[player].slot3)
       playerDatas.push(code + "." + dir + "." + state + "." + pos);
     }
 
     for (var player in coredata.players){
       var datas = [];
       for (var chunk in coredata.players[player].closeChunks){
-        //console.log(JSON.stringify(coredata.players[player].closeChunks), coredata.players[player].closeChunks[chunk], coredata.chunks);
+        //NPCS
         var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
         for ( var npc in dp){
           var code = dp[npc].team;
@@ -257,6 +256,7 @@ listener.sockets.on('connection', function(socket){
           attackQueue[data[0]] =  "attack3";
           break;
         case "interact":
+          moveQueue[data[0]] = [data[0], null];
           if (data[2] !== null){
             interact.getDialog(data[0], data[2]);
           } else {
@@ -281,7 +281,12 @@ listener.sockets.on('connection', function(socket){
   socket.on('disconnect', function() {
     console.log(this.id + "Disconnected");
     var cleanid = this.id
-    if (typeof coredata.players["p"+cleanid] !== undefined){
+    if (typeof coredata.players["p"+cleanid] !== undefined && coredata.players.hasOwnProperty("p"+cleanid)){
+        //var newnpc = coredata.chunks[coredata.players["p"+cleanid].closeChunks[0]].npcs;
+        //newnpc["p"+cleanid] = {}
+        //for(var k in coredata.players["p"+cleanid]) {newnpc["p"+cleanid][k]=coredata.players["p"+cleanid][k]};
+        //newnpc["p"+cleanid].state = 63
+        //newnpc["p"+cleanid].chunk = coredata.players["p"+cleanid].closeChunks[0]
         delete coredata.players["p" + cleanid];
         console.log("cleaned up " + cleanid)
     };

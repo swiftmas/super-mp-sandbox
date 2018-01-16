@@ -68,37 +68,35 @@ function npccontroller() {
             if (cdn[npc].state == "000") {
                 alertrange(npc, chunk, 30);
                 var closetarget = getSurroundings(npc, chunk, 30);
-                if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 8 && cdn[npc].slot2 != undefined && globals.weaponData[cdn[npc].slot2].projectile){
+                if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData.hasOwnProperty(cdn[npc].slot2) && globals.weaponData[cdn[npc].slot2].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
-                        activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": -1};
-                        console.log(JSON.stringify(activeAttacksQueue))
+                        activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": 0};
                       }
                     }
-                    else if(dirToFace[2] < 4) {
+                    else if(dirToFace[2] < 6) {
                       cdn[npc].dir = dirToFace[0];
                     }
   	                else {
   		                general.DoMovement(npc, chunk, dirToFace[1], 2)
   	                };
 		            }
-                else if (closetarget.length > 1 && closetarget[1] > 8) {
+                else if (closetarget.length > 1 && closetarget[1] > 5) {
                     moveNpcTo(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
-                else if (closetarget[1] <= 8) {
+                else if (closetarget[1] <= 6) {
                     dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0]) {
                       if (!(activeAttacksQueue.hasOwnProperty(npc))){
-                        activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": -1};
-                        console.log(JSON.stringify(activeAttacksQueue))
+                        activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": 0};
                       }
                     }
                     else {
                         cdn[npc].dir = dirToFace[0];
                     };
                 } else if (cdn[npc].pos !== cdn[npc].origin){
-                    //headhome(npc);
+                    headhome(npc, chunk);
                     var none="none";
                 };
             };
@@ -155,11 +153,15 @@ function alertrange(npc, chunk, dist) {
     for (var player in coredata.players) {
         if (gp.hasOwnProperty(player)) {
             var ppos = [gp[player].pos.split(".")[0], gp[player].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== cdn.team && gp[player].state < 59) {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== cdn.team && gp[player].state < 59 && !(gp[player].effects.hasOwnProperty("stealth"))) {
                 //var cansee = isLineOfSight(trueorig, ppos)
                 var cansee = true;
                 if (cansee == true){
+                  if (gp[player].alerttimer < 35 ){
                     gp[player].alerttimer = 35;
+                  } else {
+                    gp[player].alerttimer += 1;
+                  }
                 };
             };
         };
@@ -168,17 +170,30 @@ function alertrange(npc, chunk, dist) {
     for (var npctar in gn) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59) {
-                gn[npctar].alerttimer = 35;
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59 && !(gp[player].effects.hasOwnProperty("stealth"))) {
+              if (gp[npctar].alerttimer < 35 ){
+                gp[npctar].alerttimer = 35;
+              } else {
+                gp[npctar].alerttimer += 1;
+              }
             };
         };
     };
 };
 
-function headhome(npc){
-    console.log("HEAD HOME!")
-    tar = coredata.npcs[npc].pos.split(".")
-    moveNpcTo(npc, tar[0], tar[1])
+function headhome(npc, chunk){
+    tar = coredata.chunks[chunk].npcs[npc].origin.split(".")
+    loc = coredata.chunks[chunk].npcs[npc].pos.split(".")
+    general.getDist(coredata.chunks[chunk].npcs[npc].origin, coredata.chunks[chunk].npcs[npc].pos, function(result){
+      if (result[0] > 3) {
+        moveNpcTo(npc, chunk, tar[0], tar[1])
+      } else {
+        if (Math.floor(Math.random() * Math.floor(100) < 2 )){
+          coredata.chunks[chunk].npcs[npc].dir = Math.floor(Math.random()*(4-1+1)+1)*2
+          console.log(coredata.chunks[chunk].npcs[npc].dir)
+        }
+      }
+    });
 };
 
 function isLineOfSight(orig, target) {
@@ -282,7 +297,7 @@ function getSurroundings(npc, chunk, dist) {
     var origin = coredata.chunks[chunk].npcs[npc].pos;
     var team = coredata.chunks[chunk].npcs[npc].team;
     var dist = parseInt(dist);
-    var surroundings = ["none", dist];
+    var surroundings = ["none", dist, 0, 0, 0];
     var orig = [origin.split(".")[0], origin.split(".")[1]];
     var gp = coredata.players
     for (var player in coredata.players) {
@@ -290,11 +305,11 @@ function getSurroundings(npc, chunk, dist) {
             var ppos = gp[player].pos;
             var ppsspl = gp[player].pos.split(".")
             general.getDist(origin, ppos, function(result){
-              if (result[0] < surroundings[1]) {
-                surroundings = [player, result[0], ppsspl[0], ppsspl[1]];
+              if (result[0] < dist && gp[player].alerttimer > surroundings[4]) {
+                surroundings = [player, result[0], ppsspl[0], ppsspl[1], gp[player].alerttimer];
               }
-              else if (result[0] == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
-                surroundings = [player, result[0], ppsspl[0], ppsspl[1]];
+              else if (gp[player].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [player, result[0], ppsspl[0], ppsspl[1], gp[player].alerttimer];
               };
             });
         };
@@ -305,11 +320,11 @@ function getSurroundings(npc, chunk, dist) {
             var ppos = gn[npctar].pos;
             var ppsspl = gn[npctar].pos.split(".")
             general.getDist(origin, ppos, function(result){
-              if (result[0] < surroundings[1]) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
+              if (result[0] < dist && gp[npctar].alerttimer > surroundings[4]) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
               }
-              else if (result[0] == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
+              else if (gp[npctar].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
               };
             });
         };
