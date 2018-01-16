@@ -153,11 +153,15 @@ function alertrange(npc, chunk, dist) {
     for (var player in coredata.players) {
         if (gp.hasOwnProperty(player)) {
             var ppos = [gp[player].pos.split(".")[0], gp[player].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== cdn.team && gp[player].state < 59) {
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gp[player].team !== cdn.team && gp[player].state < 59 && !(gp[player].effects.hasOwnProperty("stealth"))) {
                 //var cansee = isLineOfSight(trueorig, ppos)
                 var cansee = true;
                 if (cansee == true){
+                  if (gp[player].alerttimer < 35 ){
                     gp[player].alerttimer = 35;
+                  } else {
+                    gp[player].alerttimer += 1;
+                  }
                 };
             };
         };
@@ -166,8 +170,12 @@ function alertrange(npc, chunk, dist) {
     for (var npctar in gn) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
-            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59) {
-                gn[npctar].alerttimer = 35;
+            if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59 && !(gp[player].effects.hasOwnProperty("stealth"))) {
+              if (gp[npctar].alerttimer < 35 ){
+                gp[npctar].alerttimer = 35;
+              } else {
+                gp[npctar].alerttimer += 1;
+              }
             };
         };
     };
@@ -289,7 +297,7 @@ function getSurroundings(npc, chunk, dist) {
     var origin = coredata.chunks[chunk].npcs[npc].pos;
     var team = coredata.chunks[chunk].npcs[npc].team;
     var dist = parseInt(dist);
-    var surroundings = ["none", dist];
+    var surroundings = ["none", dist, 0, 0, 0];
     var orig = [origin.split(".")[0], origin.split(".")[1]];
     var gp = coredata.players
     for (var player in coredata.players) {
@@ -297,11 +305,11 @@ function getSurroundings(npc, chunk, dist) {
             var ppos = gp[player].pos;
             var ppsspl = gp[player].pos.split(".")
             general.getDist(origin, ppos, function(result){
-              if (result[0] < surroundings[1]) {
-                surroundings = [player, result[0], ppsspl[0], ppsspl[1]];
+              if (result[0] < dist && gp[player].alerttimer > surroundings[4]) {
+                surroundings = [player, result[0], ppsspl[0], ppsspl[1], gp[player].alerttimer];
               }
-              else if (result[0] == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
-                surroundings = [player, result[0], ppsspl[0], ppsspl[1]];
+              else if (gp[player].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [player, result[0], ppsspl[0], ppsspl[1], gp[player].alerttimer];
               };
             });
         };
@@ -312,11 +320,11 @@ function getSurroundings(npc, chunk, dist) {
             var ppos = gn[npctar].pos;
             var ppsspl = gn[npctar].pos.split(".")
             general.getDist(origin, ppos, function(result){
-              if (result[0] < surroundings[1]) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
+              if (result[0] < dist && gp[npctar].alerttimer > surroundings[4]) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
               }
-              else if (result[0] == surroundings[1] && Math.floor((Math.random() * 2)) == 1) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1]];
+              else if (gp[npctar].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
               };
             });
         };

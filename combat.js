@@ -150,6 +150,13 @@ function processActiveAttacks(){
         atpos = nx + "." + ny
       };
       var situationalData = new Object()
+      if (attackData.effectsSelf){
+        for (var effect in attackData.releaseEffects){
+          at[inst].effects[effect] = attackData.releaseEffects[effect]
+        }
+      } else {
+        situationalData.effects = attackData.chargeEffects
+      }
       situationalData.pos = atpos
       situationalData.dir = atdir
       situationalData.owner = inst
@@ -177,6 +184,7 @@ function processActiveAttacks(){
         }
         coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)))
         attackData.release = false;
+        at[inst].alerttimer += attackData.releaseAggro
         at[inst].state = attackData.releaseOwnerState
         continue;
       }
@@ -227,6 +235,15 @@ function processActiveAttacks(){
           atpos = nx + "." + ny
         };
         var situationalData = new Object()
+
+        if (attackData.effectsSelf){
+          for (var effect in attackData.chargeEffects){
+            at[inst].effects[effect] = attackData.chargeEffects[effect]
+          }
+        } else {
+          situationalData.effects = attackData.chargeEffects
+        }
+
         situationalData.pos = atpos
         situationalData.dir = atdir
         situationalData.owner = inst
@@ -255,13 +272,15 @@ function processActiveAttacks(){
           coredata.chunks[attackData.chunk].attacks.push(situationalData);
           continue;
         }
+        //ACTUAL EXPORT OF ATTACK
         coredata.chunks[attackData.chunk].attacks.push(situationalData);
+
         if (attackData.keydown >= 3 && attackData.chargeOwnerAnimOnce){
             at[inst].state = attackData.chargeOwnerAnimEnd
         } else {
           at[inst].state = attackData.chargeOwnerState
         }
-        if (attackData.keydown < attackData.chargeMaximum){at[inst].mana -= attackData.chargeManaPerTic}
+        if (attackData.keydown < attackData.chargeMaximum){at[inst].mana -= attackData.chargeManaPerTic; at[inst].alerttimer += attackData.chargeAggroPerTic}
       }
     };
   }
@@ -336,23 +355,30 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       var nameType = result[1][hit][2]
       if (chunk == "none"){ db = coredata} else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){continue;};
+      // no team damager unless healing spell
       if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {continue;}};
+
+      // Do damage
+
+      if (owner[0] == "p" && coredata.players[owner].alerttimer == 0 && damage > 0){ damage = damage * 2 }
       if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth)
       db[nameType][name].health = db[nameType][name].health - damage
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
         delete activeAttacksQueue[name];
       }
+      // Add aggro!
       if (db[nameType][name].health > 0 && owner[0] == "p"){
         if(owner[0] == "p"){ coredata.players[owner].alerttimer += 10} else if (owner[0] == "n"){ coredata.chunks[chunk].npcs[owner].alerttimer += 10}
       }
-      if (name == owner){console.log("HOLY POOP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!888888888888888888888888888", ownerTeam, owner)}
 
+      // PROJECTIlE ending anim math
       if (attack.hasOwnProperty("projectileEndAnim") && !(attack.hasOwnProperty("done"))){
       attack.distance = 3;
       attack.state = attack.projectileEndAnim;
       attack.velocity = attack.pushback;
       attack.done = true;
       };
+      // MOVE the target
       if (db[nameType][name].immoveable == null){
         general.DoMovement(name, chunk, direction, pushback, false, false);
       };

@@ -133,6 +133,20 @@ function StateController(){
     if (db[player].state % 10 == 0){
       db[player].state = 0;
     }
+    if (db[player].hasOwnProperty("effects")){
+      for (var effect in db[player].effects){
+        if (db[player].effects[effect] > 0){
+          db[player].effects[effect] -= 1
+        } else {
+          delete db[player].effects[effect]
+        };
+      }
+    };
+    if (db[player].hasOwnProperty("alerttimer")){
+      if (db[player].alerttimer > 0){
+        db[player].alerttimer -= 1
+      }
+    };
   }
   for (var chunk in coredata.chunks){
     for (var part in stateParts){
@@ -147,6 +161,20 @@ function StateController(){
         if (db[item].state % 10 == 0){
           db[item].state = 0;
         }
+        if (db[item].hasOwnProperty("effects")){
+          for (var effect in db[item].effects){
+            if (db[item].effects[effect] > 0){
+              db[item].effects[effect] -= 1
+            } else {
+              delete db[item].effects[effect]
+            }
+          }
+        };
+        if (db[item].hasOwnProperty("alerttimer")){
+          if (db[item].alerttimer > 0){
+            db[item].alerttimer -= 1
+          }
+        };
       }
     }
   }

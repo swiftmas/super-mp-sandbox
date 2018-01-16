@@ -162,7 +162,6 @@ setInterval(function(){
     general.ProcessChunks();
     general.StateController();
     npcs.npccontroller();
-    npcs.alerttimedown();
     general.ProcessMovements();
     combat.processAttackQueue();
     combat.processEffects();
