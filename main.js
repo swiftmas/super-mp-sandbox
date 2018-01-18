@@ -131,15 +131,16 @@ function draw(){
 		ctx.fillRect(24,1, 20,7)
 		ctx.fillStyle= "#850E14";
 		ctx.fillRect(24,1, Math.round((playerMana/playerMaxMana)*20),7)
-		image2draw = charAlg("10.4.1.834.710");
-		image2draw.push(90, 0, 8, 8);
+		ctx.fillStyle= "#282c34";
+		image2draw = charAlg("10.4.1.0.0");
+		image2draw.push(91, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("J", 85, 8);
-		image2draw = charAlg("10.4.2.834.710");
-		image2draw.push(105, 0, 8, 8);
+		image2draw = charAlg("10.4.2.0.0");
+		image2draw.push(106, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("K", 100, 8);
-		image2draw = charAlg("18.6.23.0.0");
+		image2draw = charAlg("10.4.3.0.0");
 		image2draw.push(120, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("L", 115, 8);
