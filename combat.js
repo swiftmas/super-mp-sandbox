@@ -348,6 +348,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       at = {"h": h, "w": w}
       break;
   }
+  if (typeof at == undefined){return}
   general.Collission(atpos, at.w, at.h, function(result){
     for (hit in result[1]){
       var name = result[1][hit][0]

@@ -171,10 +171,10 @@ function alertrange(npc, chunk, dist) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
             if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59 && !(gp[player].effects.hasOwnProperty("stealth"))) {
-              if (gp[npctar].alerttimer < 35 ){
-                gp[npctar].alerttimer = 35;
+              if (gn[npctar].alerttimer < 35 ){
+                gn[npctar].alerttimer = 35;
               } else {
-                gp[npctar].alerttimer += 1;
+                gn[npctar].alerttimer += 1;
               }
             };
         };
@@ -320,11 +320,11 @@ function getSurroundings(npc, chunk, dist) {
             var ppos = gn[npctar].pos;
             var ppsspl = gn[npctar].pos.split(".")
             general.getDist(origin, ppos, function(result){
-              if (result[0] < dist && gp[npctar].alerttimer > surroundings[4]) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
+              if (result[0] < dist && gn[npctar].alerttimer > surroundings[4]) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gn[npctar].alerttimer];
               }
-              else if (gp[npctar].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
+              else if (gn[npctar].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gn[npctar].alerttimer];
               };
             });
         };
