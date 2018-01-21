@@ -1,15 +1,22 @@
 //// SETUP VARS ////////////////////////////
-var http = require("http");
-var url = require('url');
-var fs = require('fs');
-var io = require('socket.io');
-var npcs = require('./npc.js');
-var globals = require('./globals.js');
-var combat = require('./combat.js');
-var interact = require('./interact.js');
-var general = require('./general.js');
+http = require("http");
+url = require('url');
+fs = require('fs');
+io = require('socket.io');
+npcs = require('./npc.js');
+globals = require('./globals.js');
+combat = require('./combat.js');
+interact = require('./interact.js');
+general = require('./general.js');
+////VARS////
+coredata = globals.coredata;
+mapchange = globals.mapchange;
+attackQueue = globals.attackQueue;
+moveQueue = globals.moveQueue;
+chunkParts = globals.chunkParts;
+activeAttacksQueue = globals.activeAttacksQueue;
 
-
+// Unfortunately at this time this setups up the server and does all the listening so its a little ugly. to see actual game functions goto the setInterval. That loop is the backbone of the game.
 var server = http.createServer(function(request, response){
     var path = url.parse(request.url).pathname;
     // STATIC STUFF ///////////////////
@@ -147,89 +154,20 @@ server.listen(8080);
 
 
 //----------------------------/COOL STUFF /-----------------------------------------------------------------------//////////////
-////VARS////
-coredata = globals.coredata;
-collmap = globals.collmap;
-attackQueue = globals.attackQueue;
-moveQueue = globals.moveQueue;
+
 listener = io.listen(server);
 
 //// Server Update ///////////////////////////////////////////////////////////////////////////////////////////////////
 setInterval(function(){
   var tickstart = new Date().getTime()
-  general.ProcessTime();
-  if (globals.serverPause == false ){
-    general.ProcessChunks();
-    general.StateController();
-    npcs.npccontroller();
-    general.ProcessMovements();
-    combat.processAttackQueue();
-    combat.processEffects();
-    //npcs.npccontroller();
-    //npcs.alerttimedown();
-
-
-
-    /////Convert Catagories to Packets//////////
-    var playerDatas = [];
-    //PLAYERS
-    var dp = coredata.players;
-    for ( var player in dp){
-      var code = dp[player].team;
-      var pos = dp[player].pos;
-      var state = dp[player].state;
-      var dir = dp[player].dir
-      //position player camera!
-      listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana],dp[player].slot1, dp[player].slot2, dp[player].slot3)
-      playerDatas.push(code + "." + dir + "." + state + "." + pos);
-    }
-
-    for (var player in coredata.players){
-      var datas = [];
-      for (var chunk in coredata.players[player].closeChunks){
-        //NPCS
-        var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
-        for ( var npc in dp){
-          var code = dp[npc].team;
-          var pos = dp[npc].pos;
-          var state = dp[npc].state;
-          var dir = dp[npc].dir
-          datas.push(code + "." + dir + "." + state + "." + pos);
-        }
-        //Attacks
-        var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;
-        for (var attack in db){
-          var code = db[attack].type
-          var pos = db[attack].pos
-          var dir = db[attack].dir
-          var state = db[attack].state
-          datas.push(code + "." + dir + "." + state + "." + pos);
-        }
-        //entities
-        var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].entities;
-        for (var attack in db){
-          var code = db[attack].team
-          var pos = db[attack].pos
-          var dir = db[attack].dir
-          var state = db[attack].state
-          datas.push(code + "." + dir + "." + state + "." + pos);
-        }
-      }
-      playerspecificData = datas.concat(playerDatas)
-      listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
-
-    }
-  } else { listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})}
+  general.ticBegin()
   ticklength = (new Date().getTime()) - tickstart
   if ( ticklength > 10){console.log(ticklength)}
 }, 100);
 
 ///// Per Connectoin /////////////////////////////////////////////////////////////////////////////////////////////////
 listener.sockets.on('connection', function(socket){
-
-////// INIT ////////////
-
-// For every Client data event (this is where we recieve movement)////////////
+// For every Client data event (this is where we recieve input)////////////
 
 // This listens for new players ////////
   socket.on('add_player', function(data){

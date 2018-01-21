@@ -1,12 +1,3 @@
-globals = require('./globals.js');
-general = require('./general.js');
-coredata = globals.coredata;
-collmap = globals.collmap;
-mapchange = globals.mapchange;
-attackQueue = globals.attackQueue;
-activeAttacksQueue = globals.activeAttacksQueue;
-
-
 ///// Exports ///////////////////////////
 module.exports = {
   addEffect: function (attacker, chunk, attacktype) {
@@ -386,12 +377,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
         db[nameType][name].alerttimer = 0;
-	if (name[0] == "p"){
-		listener.sockets.connected[name.slice(1)].emit('serverMessage', {"message": "YOU HAVE DIED|but your soul is restless", "time": globals.time})
-	}
-        if (activeAttacksQueue.hasOwnProperty(name)){
-          delete activeAttacksQueue[name];
-        }
+      	if (name[0] == "p"){
+      		listener.sockets.connected[name.slice(1)].emit('serverMessage', {"message": "YOU HAVE DIED|but your soul is restless", "time": globals.time})
+      	}
       };
     };
   });

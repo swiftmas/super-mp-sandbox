@@ -1,10 +1,3 @@
-globals = require('./globals.js');
-general = require('./general.js');
-coredata = globals.coredata;
-collmap = globals.collmap;
-mapchange = globals.mapchange;
-attackQueue = globals.attackQueue;
-
 ///// Exports ///////////////////////////
 module.exports = {
   startDialog: function (interacter) {

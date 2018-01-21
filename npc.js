@@ -1,11 +1,3 @@
-var globals = require('./globals.js');
-var combat = require('./combat.js');
-var coredata = globals.coredata;
-var collmap = globals.collmap;
-var general = require('./general.js');
-activeAttacksQueue = globals.activeAttacksQueue;
-
-
 ///// Exports ///////////////////////////
 module.exports = {
     npccontroller: function () {

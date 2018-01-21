@@ -1,11 +1,9 @@
-globals = require('./globals.js');
-const fs = require('fs');
-coredata = globals.coredata;
-chunkParts = globals.chunkParts;
-moveQueue = globals.moveQueue;
-mapchange = globals.mapchange;
+//// SETUP VARS ////////////////////////////
 
 module.exports = {
+  ticBegin: function () {
+    ticBegin();
+  },
   getDist: function (origin, destination, callback) {
     getDist(origin, destination, callback);
   },
@@ -28,6 +26,70 @@ module.exports = {
     ProcessMovements();
   },
 };
+
+function ticBegin(){
+  // Why not put documentation in the code. that seems like a best practice :(. Currently We process time, resolve all chunks that we need pulled into memory,
+  // All chunks are already in memory but we have a subset that we look at as not to loop through all chunks cause that would take forever
+  // We then globally tic down the state of every entity npc and player (this includes thier states)
+  // We then process npc movement, we do this before player movemnt because it gives the player the opportunity to attack before the npcs. Otherwise npcs can get in range and attack int the same tic
+  ProcessTime();
+  ProcessChunks();
+  StateController();
+  npcs.npccontroller();
+  ProcessMovements();
+  combat.processAttackQueue();
+  combat.processEffects();
+
+  /////We then send out the sprite info per player in the form of decimal deliniated numbers //////////
+  var playerDatas = [];
+  //PLAYERS
+  var dp = coredata.players;
+  for ( var player in dp){
+    var code = dp[player].team;
+    var pos = dp[player].pos;
+    var state = dp[player].state;
+    var dir = dp[player].dir
+    //We export the players camera location, this is a semi non priority as the players will update as needed. This also holds mana data health and cooldowns for now
+    listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana],dp[player].slot1, dp[player].slot2, dp[player].slot3)
+    playerDatas.push(code + "." + dir + "." + state + "." + pos);
+  }
+
+  for (var player in coredata.players){
+    var datas = [];
+    for (var chunk in coredata.players[player].closeChunks){
+      //NPCS
+      var dp = coredata.chunks[coredata.players[player].closeChunks[chunk]].npcs;
+      for ( var npc in dp){
+        var code = dp[npc].team;
+        var pos = dp[npc].pos;
+        var state = dp[npc].state;
+        var dir = dp[npc].dir
+        datas.push(code + "." + dir + "." + state + "." + pos);
+      }
+      //Attacks
+      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;
+      for (var attack in db){
+        var code = db[attack].type
+        var pos = db[attack].pos
+        var dir = db[attack].dir
+        var state = db[attack].state
+        datas.push(code + "." + dir + "." + state + "." + pos);
+      }
+      //entities
+      var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].entities;
+      for (var attack in db){
+        var code = db[attack].team
+        var pos = db[attack].pos
+        var dir = db[attack].dir
+        var state = db[attack].state
+        datas.push(code + "." + dir + "." + state + "." + pos);
+      }
+    }
+    playerspecificData = datas.concat(playerDatas)
+    listener.sockets.connected[player.slice(1)].emit('getdata', playerspecificData)
+
+  }
+}
 
 function ProcessTime(){
   globals.time -= 1
