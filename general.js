@@ -126,10 +126,11 @@ function ProcessChunks(){
       }
       for (var chunk in surroundingChunks){
         getDist(coredata.players[player].pos, chunk, function(result) {
-          if (Math.abs(result[1]) < 110 && Math.abs(result[2]) < 110){
+          if (Math.abs(result[1]) < 110 && Math.abs(result[2]) < 110 && chunk.indexOf('-') == -1){
             coredata.players[player].closeChunks.push(chunk);
             CurrentChunksInTick.push(chunk);
             if (! coredata.chunks.hasOwnProperty(chunk)){
+              console.log(chunk )
               if (typeof globals.chunkdata[chunk].lastClosed !== undefined && globals.chunkdata[chunk].lastClosed < globals.dayint - 2){
                 var resetChunkdata = JSON.parse(fs.readFileSync("./daychunks.json"))
                 console.log("chunk refreshed from file after timout of 2 days")
