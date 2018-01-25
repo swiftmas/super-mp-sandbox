@@ -20,8 +20,6 @@ var currentDir = null;
 var controlState = "character";
 
 
-
-
 ///// METHODS ///////////////////////////
 
 function resize(){
@@ -45,7 +43,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -123,14 +121,15 @@ function draw(){
 
 		//////////// UI stuff ////////////////////
 		//Health
-		ctx.fillStyle= "grey";
-		ctx.fillRect(1,1, 20,7)
-		ctx.fillStyle= "#00ff38";
-		ctx.fillRect(1,1, Math.round((playerHealth/playerMaxHealth)*20),7)
-		ctx.fillStyle= "grey";
-		ctx.fillRect(24,1, 20,7)
-		ctx.fillStyle= "#850E14";
-		ctx.fillRect(24,1, Math.round((playerMana/playerMaxMana)*20),7)
+		ctx.drawImage.apply(ctx, [charsprites,400,560,80,16,-10,-5,80,16])
+		ctx.fillStyle= "rgba(255,0,56,0.35)";
+		ctx.fillRect(2,0, Math.round((playerHealth/playerMaxHealth)*30),6)
+		ctx.fillStyle= "rgba(0,56,255,0.35)";
+		ctx.fillRect(35,0, Math.round((playerMana/playerMaxMana)*23),6)
+		var cor = Math.round((playerCor/playerMaxCor)*80) + 1
+		ctx.drawImage.apply(ctx, [charsprites,560-cor,560,cor,16,70-cor,-5,cor,16])
+
+		//Items
 		ctx.fillStyle= "#282c34";
 		image2draw = charAlg("10.4.1.0.0");
 		image2draw.push(91, 0, 8, 8);
@@ -147,14 +146,15 @@ function draw(){
 		//Dialog
 		if (dialog != null){
 			ctx.fillStyle= "rgba(15,15,15,0.85)"
-			ctx.fillRect(0,74,128,64);
+			ctx.drawImage.apply(ctx, [charsprites,400,576,128,64,0,64,128,64])
+			//ctx.fillRect(0,74,128,64);
 			ctx.fillStyle= "grey";
-			ctx.fillText(dialog[0], 3, 84);
-			ctx.fillText(dialog[1], 3, 94);
-			ctx.fillText(dialog[2], 3, 104);
-			ctx.fillText(dialog[3], 3, 114);
-			ctx.fillText(dialog[4], 3, 124);
-			ctx.fillText(">", -1, 84 + (10*selector));
+			ctx.fillText(dialog[0], 7, 78);
+			ctx.fillText(dialog[1], 7, 88);
+			ctx.fillText(dialog[2], 7, 98);
+			ctx.fillText(dialog[3], 7, 108);
+			ctx.fillText(dialog[4], 7, 118);
+			ctx.fillText(">", 2, 78 + (10*selector));
 		}
 
 		// If server message, display now
@@ -266,7 +266,7 @@ document.onkeydown= function(event) {
 		if (key == 74){ control("attack1"); return };
 		if (key == 75){ control("attack2"); return };
 		if (key == 76){ control("attack3"); return };
-		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
+		if (key == 192){ console.log(playerCor++, serverTime, coredata, " currentDirKey ", currentDirKey); return };
 		if (key == 73){ control("interact"); return };
 		//wasd
 		if (key == 87){ control("2") };
@@ -328,6 +328,8 @@ socket.on('camera', function(data) {
 		playerMaxHealth = data[2]
 		playerMana = data[3]
 		playerMaxMana = data[4]
+		playerCor = data[5]
+		playerMaxCor = data[6]
 });
 
 socket.on('getdata', function(data){
