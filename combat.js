@@ -24,6 +24,7 @@ function processAttackQueue(){
     delete attackQueue[inst];
   }
   processActiveAttacks();
+  console.warn("Attacks")
 };
 
 function processActiveAttacks(){
@@ -87,7 +88,7 @@ function processActiveAttacks(){
       var cooldown = at[inst]["slot" + attackData.attacktype[-1]+"cooldown" ]
       if ( typeof cooldown !== "undefined"){
         if (cooldown[0] < globals.dayint || cooldown[1] - attackData.cooldown >= globals.time){
-          console.log("")
+          var nothing = undefined;
         }else{
         delete activeAttacksQueue[inst];
         continue;
@@ -306,6 +307,8 @@ function processEffects(){
       db.splice(rem, 1)
     };
   }
+  console.warn("Effects")
+
 };
 
 
@@ -382,5 +385,6 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       	}
       };
     };
+    console.warn("Combat Is still happen")
   });
 };

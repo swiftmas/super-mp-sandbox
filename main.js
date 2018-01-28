@@ -14,10 +14,11 @@ var serverMessageWindow = 0;
 var serverTime = 6000
 var dialog = null;
 var dialogPointers = [null, null, null, null, null];
-var selector = 0;
+var selector = [0,0];
 var currentDirKey = null;
 var currentDir = null;
 var controlState = "character";
+var dialogType = null;
 
 
 ///// METHODS ///////////////////////////
@@ -128,6 +129,7 @@ function draw(){
 		ctx.fillRect(35,0, Math.round((playerMana/playerMaxMana)*23),6)
 		var cor = Math.round((playerCor/playerMaxCor)*80) + 1
 		ctx.drawImage.apply(ctx, [charsprites,560-cor,560,cor,16,70-cor,-5,cor,16])
+		ctx.fillText(selector[0]+"|"+selector[1], 70, 8);
 
 		//Items
 		ctx.fillStyle= "#282c34";
@@ -144,18 +146,36 @@ function draw(){
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("L", 115, 8);
 		//Dialog
-		if (dialog != null){
+		if (dialog != null && dialogType == "speech"){
 			ctx.fillStyle= "rgba(15,15,15,0.85)"
 			ctx.drawImage.apply(ctx, [charsprites,400,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
 			ctx.fillStyle= "grey";
-			ctx.fillText(dialog[0], 7, 78);
-			ctx.fillText(dialog[1], 7, 88);
-			ctx.fillText(dialog[2], 7, 98);
-			ctx.fillText(dialog[3], 7, 108);
-			ctx.fillText(dialog[4], 7, 118);
-			ctx.fillText(">", 2, 78 + (10*selector));
+			ctx.fillText(dialog[0], 7, 82);
+			ctx.fillText(dialog[1], 7, 92);
+			ctx.fillText(dialog[2], 7, 102);
+			ctx.fillText(dialog[3], 7, 112);
+			ctx.fillText(dialog[4], 7, 122);
+			ctx.fillText(">", 2, 81 + (10*selector[0]));
 		}
+		//loot
+		if (dialog != null && dialogType == "loot"){
+			ctx.fillStyle= "rgba(15,15,15,0.85)"
+			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
+			//ctx.fillRect(0,74,128,64);
+			ctx.fillStyle= "grey";
+			ctx.fillText(dialog[selector[1]+ (selector[0]*3)], 7, 76);
+			//ctx.fillText(dialog[1], 7, 92);
+			//ctx.fillText(dialog[2], 7, 102);
+			//ctx.fillText(dialog[3], 7, 112);
+			//ctx.fillText(dialog[4], 7, 122);
+			ctx.beginPath();
+			ctx.strokeStyle= "orange"
+			ctx.rect(5 + (12*selector[1]), 96 + (16*selector[0]), 10, 10);
+			ctx.stroke();
+			ctx.fillText(">", 2 + (12*selector[1]), 102 + (16*selector[0]));
+		}
+
 
 		// If server message, display now
 		if (serverMessage != null){
@@ -192,16 +212,16 @@ function control(action){
 	if (action == currentDir){return};
 	switch (action){
 		case "2":
-			if(controlState == "character"){	socket.emit('action', [userplayer, "2"]); } else { if (selector > 0){selector -= 1}  }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "2"]); } else { if (selector[0] > 0){selector[0] -= 1} }
 			break;
 		case "4":
-			if(controlState == "character"){	socket.emit('action', [userplayer, "4"]); } else { selector = selector }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "4"]); } else { if (selector[1] < selectorYlimit){selector[1] += 1} }
 			break;
 		case "6":
-			if(controlState == "character"){	socket.emit('action', [userplayer, "6"]); } else { if (selector < 4){selector += 1}  }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "6"]); } else { if (selector[0] < selectorXlimit){selector[0] += 1} }
 			break;
 		case "8":
-			if(controlState == "character"){	socket.emit('action', [userplayer, "8"]); } else { selector = selector }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "8"]); } else { if (selector[1] > 0){selector[1] -= 1} }
 			break;
 		case "movenull":
 			if(controlState == "character"){socket.emit('action', [userplayer, "movenull"]);}
@@ -213,33 +233,33 @@ function control(action){
 			if(controlState == "character"){
 				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
 			} else {
-				if (dialogPointers == "exit" || dialogPointers[selector] == "exit"){
-					selector = 0;
+				if (dialogPointers == "exit" || dialogPointers[selector[0]] == "exit"){
+					selector = [0,0];
 					dialogPointers = [null, null, null, null, null];
 					dialog = null;
 					controlState = "character";
 					return;
 				}
-				socket.emit('action', [userplayer, "interact", dialogPointers[selector]]); console.log('speak', dialogPointers[selector]);
+				socket.emit('action', [userplayer, "interact", dialogPointers[selector[0]]]); console.log('speak', dialogPointers[selector[0]]);
 			}
 			break;
 		case "attack1":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack1"]);}
-			selector = 0;
+			selector = [0,0];
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;
 			controlState = "character";
 			break;
 		case "attack2":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack2"]);}
-			selector = 0;
+			selector = [0,0];
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;
 			controlState = "character";
 			break;
 		case "attack3":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack3"]);}
-			selector = 0;
+			selector = [0,0];
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;
 			controlState = "character";
@@ -308,8 +328,17 @@ socket.on('start', function(data) {
 });
 
 socket.on('dialog', function(data) {
-	dialog = data[0];
-	dialogPointers= data[1];
+	dialogType = data[0];
+	dialog = data[1];
+	dialogPointers= data[2];
+	if (dialogType == "speech"){
+		selectorXlimit = 4
+		selectorYlimit = 1
+	}
+	if (dialogType == "loot"){
+		selectorXlimit = 1
+		selectorYlimit = 9
+	}
 	controlState = "dialog";
 	console.log("Dialog gottedidid:", data);
 });

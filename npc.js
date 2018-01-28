@@ -95,6 +95,7 @@ function npccontroller() {
         };
     };
   }
+  console.warn("npcs")
 };
 
 
@@ -182,7 +183,6 @@ function headhome(npc, chunk){
       } else {
         if (Math.floor(Math.random() * Math.floor(100) < 2 )){
           coredata.chunks[chunk].npcs[npc].dir = Math.floor(Math.random()*(4-1+1)+1)*2
-          console.log(coredata.chunks[chunk].npcs[npc].dir)
         }
       }
     });

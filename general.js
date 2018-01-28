@@ -28,6 +28,8 @@ module.exports = {
 };
 
 function ticBegin(){
+  console.warn("------------ Tic Begins ---------------------")
+
   // Why not put documentation in the code. that seems like a best practice :(. Currently We process time, resolve all chunks that we need pulled into memory,
   // All chunks are already in memory but we have a subset that we look at as not to loop through all chunks cause that would take forever
   // We then globally tic down the state of every entity npc and player (this includes thier states)
@@ -105,6 +107,7 @@ function ProcessTime(){
     globals.serverMessage = "DAY " + globals.dayint +" HAS BROKEN | the light blesses you"
     listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
   }
+  console.warn("Time")
 }
 
 function ProcessChunks(){
@@ -151,6 +154,8 @@ function ProcessChunks(){
       console.log("New chunk removed: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
     }
   }
+  console.warn("chunks")
+
 };
 
 function Collission(location, width, height, callback){
@@ -241,6 +246,8 @@ function StateController(){
       }
     }
   }
+  console.warn("States")
+
 }
 
 // All the goods in one. probably needs to be tuned. but should be fast enough.
