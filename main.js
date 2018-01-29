@@ -164,7 +164,7 @@ function draw(){
 			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
 			ctx.fillStyle= "grey";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*3)], 7, 76);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*selectorXlimit)], 7, 76);
 			//ctx.fillText(dialog[1], 7, 92);
 			//ctx.fillText(dialog[2], 7, 102);
 			//ctx.fillText(dialog[3], 7, 112);
@@ -215,10 +215,10 @@ function control(action){
 			if(controlState == "character"){	socket.emit('action', [userplayer, "2"]); } else { if (selector[0] > 0){selector[0] -= 1} }
 			break;
 		case "4":
-			if(controlState == "character"){	socket.emit('action', [userplayer, "4"]); } else { if (selector[1] < selectorYlimit){selector[1] += 1} }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "4"]); } else { if (selector[1] < selectorXlimit){selector[1] += 1} }
 			break;
 		case "6":
-			if(controlState == "character"){	socket.emit('action', [userplayer, "6"]); } else { if (selector[0] < selectorXlimit){selector[0] += 1} }
+			if(controlState == "character"){	socket.emit('action', [userplayer, "6"]); } else { if (selector[0] < selectorYlimit){selector[0] += 1} }
 			break;
 		case "8":
 			if(controlState == "character"){	socket.emit('action', [userplayer, "8"]); } else { if (selector[1] > 0){selector[1] -= 1} }
@@ -233,14 +233,14 @@ function control(action){
 			if(controlState == "character"){
 				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
 			} else {
-				if (dialogPointers == "exit" || dialogPointers[selector[0]] == "exit"){
+				if (dialogPointers == "exit" || dialogPointers[selector[1]+ (selector[0]*selectorXlimit)] == "exit"){
 					selector = [0,0];
 					dialogPointers = [null, null, null, null, null];
 					dialog = null;
 					controlState = "character";
 					return;
 				}
-				socket.emit('action', [userplayer, "interact", dialogPointers[selector[0]]]); console.log('speak', dialogPointers[selector[0]]);
+				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*selectorXlimit)]]); console.log('speak', dialogPointers[selector[1]+ (selector[0]*selectorXlimit)]);
 			}
 			break;
 		case "attack1":
@@ -332,12 +332,12 @@ socket.on('dialog', function(data) {
 	dialog = data[1];
 	dialogPointers= data[2];
 	if (dialogType == "speech"){
-		selectorXlimit = 4
-		selectorYlimit = 1
+		selectorYlimit = 4
+		selectorXlimit = 1
 	}
 	if (dialogType == "loot"){
-		selectorXlimit = 1
-		selectorYlimit = 9
+		selectorYlimit = 1
+		selectorXlimit = 9
 	}
 	controlState = "dialog";
 	console.log("Dialog gottedidid:", data);

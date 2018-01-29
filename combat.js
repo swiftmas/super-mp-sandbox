@@ -24,7 +24,7 @@ function processAttackQueue(){
     delete attackQueue[inst];
   }
   processActiveAttacks();
-  console.warn("Attacks")
+  //console.warn("Attacks")
 };
 
 function processActiveAttacks(){
@@ -307,7 +307,7 @@ function processEffects(){
       db.splice(rem, 1)
     };
   }
-  console.warn("Effects")
+  //console.warn("Effects")
 
 };
 
@@ -385,6 +385,6 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       	}
       };
     };
-    console.warn("Combat Is still happen")
+    //console.warn("Combat Is still happen")
   });
 };

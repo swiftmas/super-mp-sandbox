@@ -95,7 +95,7 @@ function npccontroller() {
         };
     };
   }
-  console.warn("npcs")
+  //console.warn("npcs")
 };
 
 

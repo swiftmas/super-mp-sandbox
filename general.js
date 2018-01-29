@@ -28,7 +28,7 @@ module.exports = {
 };
 
 function ticBegin(){
-  console.warn("------------ Tic Begins ---------------------")
+  //console.warn("------------ Tic Begins ---------------------")
 
   // Why not put documentation in the code. that seems like a best practice :(. Currently We process time, resolve all chunks that we need pulled into memory,
   // All chunks are already in memory but we have a subset that we look at as not to loop through all chunks cause that would take forever
@@ -107,7 +107,7 @@ function ProcessTime(){
     globals.serverMessage = "DAY " + globals.dayint +" HAS BROKEN | the light blesses you"
     listener.sockets.emit('serverMessage', {"message": globals.serverMessage, "time": globals.time})
   }
-  console.warn("Time")
+  //console.warn("Time")
 }
 
 function ProcessChunks(){
@@ -154,7 +154,7 @@ function ProcessChunks(){
       console.log("New chunk removed: ", chunk, "  total: ", Object.keys(coredata.chunks).length)
     }
   }
-  console.warn("chunks")
+  //console.warn("chunks")
 
 };
 
@@ -246,7 +246,7 @@ function StateController(){
       }
     }
   }
-  console.warn("States")
+  //console.warn("States")
 
 }
 
