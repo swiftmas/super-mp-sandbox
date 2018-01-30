@@ -16,7 +16,7 @@ function getDialog(interacter, path){
     coredata.players[interacter][consumable[1]] += parseInt(consumable[0])
     coredata.chunks[path[1]][path[2]][path[3]][path[4]] = "-";
     var pointers = [null,null,null,null,null]
-    listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
+    listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
     return;
   }
   if (path[0] == "loot"){
@@ -43,6 +43,34 @@ function getDialog(interacter, path){
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
 }
 
+function showLoot(interacter, name, chunk, nameType){
+  db = coredata.chunks[chunk]
+  var verbage = []
+  var thing = db[nameType][name];
+  var pointers = []
+  console.log(thing,Object.keys(thing.inventory).length)
+  for (var obj in thing.inventory){
+    verbage.push([obj])
+    pointers.push([chunk,nameType,name,obj])
+  }
+  for (var i=verbage.length)
+  for (var obj  in coredata.players[interacter].inventory){
+    verbage.push([obj])
+    pointers.push([chunk,nameType,name,obj])
+  }
+  listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
+  console.log(verbage)
+}
+
+function showGrave(interacter, name, chunk, nameType){
+  var verbage = ["You have bound","yourself to this grave.",". . . ","You will respawn here","If you die."]
+  var pointers = ["exit"];
+  listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
+  db[nameType][name].state = 67;
+  coredata.players[interacter].health = coredata.players[interacter].maxHealth;
+  var newpos = db[nameType][name].pos.split(".")[0] + "." + (parseInt(db[nameType][name].pos.split(".")[1]) + 6);
+  coredata.players[interacter].origin = newpos;
+}
 
 function startDialog(interacter){
   var distance = 4;
@@ -79,34 +107,16 @@ function startDialog(interacter){
       if (nameType == "colliders"){continue;};
       if (db[nameType][name].hasOwnProperty("singleMessage")){ getDialog(interacter, [db[nameType][name].properName, db[nameType][name].singleMessage]) };
       if (nameType == "entities" && db[nameType][name].hasOwnProperty("grave")){
-        var verbage = ["You have bound","yourself to this grave.",". . . ","You will respawn here","If you die."]
-        var pointers = ["exit"];
-        listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
-        db[nameType][name].state = 67;
-        coredata.players[interacter].health = coredata.players[interacter].maxHealth;
-        var newpos = db[nameType][name].pos.split(".")[0] + "." + (parseInt(db[nameType][name].pos.split(".")[1]) + 6);
-        coredata.players[interacter].origin = newpos;
+        showGrave(interacter, name, chunk, nameType)
         break;
       }
       if (nameType == "entities" && db[nameType][name].slot1 != null){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
-        var verbage = ["== Chest ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]
-        var thing = db[nameType][name];
-        if (thing.slot1.indexOf("mana") !== -1 || thing.slot1.indexOf("health") !== -1 || thing.slot1.indexOf("gold") !== -1){var loot1 = "consumable"}else{var loot1 = "loot"}
-        if (thing.slot2.indexOf("mana") !== -1 || thing.slot2.indexOf("health") !== -1 || thing.slot2.indexOf("gold") !== -1){var loot2 = "consumable"}else{var loot2 = "loot"}
-        if (thing.slot3.indexOf("mana") !== -1 || thing.slot3.indexOf("health") !== -1 || thing.slot3.indexOf("gold") !== -1){var loot3 = "consumable"}else{var loot3 = "loot"}
-        var pointers = ["exit",[loot1, chunk, nameType, name, "slot1"],[loot2, chunk, nameType, name, "slot2"],[loot3, chunk, nameType, name, "slot3"],"exit"]
-        listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
+        showLoot(interacter, name, chunk, nameType)
         break;
       } else if (nameType == "entities"){ console.log("nothing to interact with");continue;};
       if (db[nameType][name].state >= 60 ){
-        var verbage = ["== " + name +"'s Corpse ==", db[nameType][name].slot1, db[nameType][name].slot2, db[nameType][name].slot3, "<"]
-        var thing = db[nameType][name];
-        if (thing.slot1.indexOf("mana") !== -1 || thing.slot1.indexOf("health") !== -1 || thing.slot1.indexOf("gold") !== -1){var loot1 = "consumable"}else{var loot1 = "loot"}
-        if (thing.slot2.indexOf("mana") !== -1 || thing.slot2.indexOf("health") !== -1 || thing.slot2.indexOf("gold") !== -1){var loot2 = "consumable"}else{var loot2 = "loot"}
-        if (thing.slot3.indexOf("mana") !== -1 || thing.slot3.indexOf("health") !== -1 || thing.slot3.indexOf("gold") !== -1){var loot3 = "consumable"}else{var loot3 = "loot"}
-        var pointers = ["exit",[loot1, chunk, nameType, name, "slot1"],[loot2, chunk, nameType, name, "slot2"],[loot3, chunk, nameType, name, "slot3"],"exit"]
-        listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
+        showLoot(interacter, name, chunk, nameType)
         break;
       }
       if (db[nameType][name].hasOwnProperty("team")){

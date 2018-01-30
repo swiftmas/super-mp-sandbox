@@ -44,7 +44,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" , "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" ,"inventory":{"sword1":1,"bow1":1,"spell1":1}, "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -164,7 +164,7 @@ function draw(){
 			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
 			ctx.fillStyle= "grey";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*selectorXlimit)], 7, 76);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*selectorXlimit)][0], 7, 76);
 			//ctx.fillText(dialog[1], 7, 92);
 			//ctx.fillText(dialog[2], 7, 102);
 			//ctx.fillText(dialog[3], 7, 112);
