@@ -44,7 +44,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" ,"inventory":{"sword1":1,"bow1":1,"spell1":1}, "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" ,"inventory":[{"name":"sword1","quantity":1},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}], "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -129,7 +129,7 @@ function draw(){
 		ctx.fillRect(35,0, Math.round((playerMana/playerMaxMana)*23),6)
 		var cor = Math.round((playerCor/playerMaxCor)*80) + 1
 		ctx.drawImage.apply(ctx, [charsprites,560-cor,560,cor,16,70-cor,-5,cor,16])
-		ctx.fillText(selector[0]+"|"+selector[1], 70, 8);
+		ctx.fillText(selector[0]+"|"+selector[1]+"|"+(selector[1]+ (selector[0]*(selectorXlimit+1))), 70, 16);
 
 		//Items
 		ctx.fillStyle= "#282c34";
@@ -163,12 +163,17 @@ function draw(){
 			ctx.fillStyle= "rgba(15,15,15,0.85)"
 			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
+			for (var i = 0; i < dialog.length; i++){
+				image2draw = charAlg(dialog[i][2]);
+				if (i < 10){
+					image2draw.push(2+(12*i), 102, 8, 8);
+				} else{
+					image2draw.push(2+(12*(i-10)), 118, 8, 8);
+				}
+			}
 			ctx.fillStyle= "grey";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*selectorXlimit)][0], 7, 76);
-			//ctx.fillText(dialog[1], 7, 92);
-			//ctx.fillText(dialog[2], 7, 102);
-			//ctx.fillText(dialog[3], 7, 112);
-			//ctx.fillText(dialog[4], 7, 122);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 86);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
 			ctx.rect(5 + (12*selector[1]), 96 + (16*selector[0]), 10, 10);
@@ -233,14 +238,14 @@ function control(action){
 			if(controlState == "character"){
 				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
 			} else {
-				if (dialogPointers == "exit" || dialogPointers[selector[1]+ (selector[0]*selectorXlimit)] == "exit"){
+				if (dialogPointers == "exit" || dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))] == "exit"){
 					selector = [0,0];
 					dialogPointers = [null, null, null, null, null];
 					dialog = null;
 					controlState = "character";
 					return;
 				}
-				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*selectorXlimit)]]); console.log('speak', dialogPointers[selector[1]+ (selector[0]*selectorXlimit)]);
+				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]]); console.log('speak', dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]);
 			}
 			break;
 		case "attack1":

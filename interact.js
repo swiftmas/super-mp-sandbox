@@ -47,16 +47,24 @@ function showLoot(interacter, name, chunk, nameType){
   db = coredata.chunks[chunk]
   var verbage = []
   var thing = db[nameType][name];
+  var person = coredata.players[interacter];
   var pointers = []
-  console.log(thing,Object.keys(thing.inventory).length)
-  for (var obj in thing.inventory){
-    verbage.push([obj])
-    pointers.push([chunk,nameType,name,obj])
+  //console.log(thing,Object.keys(thing.inventory).length)
+  for (var i = 0; i < thing.inventory.length; i++){
+    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, globals.weaponData[thing.inventory[i].name].sprite, globals.weaponData[thing.inventory[i].name].description])
+    pointers.push([chunk,nameType,name,i])
   }
-  for (var i=verbage.length)
-  for (var obj  in coredata.players[interacter].inventory){
-    verbage.push([obj])
-    pointers.push([chunk,nameType,name,obj])
+  for (var i = verbage.length; i < 10; i++){
+    verbage.push(["-","1","0.0.0.0","Empty"])
+    pointers.push([chunk,nameType,name,i])
+  }
+  for (var i = 0; i < person.inventory.length; i++){
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, globals.weaponData[person.inventory[i].name].sprite, globals.weaponData[person.inventory[i].name].description])
+    pointers.push([chunk,nameType,name,i+9])
+  }
+  for (var i = verbage.length; i < 20; i++){
+    verbage.push(["-","1","0.0.0.0","Empty"])
+    pointers.push([chunk,nameType,name,i])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
   console.log(verbage)
