@@ -296,7 +296,7 @@
     "ph": 3,
     "pw": 3
   },
-  "-": {"sprite":"10.8.0.0.0", "description":"Empty"},
+  "-": {"sprite":"10.8.1.0.0", "description":"Empty"},
   "Orb Of Healing": {
     "description":"Healing Spell",
     "cooldown": 0,
