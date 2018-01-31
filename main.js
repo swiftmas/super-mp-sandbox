@@ -164,12 +164,13 @@ function draw(){
 			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
 			for (var i = 0; i < dialog.length; i++){
-				image2draw = charAlg(dialog[i][2]);
+				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
 					image2draw.push(2+(12*i), 102, 8, 8);
 				} else{
 					image2draw.push(2+(12*(i-10)), 118, 8, 8);
 				}
+				ctx.drawImage.apply(ctx, image2draw);
 			}
 			ctx.fillStyle= "grey";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
