@@ -166,9 +166,9 @@ function draw(){
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
-					image2draw.push(2+(12*i), 102, 8, 8);
+					image2draw.push(5+(12*i), 96, 8, 8);
 				} else{
-					image2draw.push(2+(12*(i-10)), 118, 8, 8);
+					image2draw.push(5+(12*(i-10)), 112, 8, 8);
 				}
 				ctx.drawImage.apply(ctx, image2draw);
 			}
