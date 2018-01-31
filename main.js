@@ -19,6 +19,9 @@ var currentDirKey = null;
 var currentDir = null;
 var controlState = "character";
 var dialogType = null;
+var lootSpot1 = null;
+var loot1 = null;
+var loot2 = null;
 
 
 ///// METHODS ///////////////////////////
@@ -86,7 +89,6 @@ function draw(){
 				image2draw = charAlg(db[code]);
 				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
-
 			};
 		};
 		// Draw the top layer of the map
@@ -129,7 +131,7 @@ function draw(){
 		ctx.fillRect(35,0, Math.round((playerMana/playerMaxMana)*23),6)
 		var cor = Math.round((playerCor/playerMaxCor)*80) + 1
 		ctx.drawImage.apply(ctx, [charsprites,560-cor,560,cor,16,70-cor,-5,cor,16])
-		ctx.fillText(selector[0]+"|"+selector[1]+"|"+(selector[1]+ (selector[0]*(selectorXlimit+1))), 70, 16);
+		//ctx.fillText(selector[0]+"|"+selector[1]+"|"+(selector[1]+ (selector[0]*(selectorXlimit+1))), 70, 16);
 
 		//Items
 		ctx.fillStyle= "#282c34";
@@ -142,7 +144,7 @@ function draw(){
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("K", 100, 8);
 		image2draw = charAlg("10.4.3.0.0");
-		image2draw.push(120, 0, 8, 8);
+		image2draw.push(119, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("L", 115, 8);
 		//Dialog
@@ -166,20 +168,26 @@ function draw(){
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
-					image2draw.push(5+(12*i), 96, 8, 8);
+					image2draw.push(5+(12*i), 98, 8, 8);
 				} else{
-					image2draw.push(5+(12*(i-10)), 112, 8, 8);
+					image2draw.push(5+(12*(i-10)), 114, 8, 8);
 				}
 				ctx.drawImage.apply(ctx, image2draw);
+			}
+			if (lootSpot1 !== null){
+				ctx.beginPath();
+				ctx.strokeStyle= "red"
+				ctx.rect(5 + (12*lootSpot1[1]), 97 + (16*lootSpot1[0]), 10, 10);
+				ctx.stroke();
 			}
 			ctx.fillStyle= "grey";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 86);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
-			ctx.rect(5 + (12*selector[1]), 96 + (16*selector[0]), 10, 10);
+			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
 			ctx.stroke();
-			ctx.fillText(">", 2 + (12*selector[1]), 102 + (16*selector[0]));
+			//ctx.fillText(">", 2 + (12*selector[1]), 102 + (16*selector[0]));
 		}
 
 
@@ -239,6 +247,20 @@ function control(action){
 			if(controlState == "character"){
 				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
 			} else {
+				if (dialogType == "loot" && loot1 == null){
+					loot1 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
+					lootSpot1 = [selector[0],selector[1]]
+					return;
+				}
+				if (dialogType == "loot" && loot1 !== null){
+					loot2 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
+					console.log("emit", loot1, loot2)
+					socket.emit('action', [userplayer, "interact", ["swap"].concat(loot1, loot2)]); console.log('speak', dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]);
+					loot1 = null
+					loot2 = null
+					lootSpot1 = null
+					return;
+				}
 				if (dialogPointers == "exit" || dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))] == "exit"){
 					selector = [0,0];
 					dialogPointers = [null, null, null, null, null];
@@ -339,7 +361,7 @@ socket.on('dialog', function(data) {
 	dialogPointers= data[2];
 	if (dialogType == "speech"){
 		selectorYlimit = 4
-		selectorXlimit = 1
+		selectorXlimit = 0
 	}
 	if (dialogType == "loot"){
 		selectorYlimit = 1

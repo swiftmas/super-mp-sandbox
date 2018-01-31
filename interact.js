@@ -29,12 +29,21 @@ function getDialog(interacter, path){
   }
   if (path[0] == "swap"){
     console.log("swapping path: " + path)
-    var curItem = coredata.players[interacter][path[5]];
+    //item1
+    if (path[1] == "none"){ db = coredata } else { db = coredata.chunks[path[1]]}
+    var item1 = db[path[2]][path[3]].inventory[path[4]].name;
+    var item1Quant = db[path[2]][path[3]].inventory[path[4]].quantity;
+    console.log(item1, item1Quant)
+    //item2
+    if (path[5] == "none"){ db = coredata } else { db = coredata.chunks[path[5]]}
+    var item2 = db[path[6]][path[7]].inventory[path[8]].name;
+    var item2Quant = db[path[6]][path[7]].inventory[path[8]].quantity;
+    console.log(item2, item2Quant)
+
+
     coredata.players[interacter][path[5]] = coredata.chunks[path[1]][path[2]][path[3]][path[4]]
     coredata.chunks[path[1]][path[2]][path[3]][path[4]] = curItem
-    var verbage = ["","Your " + curItem, "has been replaced with", coredata.players[interacter][path[5]], ""]
-    var pointers = [null,null,null,null,null]
-    listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
+    showLoot(interacter, path[3], path[1], path[2])
     return;
   }
   var verbageOptions = globals.dialogdb[path[0]][path[1]].textVariations.length - 1;
@@ -60,14 +69,14 @@ function showLoot(interacter, name, chunk, nameType){
   }
   for (var i = 0; i < person.inventory.length; i++){
     verbage.push([person.inventory[i].name, person.inventory[i].quantity, globals.weaponData[person.inventory[i].name].sprite, globals.weaponData[person.inventory[i].name].description])
-    pointers.push([chunk,nameType,name,i+9])
+    pointers.push(["none","players",interacter,i])
   }
   for (var i = verbage.length; i < 20; i++){
     verbage.push(["-","1","0.0.0.0","Empty"])
-    pointers.push([chunk,nameType,name,i])
+    pointers.push(["none","players",interacter,i])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
-  console.log(verbage)
+  //console.log(verbage)
 }
 
 function showGrave(interacter, name, chunk, nameType){
