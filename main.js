@@ -47,7 +47,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" ,"inventory":[{"name":"sword1","quantity":1},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}], "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" ,"inventory":[{"name":"sword1","quantity":2},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}], "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -162,17 +162,20 @@ function draw(){
 		}
 		//loot
 		if (dialog != null && dialogType == "loot"){
-			ctx.fillStyle= "rgba(15,15,15,0.85)"
+			ctx.fillStyle= "white"
 			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
 					image2draw.push(5+(12*i), 98, 8, 8);
+					ctx.drawImage.apply(ctx, image2draw);
+					if (dialog[i][1] > 1){ctx.fillText(dialog[i][1], 10+(12*i), 108); }
 				} else{
 					image2draw.push(5+(12*(i-10)), 114, 8, 8);
+					ctx.drawImage.apply(ctx, image2draw);
+					if (dialog[i][1] > 1){ctx.fillText(dialog[i][1], 10+(12*(i-10)), 124); }
 				}
-				ctx.drawImage.apply(ctx, image2draw);
 			}
 			if (lootSpot1 !== null){
 				ctx.beginPath();
@@ -255,7 +258,7 @@ function control(action){
 				if (dialogType == "loot" && loot1 !== null){
 					loot2 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
 					console.log("emit", loot1, loot2)
-					socket.emit('action', [userplayer, "interact", ["swap"].concat(loot1, loot2)]); console.log('speak', dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]);
+					socket.emit('action', [userplayer, "interact", ["swap"].concat(loot1, loot2)]);
 					loot1 = null
 					loot2 = null
 					lootSpot1 = null
@@ -268,7 +271,7 @@ function control(action){
 					controlState = "character";
 					return;
 				}
-				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]]); console.log('speak', dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]);
+				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]]);
 			}
 			break;
 		case "attack1":
@@ -314,7 +317,7 @@ document.onkeydown= function(event) {
 		if (key == 74){ control("attack1"); return };
 		if (key == 75){ control("attack2"); return };
 		if (key == 76){ control("attack3"); return };
-		if (key == 192){ console.log(playerCor++, serverTime, coredata, " currentDirKey ", currentDirKey); return };
+		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
 		if (key == 73){ control("interact"); return };
 		//wasd
 		if (key == 87){ control("2") };

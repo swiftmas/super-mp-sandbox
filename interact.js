@@ -35,11 +35,12 @@ function getDialog(interacter, path){
       var item1 = db1[path[2]][path[3]].inventory[path[4]].name;
       var item1Quant = db1[path[2]][path[3]].inventory[path[4]].quantity;
     } else {
-      //Create actual record for empty slot
+      //Create actual record for any empty slots
       var item1 = "-"
       var item1Quant = 1
-      path[4] = db1[path[2]][path[3]].inventory.length
-      db1[path[2]][path[3]].inventory.push({"name": item1, "quantity": item1Quant})
+      for (var newi = db1[path[2]][path[3]].inventory.length; newi < 10; newi++){
+        db1[path[2]][path[3]].inventory.push({"name": item1, "quantity": item1Quant})
+      }
     }
     console.log(item1, item1Quant)
     //item2
@@ -48,22 +49,34 @@ function getDialog(interacter, path){
       var item2 = db2[path[6]][path[7]].inventory[path[8]].name;
       var item2Quant = db2[path[6]][path[7]].inventory[path[8]].quantity;
     } else {
-      //Create actual record for empty slot
+      //Create actual record for empty slots
       var item2 = "-"
       var item2Quant = 1
-      path[8] = db2[path[6]][path[7]].inventory.length
-      db2[path[6]][path[7]].inventory.push({"name": item2, "quantity": item2Quant})
+      for (var newi = db2[path[6]][path[7]].inventory.length; newi < 10; newi++){
+        db2[path[6]][path[7]].inventory.push({"name": item2, "quantity": item2Quant})
+      }
     }
-    console.log(item2, item2Quant)
+    console.log(db2[path[6]][path[7]].inventory, path[8])
 
-    //SwapItem1
-    db1[path[2]][path[3]].inventory[path[4]].name = item2
-    db1[path[2]][path[3]].inventory[path[4]].quantity = item2Quant
+    if (item1 == item2 && item1 !== "-"){
+      if (path[3] == path[7] && path[4] == path[8]){console.log("Cannot Swap same item")} else {
+        db1[path[2]][path[3]].inventory[path[4]].name = "-"
+        db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+        db2[path[6]][path[7]].inventory[path[8]].quantity += item1Quant
+      }
+    } else if (item2 == "-" && item1Quant > 1){
+      db2[path[6]][path[7]].inventory[path[8]].name = item1
+      db2[path[6]][path[7]].inventory[path[8]].quantity = 1
+      db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
+    } else {
+      //SwapItem1
+      db1[path[2]][path[3]].inventory[path[4]].name = item2
+      db1[path[2]][path[3]].inventory[path[4]].quantity = item2Quant
 
-    //SwapItem2
-    db2[path[6]][path[7]].inventory[path[8]].name = item1
-    db2[path[6]][path[7]].inventory[path[8]].quantity = item1Quant
-
+      //SwapItem2
+      db2[path[6]][path[7]].inventory[path[8]].name = item1
+      db2[path[6]][path[7]].inventory[path[8]].quantity = item1Quant
+    }
     //Go to start
     startDialog(interacter)
     return;
@@ -82,7 +95,8 @@ function showLoot(interacter, name, chunk, nameType){
   var pointers = []
   //console.log(thing,Object.keys(thing.inventory).length)
   for (var i = 0; i < thing.inventory.length; i++){
-    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, globals.weaponData[thing.inventory[i].name].sprite, globals.weaponData[thing.inventory[i].name].description])
+    var weapon =  globals.weaponData[thing.inventory[i].name]
+    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, weapon.sprite, weapon.description])
     pointers.push([chunk,nameType,name,i])
   }
   for (var i = verbage.length; i < 10; i++){
@@ -90,12 +104,13 @@ function showLoot(interacter, name, chunk, nameType){
     pointers.push([chunk,nameType,name,i])
   }
   for (var i = 0; i < person.inventory.length; i++){
-    verbage.push([person.inventory[i].name, person.inventory[i].quantity, globals.weaponData[person.inventory[i].name].sprite, globals.weaponData[person.inventory[i].name].description])
+    var weapon =  globals.weaponData[person.inventory[i].name]
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
     pointers.push(["none","players",interacter,i])
   }
   for (var i = verbage.length; i < 20; i++){
     verbage.push(["-","1","10.8.1.0.0","Empty"])
-    pointers.push(["none","players",interacter,i])
+    pointers.push(["none","players",interacter,i - 10])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
   //console.log(verbage)
