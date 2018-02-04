@@ -152,7 +152,7 @@ function draw(){
 			ctx.fillStyle= "rgba(15,15,15,0.85)"
 			ctx.drawImage.apply(ctx, [charsprites,400,576,128,64,0,64,128,64])
 			//ctx.fillRect(0,74,128,64);
-			ctx.fillStyle= "grey";
+			ctx.fillStyle= "#c1c1c1";
 			ctx.fillText(dialog[0], 7, 82);
 			ctx.fillText(dialog[1], 7, 92);
 			ctx.fillText(dialog[2], 7, 102);
@@ -162,19 +162,20 @@ function draw(){
 		}
 		//loot
 		if (dialog != null && dialogType == "loot"){
-			ctx.fillStyle= "white"
-			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
-			//ctx.fillRect(0,74,128,64);
+			//ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
+			ctx.drawImage.apply(ctx, [charsprites,784,528,128,112,0,16,128,112])
+			ctx.fillStyle= "#c1c1c1";
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
 					image2draw.push(5+(12*i), 98, 8, 8);
 					ctx.drawImage.apply(ctx, image2draw);
-					if (dialog[i][1] > 1){ctx.fillText(dialog[i][1], 10+(12*i), 108); }
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*i), 108);} else {ctx.fillText("+", 10+(12*i), 108);} }
 				} else{
 					image2draw.push(5+(12*(i-10)), 114, 8, 8);
 					ctx.drawImage.apply(ctx, image2draw);
-					if (dialog[i][1] > 1){ctx.fillText(dialog[i][1], 10+(12*(i-10)), 124); }
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*(i-10)), 124);} else {ctx.fillText("+", 10+(12*(i-10)), 124);} }
+
 				}
 			}
 			if (lootSpot1 !== null){
@@ -183,7 +184,7 @@ function draw(){
 				ctx.rect(5 + (12*lootSpot1[1]), 97 + (16*lootSpot1[0]), 10, 10);
 				ctx.stroke();
 			}
-			ctx.fillStyle= "grey";
+			ctx.fillStyle= "#c1c1c1";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 86);
 			ctx.beginPath();

@@ -113,7 +113,7 @@ function showLoot(interacter, name, chunk, nameType){
     pointers.push(["none","players",interacter,i - 10])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
-  //console.log(verbage)
+  console.log(verbage)
 }
 
 function showGrave(interacter, name, chunk, nameType){
