@@ -149,10 +149,6 @@ var server = http.createServer(function(request, response){
 
 server.listen(8080);
 
-
-
-
-
 //----------------------------/COOL STUFF /-----------------------------------------------------------------------//////////////
 
 listener = io.listen(server);
@@ -201,6 +197,9 @@ listener.sockets.on('connection', function(socket){
             interact.startDialog(data[0]);
           };
           break;
+        case "character":
+          moveQueue[data[0]] = [data[0], null];
+          interact.showCharacter(data[0]);
         case "attacknull":
           attackQueue[data[0]] = null;
           //moveQueue[data[0]] = data;

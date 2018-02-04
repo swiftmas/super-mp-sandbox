@@ -162,8 +162,7 @@ function draw(){
 		}
 		//loot
 		if (dialog != null && dialogType == "loot"){
-			//ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
-			ctx.drawImage.apply(ctx, [charsprites,784,528,128,112,0,16,128,112])
+			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			ctx.fillStyle= "#c1c1c1";
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
@@ -187,6 +186,38 @@ function draw(){
 			ctx.fillStyle= "#c1c1c1";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 86);
+			ctx.beginPath();
+			ctx.strokeStyle= "orange"
+			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
+			ctx.stroke();
+			//ctx.fillText(">", 2 + (12*selector[1]), 102 + (16*selector[0]));
+		}
+		//loot
+		if (dialog != null && dialogType == "character"){
+			ctx.drawImage.apply(ctx, [charsprites,784,528,128,112,0,16,128,112])
+			ctx.fillStyle= "#c1c1c1";
+			for (var i = 0; i < dialog.length; i++){
+				var image2draw = charAlg(dialog[i][2]);
+				if (i < 10){
+					image2draw.push(5+(12*i), 98, 8, 8);
+					ctx.drawImage.apply(ctx, image2draw);
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*i), 108);} else {ctx.fillText("+", 10+(12*i), 108);} }
+				} else{
+					image2draw.push(5+(12*(i-10)), 114, 8, 8);
+					ctx.drawImage.apply(ctx, image2draw);
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*(i-10)), 124);} else {ctx.fillText("+", 10+(12*(i-10)), 124);} }
+
+				}
+			}
+			if (lootSpot1 !== null){
+				ctx.beginPath();
+				ctx.strokeStyle= "red"
+				ctx.rect(5 + (12*lootSpot1[1]), 97 + (16*lootSpot1[0]), 10, 10);
+				ctx.stroke();
+			}
+			ctx.fillStyle= "#c1c1c1";
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 72);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 82);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
 			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
@@ -247,19 +278,36 @@ function control(action){
 		case "attacknull":
 			if(controlState == "character"){socket.emit('action', [userplayer, "attacknull"]);}
 			break;
+		case "character":
+			socket.emit('action', [userplayer, "character", null]); console.log('interact');
+			break;
 		case "interact":
 			if(controlState == "character"){
 				socket.emit('action', [userplayer, "interact", null]); console.log('interact');
 			} else {
-				if (dialogType == "loot" && loot1 == null){
+				if (["loot"].indexOf(dialogType) > -1 && loot1 == null){
 					loot1 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
 					lootSpot1 = [selector[0],selector[1]]
 					return;
 				}
-				if (dialogType == "loot" && loot1 !== null){
+				if (["loot"].indexOf(dialogType) > -1 && loot1 !== null){
 					loot2 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
 					console.log("emit", loot1, loot2)
 					socket.emit('action', [userplayer, "interact", ["swap"].concat(loot1, loot2)]);
+					loot1 = null
+					loot2 = null
+					lootSpot1 = null
+					return;
+				}
+				if (["character"].indexOf(dialogType) > -1 && loot1 == null){
+					loot1 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
+					lootSpot1 = [selector[0],selector[1]]
+					return;
+				}
+				if (["character"].indexOf(dialogType) > -1 && loot1 !== null){
+					loot2 = dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]
+					console.log("emit", loot1, loot2)
+					socket.emit('action', [userplayer, "interact", ["characterInteract"].concat(loot1, loot2)]);
 					loot1 = null
 					loot2 = null
 					lootSpot1 = null
@@ -320,6 +368,7 @@ document.onkeydown= function(event) {
 		if (key == 76){ control("attack3"); return };
 		if (key == 192){ console.log(serverTime, coredata, " currentDirKey ", currentDirKey); return };
 		if (key == 73){ control("interact"); return };
+		if (key == 85){ control("character"); return };
 		//wasd
 		if (key == 87){ control("2") };
 		if (key == 68){ control("4") };
@@ -368,6 +417,10 @@ socket.on('dialog', function(data) {
 		selectorXlimit = 0
 	}
 	if (dialogType == "loot"){
+		selectorYlimit = 1
+		selectorXlimit = 9
+	}
+	if (dialogType == "character"){
 		selectorYlimit = 1
 		selectorXlimit = 9
 	}

@@ -5,6 +5,9 @@ module.exports = {
   },
   getDialog: function (interacter, path) {
     getDialog(interacter, path);
+  },
+  showCharacter: function (interacter) {
+    showCharacter(interacter);
   }
 };
 
@@ -81,6 +84,60 @@ function getDialog(interacter, path){
     startDialog(interacter)
     return;
   }
+  if (path[0] == "characterInteract"){
+    console.log("swapping path: " + path)
+    //item1
+    if (path[1] == "none"){ db1 = coredata } else { db1 = coredata.chunks[path[1]]}
+    if (db1[path[2]][path[3]].inventory[path[4]] !== void 0){
+      var item1 = db1[path[2]][path[3]].inventory[path[4]].name;
+      var item1Quant = db1[path[2]][path[3]].inventory[path[4]].quantity;
+    } else {
+      //Create actual record for any empty slots
+      var item1 = "-"
+      var item1Quant = 1
+      for (var newi = db1[path[2]][path[3]].inventory.length; newi < 10; newi++){
+        db1[path[2]][path[3]].inventory.push({"name": item1, "quantity": item1Quant})
+      }
+    }
+    console.log(item1, item1Quant)
+    //item2
+    if (path[5] == "none"){ db2 = coredata } else { db2 = coredata.chunks[path[5]]}
+    if (db2[path[6]][path[7]].inventory[path[8]] !== void 0){
+      var item2 = db2[path[6]][path[7]].inventory[path[8]].name;
+      var item2Quant = db2[path[6]][path[7]].inventory[path[8]].quantity;
+    } else {
+      //Create actual record for empty slots
+      var item2 = "-"
+      var item2Quant = 1
+      for (var newi = db2[path[6]][path[7]].inventory.length; newi < 10; newi++){
+        db2[path[6]][path[7]].inventory.push({"name": item2, "quantity": item2Quant})
+      }
+    }
+    console.log(db2[path[6]][path[7]].inventory, path[8])
+
+    if (item1 == item2 && item1 !== "-"){
+      if (path[3] == path[7] && path[4] == path[8]){console.log("Cannot Swap same item")} else {
+        db1[path[2]][path[3]].inventory[path[4]].name = "-"
+        db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+        db2[path[6]][path[7]].inventory[path[8]].quantity += item1Quant
+      }
+    } else if (item2 == "-" && item1Quant > 1){
+      db2[path[6]][path[7]].inventory[path[8]].name = item1
+      db2[path[6]][path[7]].inventory[path[8]].quantity = 1
+      db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
+    } else {
+      //SwapItem1
+      db1[path[2]][path[3]].inventory[path[4]].name = item2
+      db1[path[2]][path[3]].inventory[path[4]].quantity = item2Quant
+
+      //SwapItem2
+      db2[path[6]][path[7]].inventory[path[8]].name = item1
+      db2[path[6]][path[7]].inventory[path[8]].quantity = item1Quant
+    }
+    //Go to start
+    showCharacter(interacter)
+    return;
+  }
   var verbageOptions = globals.dialogdb[path[0]][path[1]].textVariations.length - 1;
   var verbage = globals.dialogdb[path[0]][path[1]].textVariations[Math.round(Math.random() * verbageOptions)];
   var pointers = globals.dialogdb[path[0]][path[1]].pointers;
@@ -113,6 +170,32 @@ function showLoot(interacter, name, chunk, nameType){
     pointers.push(["none","players",interacter,i - 10])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
+  console.log(verbage)
+}
+
+function showCharacter(interacter){
+  var verbage = []
+  var person = coredata.players[interacter];
+  var pointers = []
+  for (var i = 0; i < person.inventory.length; i++){
+    var weapon =  globals.weaponData[person.inventory[i].name]
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
+    pointers.push(["none","players",interacter,i])
+  }
+  for (var i = verbage.length; i < 10; i++){
+    verbage.push(["-","1","10.8.1.0.0","Empty"])
+    pointers.push(["none","players",interacter,i])
+  }
+  for (var i = 0; i < person.inventory.length; i++){
+    var weapon =  globals.weaponData[person.inventory[i].name]
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
+    pointers.push(["none","players",interacter,i])
+  }
+  for (var i = verbage.length; i < 20; i++){
+    verbage.push(["-","1","10.8.1.0.0","Empty"])
+    pointers.push(["none","players",interacter,i - 10])
+  }
+  listener.sockets.connected[interacter.slice(1)].emit('dialog', ["character", verbage, pointers]);
   console.log(verbage)
 }
 
