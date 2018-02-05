@@ -47,7 +47,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782", "dir": "2", "state":"0", "effects": {}, "health": 140, "maxHealth": 140, "mana": 100, "maxMana": 100, "cor": 0, "maxCor": 200, "alerttimer": 0, "team": team, "slot1": "sword1", "slot2": "bow1", "slot3": "spell1" ,"inventory":[{"name":"sword1","quantity":2},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}], "origin": "818.782", "closeChunks": [], "h": 4, "w": 4};
+	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team": team,"slot1":"sword1","slot2":"bow1","slot3":"spell1","slot4":"spell1","inventory":[{"name":"sword1","quantity":2},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}],"abilities":[{"name":"Fire Trap","quantity":2},{"name":"Vanish","quantity":1},{"name":"Orb Of Healing","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -279,7 +279,18 @@ function control(action){
 			if(controlState == "character"){socket.emit('action', [userplayer, "attacknull"]);}
 			break;
 		case "character":
-			socket.emit('action', [userplayer, "character", null]); console.log('interact');
+			if (dialogType == "character") {
+				loot1 = null
+				loot2 = null
+				lootSpot1 = null
+				selector = [0,0];
+				dialogPointers = [null, null, null, null, null];
+				dialog = null;
+				dialogType = null;
+				controlState = "character";
+			} else{
+				socket.emit('action', [userplayer, "character", null]); console.log('interact');
+			}
 			break;
 		case "interact":
 			if(controlState == "character"){
@@ -317,6 +328,7 @@ function control(action){
 					selector = [0,0];
 					dialogPointers = [null, null, null, null, null];
 					dialog = null;
+					dialogType = null;
 					controlState = "character";
 					return;
 				}
@@ -325,6 +337,9 @@ function control(action){
 			break;
 		case "attack1":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack1"]);}
+			loot1 = null
+			loot2 = null
+			lootSpot1 = null
 			selector = [0,0];
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;
@@ -332,6 +347,9 @@ function control(action){
 			break;
 		case "attack2":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack2"]);}
+			loot1 = null
+			loot2 = null
+			lootSpot1 = null
 			selector = [0,0];
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;
@@ -339,6 +357,9 @@ function control(action){
 			break;
 		case "attack3":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack3"]);}
+			loot1 = null
+			loot2 = null
+			lootSpot1 = null
 			selector = [0,0];
 			dialogPointers = [null, null, null, null, null];
 			dialog = null;

@@ -10,6 +10,10 @@ module.exports = {
     showCharacter(interacter);
   }
 };
+//// Basically this is a mess and has a long way to go. I wanna have one feeding function do a bunch of commands based on a path given. Basically making it an api call. There are three ways to start:
+// Client feeds just the interacters ID and the closest target is interacted with resulting in Speech or Looting,
+// Client feeds back the interacter ID and a path denoting which specific dialog or loot action to perform( such as a speech tree or to perform a loot swap command)
+// Client toggles the user inventory character pane. This is a special deal i may revise. it got its own function cause its a differnt keypress but it complicates things so this may change.
 
 function getDialog(interacter, path){
   if (path[0] == "consumable"){
@@ -20,14 +24,6 @@ function getDialog(interacter, path){
     coredata.chunks[path[1]][path[2]][path[3]][path[4]] = "-";
     var pointers = [null,null,null,null,null]
     listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
-    return;
-  }
-  if (path[0] == "loot"){
-    console.log("looting path: " + path)
-    path.splice(0,1,"swap")
-    var verbage = ["== Your Equipped: ==", coredata.players[interacter].slot1, coredata.players[interacter].slot2, coredata.players[interacter].slot3, "<"]
-    var pointers = ["exit",path.concat(["slot1"]),path.concat(["slot2"]),path.concat(["slot3"]),"exit"]
-    listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
     return;
   }
   if (path[0] == "swap"){
@@ -67,10 +63,10 @@ function getDialog(interacter, path){
         db1[path[2]][path[3]].inventory[path[4]].quantity = 1
         db2[path[6]][path[7]].inventory[path[8]].quantity += item1Quant
       }
-    } else if (item2 == "-" && item1Quant > 1){
-      db2[path[6]][path[7]].inventory[path[8]].name = item1
-      db2[path[6]][path[7]].inventory[path[8]].quantity = 1
-      db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
+    } else if (item1 == "-" && item2Quant > 1){
+      db1[path[2]][path[3]].inventory[path[4]].name = item2
+      db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+      db2[path[6]][path[7]].inventory[path[8]].quantity -= 1
     } else {
       //SwapItem1
       db1[path[2]][path[3]].inventory[path[4]].name = item2
@@ -87,7 +83,11 @@ function getDialog(interacter, path){
   if (path[0] == "characterInteract"){
     console.log("swapping path: " + path)
     //item1
-    if (path[1] == "none"){ db1 = coredata } else { db1 = coredata.chunks[path[1]]}
+    if (["slot"].indexOf(path[5]) > -1){
+      showCharacter(interacter)
+      return;
+    }
+    var db1 = coredata
     if (db1[path[2]][path[3]].inventory[path[4]] !== void 0){
       var item1 = db1[path[2]][path[3]].inventory[path[4]].name;
       var item1Quant = db1[path[2]][path[3]].inventory[path[4]].quantity;
@@ -121,10 +121,10 @@ function getDialog(interacter, path){
         db1[path[2]][path[3]].inventory[path[4]].quantity = 1
         db2[path[6]][path[7]].inventory[path[8]].quantity += item1Quant
       }
-    } else if (item2 == "-" && item1Quant > 1){
-      db2[path[6]][path[7]].inventory[path[8]].name = item1
-      db2[path[6]][path[7]].inventory[path[8]].quantity = 1
-      db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
+    } else if (item1 == "-" && item2Quant > 1){
+      db1[path[2]][path[3]].inventory[path[4]].name = item2
+      db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+      db2[path[6]][path[7]].inventory[path[8]].quantity -= 1
     } else {
       //SwapItem1
       db1[path[2]][path[3]].inventory[path[4]].name = item2
@@ -177,23 +177,33 @@ function showCharacter(interacter){
   var verbage = []
   var person = coredata.players[interacter];
   var pointers = []
-  for (var i = 0; i < person.inventory.length; i++){
-    var weapon =  globals.weaponData[person.inventory[i].name]
-    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
+  var slots = ["slot1", "slot2", "slot3", "slot4"]
+  // List Equipped
+  for (var i = 0; i < slots.length; i++){
+    var weapon =  globals.weaponData[person[slots[i]]]
+    verbage.push([person[slots[i]], 1, weapon.sprite, weapon.description])
     pointers.push(["none","players",interacter,i])
   }
+  // List Available abilities
+  for (var i = 0; i < person.abilities.length; i++){
+    console.log(i)
+    var weapon =  globals.weaponData[person.abilities[i].name]
+    verbage.push([person.abilities[i].name, 1, weapon.sprite, weapon.description])
+    pointers.push(["none","players",interacter,i,"slot"])
+  }
+  // Fill in blank space
   for (var i = verbage.length; i < 10; i++){
     verbage.push(["-","1","10.8.1.0.0","Empty"])
-    pointers.push(["none","players",interacter,i])
+    pointers.push(["none","players",interacter,i,"ability"])
   }
   for (var i = 0; i < person.inventory.length; i++){
     var weapon =  globals.weaponData[person.inventory[i].name]
     verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
-    pointers.push(["none","players",interacter,i])
+    pointers.push(["none","players",interacter,i,"item"])
   }
   for (var i = verbage.length; i < 20; i++){
     verbage.push(["-","1","10.8.1.0.0","Empty"])
-    pointers.push(["none","players",interacter,i - 10])
+    pointers.push(["none","players",interacter,i - 10, "item"])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["character", verbage, pointers]);
   console.log(verbage)

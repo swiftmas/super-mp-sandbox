@@ -61,7 +61,7 @@
   "Vanish": {
     "cooldown": 40,
     "description":"Ability",
-    "sprite":"10.4.3.0.0",
+    "sprite":"10.6.1.0.0",
     "npcCooldown": 5,
     "interruptible": true,
     "effectsSelf": true,
@@ -300,7 +300,7 @@
   "Orb Of Healing": {
     "description":"Healing Spell",
     "cooldown": 0,
-    "sprite":"10.4.3.0.0",
+    "sprite":"10.6.2.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
@@ -359,7 +359,7 @@
   "Fire Trap": {
     "cooldown": 3,
     "description":"Fire Spell",
-    "sprite":"10.4.3.0.0",
+    "sprite":"10.6.3.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
