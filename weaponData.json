@@ -1,8 +1,8 @@
 {
   "sword1": {
     "cooldown": 0,
-    "description":"Weapon",
-    "sprite":"10.4.1.0.0",
+    "description": "Weapon",
+    "sprite": "10.4.1.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
@@ -60,8 +60,8 @@
   },
   "Vanish": {
     "cooldown": 40,
-    "description":"Ability",
-    "sprite":"10.6.1.0.0",
+    "description": "Ability",
+    "sprite": "10.6.1.0.0",
     "npcCooldown": 5,
     "interruptible": true,
     "effectsSelf": true,
@@ -121,8 +121,8 @@
   },
   "Giant's Greatsword": {
     "cooldown": 0,
-    "description":"Sword",
-    "sprite":"10.4.1.0.0",
+    "description": "Sword",
+    "sprite": "10.4.1.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
@@ -180,8 +180,8 @@
   },
   "bow1": {
     "cooldown": 0,
-    "description":"Basic Long Bow",
-    "sprite":"10.4.2.0.0",
+    "description": "Basic Long Bow",
+    "sprite": "10.4.2.0.0",
     "npcCooldown": 5,
     "interruptible": true,
     "effectsSelf": false,
@@ -239,8 +239,8 @@
   },
   "bow2": {
     "cooldown": 0,
-    "description":"Better Long Bow",
-    "sprite":"10.4.2.0.0",
+    "description": "Better Long Bow",
+    "sprite": "10.4.2.0.0",
     "npcCooldown": 3,
     "interruptible": false,
     "effectsSelf": false,
@@ -296,11 +296,26 @@
     "ph": 3,
     "pw": 3
   },
-  "-": {"sprite":"10.8.1.0.0", "description":"Empty"},
+  "-": {
+    "sprite": "10.8.1.0.0",
+    "description": "Empty"
+  },
+  "mana": {
+    "sprite": "10.8.2.0.0",
+    "description": "Recover 25 mana"
+  },
+  "health": {
+    "sprite": "10.8.3.0.0",
+    "description": "Recover 25 health"
+  },
+  "gold": {
+    "sprite": "10.8.4.0.0",
+    "description": "Gold Gold Lovely Gold"
+  },
   "Orb Of Healing": {
-    "description":"Healing Spell",
+    "description": "Healing Spell",
     "cooldown": 0,
-    "sprite":"10.6.2.0.0",
+    "sprite": "10.6.2.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
@@ -358,8 +373,8 @@
   },
   "Fire Trap": {
     "cooldown": 3,
-    "description":"Fire Spell",
-    "sprite":"10.6.3.0.0",
+    "description": "Fire Spell",
+    "sprite": "10.6.3.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,
@@ -417,8 +432,8 @@
   },
   "spell1": {
     "cooldown": 0,
-    "description":"Long Range Mana Spell",
-    "sprite":"10.4.3.0.0",
+    "description": "Long Range Mana Spell",
+    "sprite": "10.4.3.0.0",
     "npcCooldown": 5,
     "interruptible": false,
     "effectsSelf": false,

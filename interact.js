@@ -58,7 +58,35 @@ function getDialog(interacter, path){
     console.log(item2, item2Quant)
 
     if (item1 == item2 && item1 !== "-"){
-      if (path[3] == path[7] && path[4] == path[8]){console.log("Cannot Swap same item")} else {
+      if (path[3] == path[7] && path[4] == path[8]){
+        var consumable = db1[path[2]][path[3]].inventory[path[4]].name
+        if ( ["mana","gold","health"].indexOf(consumable) > -1 ){
+          switch (consumable) {
+            case "mana":
+              coredata["players"][interacter][consumable] += 25
+              if (db1[path[2]][path[3]].inventory[path[4]].quantity > 1){
+                db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
+              } else {
+                db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+                db1[path[2]][path[3]].inventory[path[4]].name = "-"
+              }
+              break;
+            case "health":
+              coredata["players"][interacter][consumable] += 25
+              if (db1[path[2]][path[3]].inventory[path[4]].quantity > 1){
+                db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
+              } else {
+                db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+                db1[path[2]][path[3]].inventory[path[4]].name = "-"
+              }              break;
+            case "gold":
+              coredata["players"][interacter][consumable] += db1[path[2]][path[3]].inventory[path[4]].quantity
+              db1[path[2]][path[3]].inventory[path[4]].quantity = 1
+              db1[path[2]][path[3]].inventory[path[4]].name = "-"
+              break;
+          }
+        } else {console.log("cannot swap same item")}
+      } else {
         db1[path[2]][path[3]].inventory[path[4]].name = "-"
         db1[path[2]][path[3]].inventory[path[4]].quantity = 1
         db2[path[6]][path[7]].inventory[path[8]].quantity += item1Quant
@@ -118,7 +146,36 @@ function getDialog(interacter, path){
 
     if (path[5] == "inventory" && path[10] == "inventory"){
       if (db1[path[4]].name == db2[path[9]].name && db1[path[4]].name !== "-"){
-        if (path[3] == path[8] && path[4] == path[9]){console.log("Cannot Swap same item")} else {
+        if (path[3] == path[8] && path[4] == path[9]){
+          var consumable = db1[path[4]].name
+          if ( ["mana","gold","health"].indexOf(consumable) > -1 ){
+            switch (consumable) {
+              case "mana":
+                coredata[path[2]][path[3]][consumable] += 25
+                if (db1[path[4]].quantity > 1){
+                  db1[path[4]].quantity -= 1
+                } else {
+                  db1[path[4]].quantity = 1
+                  db1[path[4]].name = "-"
+                }
+                break;
+              case "health":
+                coredata[path[2]][path[3]][consumable] += 25
+                if (db1[path[4]].quantity > 1){
+                  db1[path[4]].quantity -= 1
+                } else {
+                  db1[path[4]].quantity = 1
+                  db1[path[4]].name = "-"
+                }
+                break;
+              case "gold":
+                coredata[path[2]][path[3]][consumable] += db1[path[4]].quantity
+                db1[path[4]].quantity = 1
+                db1[path[4]].name = "-"
+                break;
+            }
+          } else {console.log("cannot swap same item")}
+        } else {
           db2[path[9]].quantity += db1[path[4]].quantity
           db1[path[4]].name = "-"
           db1[path[4]].quantity = 1
