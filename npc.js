@@ -2,8 +2,8 @@
 module.exports = {
     npccontroller: function () {
         npccontroller();
-    }
-    , alerttimedown: function () {
+    },
+    alerttimedown: function () {
         alerttimedown();
     }
 };
@@ -12,11 +12,11 @@ function npccontroller() {
   for (var chunk in coredata.chunks){
     var cdn = coredata.chunks[chunk].npcs
 
-        //// Dead Cleanup
-    npcLoop:
+    //// Normal Living
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
-            var surroundings = [chunk, 36];
+            // //////////////////////   Cleanup Dead and lost npcs //////////////////////
+            var surroundings = [chunk, 300];
             for (var nearbyChunk in coredata.chunks){
               general.getDist(cdn[npc].pos, nearbyChunk, function(result){
                 if (result[0] < surroundings[1]) {
@@ -30,7 +30,7 @@ function npccontroller() {
               console.log("MOVE THIS NPC!!");
               coredata.chunks[surroundings[0]].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
               delete cdn[npc];
-              break npcLoop;
+              continue;
             }
 
             if (cdn[npc].state > 60) {
@@ -40,26 +40,21 @@ function npccontroller() {
                 console.log("spawn at ", cdn[npc].pos)
                 cdn[npc].state = "000";
                 cdn[npc].health = 100;
-                cdn[npc].respawn = 200;
+                cdn[npc].respawn = globals.npcRespawn;
                 if (cdn[npc].chunk !== chunk){
                   if (coredata.chunks.hasOwnProperty(cdn[npc].chunk)){
                     coredata.chunks[cdn[npc].chunk].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
                   }
                   delete cdn[npc];
-                  break npcLoop;
+                  continue;
                 }
               }
               cdn[npc].respawn -= 1;
             };
-        };
-    };
-    //// Normal Living
-    for (var npc in cdn) {
-        if (cdn.hasOwnProperty(npc)) {
             /////////////////////////////IF NORMAL///////////////
             if (cdn[npc].state == "000") {
                 alertrange(npc, chunk, 30);
-                var closetarget = getSurroundings(npc, chunk, 30);
+                var closetarget = getSurroundings(npc, chunk, 35);
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData.hasOwnProperty(cdn[npc].slot2) && globals.weaponData[cdn[npc].slot2].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {

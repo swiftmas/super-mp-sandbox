@@ -47,7 +47,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team": team,"slot1":"sword1","slot2":"bow1","slot3":"spell1","slot4":"spell1","inventory":[{"name":"sword1","quantity":2},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}],"abilities":[{"name":"Fire Trap","quantity":2},{"name":"Vanish","quantity":1},{"name":"Orb Of Healing","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"816.654","dir":"2","state":"0","effects":{},"health":3140,"maxHealth":140,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team": team,"slot0":"sword1","slot1":"bow1","slot2":"spell1","slot3":"spell1","inventory":[{"name":"sword1","quantity":2},{"name":"bow1","quantity":1},{"name":"bow2","quantity":1}],"abilities":[{"name":"Fire Trap","quantity":2},{"name":"Vanish","quantity":1},{"name":"Orb Of Healing","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -335,6 +335,16 @@ function control(action){
 				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]]);
 			}
 			break;
+		case "attack0":
+			if (controlState == "character"){socket.emit('action', [userplayer, "attack0"]);}
+			loot1 = null
+			loot2 = null
+			lootSpot1 = null
+			selector = [0,0];
+			dialogPointers = [null, null, null, null, null];
+			dialog = null;
+			controlState = "character";
+			break;
 		case "attack1":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack1"]);}
 			loot1 = null
@@ -384,6 +394,7 @@ resize();
 
 document.onkeydown= function(event) {
 		var key= (event || window.event).keyCode;
+		if (key == 72){ control("attack0"); return };
 		if (key == 74){ control("attack1"); return };
 		if (key == 75){ control("attack2"); return };
 		if (key == 76){ control("attack3"); return };
@@ -400,7 +411,7 @@ document.onkeydown= function(event) {
 		if (key == 39){ event.preventDefault(); control("4") };
 		if (key == 40){ event.preventDefault(); control("6") };
 		if (key == 37){ event.preventDefault(); control("8") };
-		if ([74, 75, 76].indexOf(key) == -1){
+		if ([72, 74, 75, 76].indexOf(key) == -1){
 			currentDirKey = key;
 		}
 };
@@ -412,7 +423,7 @@ document.onkeyup= function(event) {
 			currentDirKey = null;
 			currentDir = null;
 			control("movenull");
-		} else if ([74, 75, 76].indexOf(key) > -1){
+		} else if ([72, 74, 75, 76].indexOf(key) > -1){
 			control("attacknull");
 		};
 };
@@ -485,7 +496,7 @@ socket.on('getdata', function(data){
 var tc = new Hammer(map);
 tc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-tc.on("tap", function(ev){control("attack1"); return });
+tc.on("tap", function(ev){control("attack0"); return });
 
 tc.on("press", function(ev){control("interact"); return });
 

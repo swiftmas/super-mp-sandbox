@@ -13,6 +13,7 @@ exports.dayint = 0;
 exports.daystate = "day" /// Required so its easier to determine if its day or night wihtout relying on the day timer which may change.
 exports.serverPause = false;
 exports.serverMessage = null;
+exports.npcRespawn = 3000;
 
 /////////////////////// QUEUES
 exports.attackQueue = {};

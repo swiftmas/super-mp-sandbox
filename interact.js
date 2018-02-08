@@ -143,19 +143,19 @@ function getDialog(interacter, path){
         //SwapItems
         var item1 = db1[path[5]+(path[4]+1)]
         var item2 = db2[path[10]+(path[9]+1)]
-        db1[path[5]+(path[4]+1)] = item2
-        db2[path[10]+(path[9]+1)] = item1
+        db1[path[5]+(path[4])] = item2
+        db2[path[10]+(path[9])] = item1
       }
     } else if(path[5] == "inventory" && path[10] == "slot"){
      {
         var item1 = db1[path[4]].name
-        db2[path[10]+(path[9]+1)] = item1
+        db2[path[10]+(path[9])] = item1
       }
     }
     else if(path[5] == "abilities" && path[10] == "slot"){
      {
         var item1 = db1[path[4]].name
-        db2[path[10]+(path[9]+1)] = item1
+        db2[path[10]+(path[9])] = item1
       }
     }
     //Go to start
@@ -201,7 +201,7 @@ function showCharacter(interacter){
   var verbage = []
   var person = coredata.players[interacter];
   var pointers = []
-  var slots = ["slot1", "slot2", "slot3", "slot4"]
+  var slots = ["slot0", "slot1", "slot2", "slot3"]
   // List Equipped
   for (var i = 0; i < slots.length; i++){
     var weapon =  globals.weaponData[person[slots[i]]]

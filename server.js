@@ -180,6 +180,9 @@ listener.sockets.on('connection', function(socket){
   socket.on('action', function(data) {
     if (coredata.players.hasOwnProperty(data[0])){
       switch (data[1]){
+        case "attack0":
+          attackQueue[data[0]] =  "attack0";
+          break;
         case "attack1":
           attackQueue[data[0]] =  "attack1";
           break;
