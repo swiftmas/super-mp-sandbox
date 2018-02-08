@@ -198,8 +198,8 @@ function getDialog(interacter, path){
     } else if(path[5] == "slot" && path[10] == "slot"){
      {
         //SwapItems
-        var item1 = db1[path[5]+(path[4]+1)]
-        var item2 = db2[path[10]+(path[9]+1)]
+        var item1 = db1[path[5]+(path[4])]
+        var item2 = db2[path[10]+(path[9])]
         db1[path[5]+(path[4])] = item2
         db2[path[10]+(path[9])] = item1
       }
