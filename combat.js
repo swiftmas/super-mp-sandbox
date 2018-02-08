@@ -1,12 +1,3 @@
-globals = require('./globals.js');
-general = require('./general.js');
-coredata = globals.coredata;
-collmap = globals.collmap;
-mapchange = globals.mapchange;
-attackQueue = globals.attackQueue;
-activeAttacksQueue = globals.activeAttacksQueue;
-
-
 ///// Exports ///////////////////////////
 module.exports = {
   addEffect: function (attacker, chunk, attacktype) {
@@ -33,6 +24,7 @@ function processAttackQueue(){
     delete attackQueue[inst];
   }
   processActiveAttacks();
+  //console.warn("Attacks")
 };
 
 function processActiveAttacks(){
@@ -75,6 +67,9 @@ function processActiveAttacks(){
       // Get weapon attack data based on slot.
       switch(attackData.attacktype){
         //merges attack data from weapon to attack data object
+        case "attack0":
+          for (var k in globals.weaponData[at[inst].slot0]) attackData[k] = globals.weaponData[at[inst].slot0][k];
+          break;
         case "attack1":
           for (var k in globals.weaponData[at[inst].slot1]) attackData[k] = globals.weaponData[at[inst].slot1][k];
           break;
@@ -96,7 +91,7 @@ function processActiveAttacks(){
       var cooldown = at[inst]["slot" + attackData.attacktype[-1]+"cooldown" ]
       if ( typeof cooldown !== "undefined"){
         if (cooldown[0] < globals.dayint || cooldown[1] - attackData.cooldown >= globals.time){
-          console.log("")
+          var nothing = undefined;
         }else{
         delete activeAttacksQueue[inst];
         continue;
@@ -177,7 +172,8 @@ function processActiveAttacks(){
           situationalData.type =  attackData.chargeFailType
           situationalData.state =  attackData.chargeFaileState
           situationalData.pushback = 0
-          coredata.chunks[attackData.chunk].attacks.push(situationalData);
+          coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
+
           continue;
         } else if (at[inst].hasOwnProperty("mana")){
           at[inst].mana -= attackData.releaseManaCost;
@@ -199,7 +195,7 @@ function processActiveAttacks(){
       situationalData.velocity = attackData.projectileVelocity
       situationalData.pushback = attackData.projectilePushback
       situationalData.projectileEndAnim = attackData.projectileEndAnim
-      coredata.chunks[attackData.chunk].attacks.push(situationalData);
+      coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
       delete activeAttacksQueue[inst];
       at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
       continue;
@@ -269,11 +265,12 @@ function processActiveAttacks(){
           situationalData.type =  attackData.chargeFailType
           situationalData.state =  attackData.chargeFaileState
           situationalData.pushback = 0
-          coredata.chunks[attackData.chunk].attacks.push(situationalData);
+          coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
+
           continue;
         }
         //ACTUAL EXPORT OF ATTACK
-        coredata.chunks[attackData.chunk].attacks.push(situationalData);
+        coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
 
         if (attackData.keydown >= 3 && attackData.chargeOwnerAnimOnce){
             at[inst].state = attackData.chargeOwnerAnimEnd
@@ -292,29 +289,31 @@ function processEffects(){
   for (var chunk in coredata.chunks){
     var db = coredata.chunks[chunk].attacks;
     var removes = [];
-    for (var attack = db.length -1; attack >= 0; attack--){
-      if (db[attack].projectile){
-        if (db[attack].state <= 0){ db[attack].state = db[attack].startState};
-        if (!(db[attack].hasOwnProperty("done"))){
-          dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
+    for (var atk = db.length -1; atk >= 0; atk--){
+      if (db[atk].projectile){
+        if (db[atk].state <= 0){ db[atk].state = db[atk].startState};
+        if (!(db[atk].hasOwnProperty("done"))){
+          dodamage(db[atk], db[atk].pos, db[atk].owner, db[atk].chunk, db[atk].dir, db[atk].damage, db[atk].h, db[atk].w, false, db[atk].pushback);
         }
-        if (db[attack].distance > 0){
-          db[attack].distance -= 1; general.DoMovement(attack, db[attack].chunk, db[attack].dir, db[attack].velocity, true, db[attack].pushback)
-          if (db[attack].hasOwnProperty("done")){db[attack].velocity = 0;}
+        if (db[atk].distance > 0){
+          db[atk].distance -= 1; general.DoMovement(atk, db[atk].chunk, db[atk].dir, db[atk].velocity, true, db[atk].pushback)
+          if (db[atk].hasOwnProperty("done")){db[atk].velocity = 0;}
         } else {
-           db.splice(attack, 1); break;
+           db.splice(atk, 1); continue;
         };
       }
-      if (db[attack].state <= 0){ db.splice(attack, 1); break;};
+      if (db[atk].state <= 0){ db.splice(atk, 1); continue;};
 
-      if (db[attack].state == db[attack].stateWdamage || db[attack].stateWdamage == -1){
-        dodamage(db[attack], db[attack].pos, db[attack].owner, db[attack].chunk, db[attack].dir, db[attack].damage, db[attack].h, db[attack].w, false, db[attack].pushback);
+      if (db[atk].state == db[atk].stateWdamage || db[atk].stateWdamage == -1){
+        dodamage(db[atk], db[atk].pos, db[atk].owner, db[atk].chunk, db[atk].dir, db[atk].damage, db[atk].h, db[atk].w, false, db[atk].pushback);
       }
     };
     for (var rem in removes){
       db.splice(rem, 1)
     };
   }
+  //console.warn("Effects")
+
 };
 
 
@@ -337,23 +336,24 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
   } else {ownerTeam = null}
   //console.log(owner, " of team: ",ownerTeam, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
   if (damage == null){damage = 25;};
-  var at
+  var atdim
   switch (direction){
     case "2":
     case "6":
-      at = {"h": w, "w": h}
+      atdim = {"h": w, "w": h}
       break;
     case "4":
     case "8":
-      at = {"h": h, "w": w}
+      atdim = {"h": h, "w": w}
       break;
   }
-  general.Collission(atpos, at.w, at.h, function(result){
+  if (typeof atdim == undefined){return}
+  general.Collission(atpos, atdim.w, atdim.h, function(result){
     for (hit in result[1]){
       var name = result[1][hit][0]
       var chunk = result[1][hit][1]
       var nameType = result[1][hit][2]
-      if (chunk == "none"){ db = coredata} else { db = coredata.chunks[chunk]}
+      if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
       if (nameType == "colliders"){continue;};
       // no team damager unless healing spell
       if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {continue;}};
@@ -361,8 +361,9 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       // Do damage
 
       if (owner[0] == "p" && coredata.players[owner].alerttimer == 0 && damage > 0){ damage = damage * 2 }
-      if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth)
-      db[nameType][name].health = db[nameType][name].health - damage
+      if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth) {
+        db[nameType][name].health = db[nameType][name].health - damage
+      }
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
         delete activeAttacksQueue[name];
       }
@@ -384,14 +385,15 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       };
       if (db[nameType][name].health <= 0){
         db[nameType][name].state = 63;
-        db[nameType][name].alerttimer = 0;
-	if (name[0] == "p"){
-		listener.sockets.connected[name.slice(1)].emit('serverMessage', {"message": "YOU HAVE DIED|but your soul is restless", "time": globals.time})
-	}
         if (activeAttacksQueue.hasOwnProperty(name)){
           delete activeAttacksQueue[name];
         }
+        db[nameType][name].alerttimer = 0;
+      	if (name[0] == "p"){
+      		listener.sockets.connected[name.slice(1)].emit('serverMessage', {"message": "YOU HAVE DIED|but your soul is restless", "time": globals.time})
+      	}
       };
     };
+    //console.warn("Combat Is still happen")
   });
 };

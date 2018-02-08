@@ -1,17 +1,9 @@
-var globals = require('./globals.js');
-var combat = require('./combat.js');
-var coredata = globals.coredata;
-var collmap = globals.collmap;
-var general = require('./general.js');
-activeAttacksQueue = globals.activeAttacksQueue;
-
-
 ///// Exports ///////////////////////////
 module.exports = {
     npccontroller: function () {
         npccontroller();
-    }
-    , alerttimedown: function () {
+    },
+    alerttimedown: function () {
         alerttimedown();
     }
 };
@@ -20,11 +12,11 @@ function npccontroller() {
   for (var chunk in coredata.chunks){
     var cdn = coredata.chunks[chunk].npcs
 
-        //// Dead Cleanup
-    npcLoop:
+    //// Normal Living
     for (var npc in cdn) {
         if (cdn.hasOwnProperty(npc)) {
-            var surroundings = [chunk, 36];
+            // //////////////////////   Cleanup Dead and lost npcs //////////////////////
+            var surroundings = [chunk, 300];
             for (var nearbyChunk in coredata.chunks){
               general.getDist(cdn[npc].pos, nearbyChunk, function(result){
                 if (result[0] < surroundings[1]) {
@@ -38,7 +30,7 @@ function npccontroller() {
               console.log("MOVE THIS NPC!!");
               coredata.chunks[surroundings[0]].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
               delete cdn[npc];
-              break npcLoop;
+              continue;
             }
 
             if (cdn[npc].state > 60) {
@@ -48,26 +40,21 @@ function npccontroller() {
                 console.log("spawn at ", cdn[npc].pos)
                 cdn[npc].state = "000";
                 cdn[npc].health = 100;
-                cdn[npc].respawn = 200;
+                cdn[npc].respawn = globals.npcRespawn;
                 if (cdn[npc].chunk !== chunk){
                   if (coredata.chunks.hasOwnProperty(cdn[npc].chunk)){
                     coredata.chunks[cdn[npc].chunk].npcs[npc]=JSON.parse(JSON.stringify(cdn[npc]))
                   }
                   delete cdn[npc];
-                  break npcLoop;
+                  continue;
                 }
               }
               cdn[npc].respawn -= 1;
             };
-        };
-    };
-    //// Normal Living
-    for (var npc in cdn) {
-        if (cdn.hasOwnProperty(npc)) {
             /////////////////////////////IF NORMAL///////////////
             if (cdn[npc].state == "000") {
                 alertrange(npc, chunk, 30);
-                var closetarget = getSurroundings(npc, chunk, 30);
+                var closetarget = getSurroundings(npc, chunk, 35);
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData.hasOwnProperty(cdn[npc].slot2) && globals.weaponData[cdn[npc].slot2].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
@@ -103,6 +90,7 @@ function npccontroller() {
         };
     };
   }
+  //console.warn("npcs")
 };
 
 
@@ -171,10 +159,10 @@ function alertrange(npc, chunk, dist) {
         if (gn.hasOwnProperty(npctar)) {
             var ppos = [gn[npctar].pos.split(".")[0], gn[npctar].pos.split(".")[1]];
             if (ppos[0] > orig[0] - dist && ppos[0] < parseInt(orig[0]) + dist && ppos[1] > orig[1] - dist && ppos[1] < parseInt(orig[1]) + dist && gn[npctar].team !== cdn.team && gn[npctar].state < 59 && !(gp[player].effects.hasOwnProperty("stealth"))) {
-              if (gp[npctar].alerttimer < 35 ){
-                gp[npctar].alerttimer = 35;
+              if (gn[npctar].alerttimer < 35 ){
+                gn[npctar].alerttimer = 35;
               } else {
-                gp[npctar].alerttimer += 1;
+                gn[npctar].alerttimer += 1;
               }
             };
         };
@@ -190,7 +178,6 @@ function headhome(npc, chunk){
       } else {
         if (Math.floor(Math.random() * Math.floor(100) < 2 )){
           coredata.chunks[chunk].npcs[npc].dir = Math.floor(Math.random()*(4-1+1)+1)*2
-          console.log(coredata.chunks[chunk].npcs[npc].dir)
         }
       }
     });
@@ -320,11 +307,11 @@ function getSurroundings(npc, chunk, dist) {
             var ppos = gn[npctar].pos;
             var ppsspl = gn[npctar].pos.split(".")
             general.getDist(origin, ppos, function(result){
-              if (result[0] < dist && gp[npctar].alerttimer > surroundings[4]) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
+              if (result[0] < dist && gn[npctar].alerttimer > surroundings[4]) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gn[npctar].alerttimer];
               }
-              else if (gp[npctar].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
-                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gp[npctar].alerttimer];
+              else if (gn[npctar].alerttimer == surroundings[4] && Math.floor((Math.random() * 2)) == 1) {
+                surroundings = [npctar, result[0], ppsspl[0], ppsspl[1], gn[npctar].alerttimer];
               };
             });
         };

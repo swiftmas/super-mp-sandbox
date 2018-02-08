@@ -1,19 +1,4 @@
-/////// ONE MODULE TO RULE THEM ALL //////////////////
-
-const fs = require('fs');
-////// Global maintenece funtions ///////////////////
-// Day Night Change. Gotta find a way to move this.
-//function ChangeDayNight(choice){
-//  switch(choice){
-//    case "day":
-//      exports.chunkdata = JSON.parse(fs.readFileSync("./daychunks.json"));
-//      break;
-//    case "night":
-//      exports.chunkdata = JSON.parse(fs.readFileSync("./nightchunks.json"));
-//      exports.daystate = "night"
-//      break;
-//  }
-//};
+/////// ONE MODULE TO RULE ALL DATA //////////////////
 
 ////////////////// Vars
 exports = module.exports = {};
@@ -28,6 +13,7 @@ exports.dayint = 0;
 exports.daystate = "day" /// Required so its easier to determine if its day or night wihtout relying on the day timer which may change.
 exports.serverPause = false;
 exports.serverMessage = null;
+exports.npcRespawn = 3000;
 
 /////////////////////// QUEUES
 exports.attackQueue = {};
