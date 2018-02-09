@@ -126,16 +126,16 @@ function alertrange(npc, chunk, dist) {
     // in this function we are offsetting the view to the front of the player.
     var trueorig = [parseInt(origin.split(".")[0]), parseInt(origin.split(".")[1])];
     if (cdn.dir == "2") {
-        var orig = [trueorig[0], trueorig[1] - dist + 1]
+        var orig = [trueorig[0], trueorig[1] - dist + 2]
     };
     if (cdn.dir == "6") {
-        var orig = [trueorig[0], trueorig[1] + dist - 1]
+        var orig = [trueorig[0], trueorig[1] + dist - 2]
     };
     if (cdn.dir == "8") {
-        var orig = [trueorig[0] - dist + 1, trueorig[1]]
+        var orig = [trueorig[0] - dist + 2, trueorig[1]]
     };
     if (cdn.dir == "4") {
-        var orig = [trueorig[0] + dist - 1, trueorig[1]]
+        var orig = [trueorig[0] + dist - 2, trueorig[1]]
     };
     var gp = coredata.players
     for (var player in coredata.players) {
