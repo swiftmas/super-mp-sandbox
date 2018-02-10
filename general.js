@@ -52,7 +52,7 @@ function ticBegin(){
     var state = dp[player].state;
     var dir = dp[player].dir
     //We export the players camera location, this is a semi non priority as the players will update as needed. This also holds mana data health and cooldowns for now
-    listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health,dp[player].maxHealth,dp[player].mana,dp[player].maxMana,dp[player].cor,dp[player].maxCor],dp[player].slot1, dp[player].slot2, dp[player].slot3)
+    listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health, dp[player].maxHealth, dp[player].mana, dp[player].maxMana, dp[player].cor, dp[player].maxCor, globals.weaponData[dp[player].slot0].sprite, globals.weaponData[dp[player].slot1].sprite, globals.weaponData[dp[player].slot2].sprite, globals.weaponData[dp[player].slot3].sprite])
     playerDatas.push(code + "." + dir + "." + state + "." + pos);
   }
 

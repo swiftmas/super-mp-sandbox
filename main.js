@@ -135,15 +135,19 @@ function draw(){
 
 		//Items
 		ctx.fillStyle= "#282c34";
-		image2draw = charAlg("10.4.1.0.0");
+		image2draw = charAlg(weap0);
+		image2draw.push(76, 0, 8, 8);
+		ctx.drawImage.apply(ctx, image2draw);
+		ctx.fillText("H", 70, 8);
+		image2draw = charAlg(weap1);
 		image2draw.push(91, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("J", 85, 8);
-		image2draw = charAlg("10.4.2.0.0");
+		image2draw = charAlg(weap2);
 		image2draw.push(106, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("K", 100, 8);
-		image2draw = charAlg("10.4.3.0.0");
+		image2draw = charAlg(weap3);
 		image2draw.push(119, 0, 8, 8);
 		ctx.drawImage.apply(ctx, image2draw);
 		ctx.fillText("L", 115, 8);
@@ -289,6 +293,9 @@ function control(action){
 				dialogType = null;
 				controlState = "character";
 			} else{
+				loot1 = null
+				loot2 = null
+				lootSpot1 = null
 				socket.emit('action', [userplayer, "character", null]); console.log('interact');
 			}
 			break;
@@ -476,6 +483,10 @@ socket.on('camera', function(data) {
 		playerMaxMana = data[4]
 		playerCor = data[5]
 		playerMaxCor = data[6]
+		weap0 = data[7]
+		weap1 = data[8]
+		weap2 = data[9]
+		weap3 = data[10]
 });
 
 socket.on('getdata', function(data){
