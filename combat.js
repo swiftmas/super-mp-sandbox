@@ -336,7 +336,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
   } else {ownerTeam = null}
   //console.log(owner, " of team: ",ownerTeam, "attacked at: ", atpos, chunk, "for: ", damage, "damage. Projectile:", attack.projectile)
   if (damage == null){damage = 25;};
-  var atdim
+  var atdim = {"h": h, "w": w}
   switch (direction){
     case "2":
     case "6":
@@ -347,7 +347,6 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       atdim = {"h": h, "w": w}
       break;
   }
-  if (typeof atdim == undefined){return}
   general.Collission(atpos, atdim.w, atdim.h, function(result){
     for (hit in result[1]){
       var name = result[1][hit][0]
