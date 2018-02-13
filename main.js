@@ -47,7 +47,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"825.786","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"935.812","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"alert","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -168,19 +168,21 @@ function draw(){
 		if (dialog != null && dialogType == "loot"){
 			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
 			ctx.fillStyle= "#c1c1c1";
+			ctx.font='6px tinyest';
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
 					image2draw.push(5+(12*i), 98, 8, 8);
 					ctx.drawImage.apply(ctx, image2draw);
-					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*i), 108);} else {ctx.fillText("+", 10+(12*i), 108);} }
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 12+(12*i), 107);} else {ctx.fillText("+", 12+(12*i), 107);} }
 				} else{
 					image2draw.push(5+(12*(i-10)), 114, 8, 8);
 					ctx.drawImage.apply(ctx, image2draw);
-					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*(i-10)), 124);} else {ctx.fillText("+", 10+(12*(i-10)), 124);} }
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 12+(12*(i-10)), 123);} else {ctx.fillText("+", 12+(12*(i-10)), 123);} }
 
 				}
 			}
+			ctx.font='8px tiny';
 			if (lootSpot1 !== null){
 				ctx.beginPath();
 				ctx.strokeStyle= "red"
@@ -196,23 +198,34 @@ function draw(){
 			ctx.stroke();
 			//ctx.fillText(">", 2 + (12*selector[1]), 102 + (16*selector[0]));
 		}
-		//loot
+		//Character UI inventory
 		if (dialog != null && dialogType == "character"){
 			ctx.drawImage.apply(ctx, [charsprites,784,528,128,112,0,16,128,112])
 			ctx.fillStyle= "#c1c1c1";
+			ctx.font='6px tinyest';
 			for (var i = 0; i < dialog.length; i++){
 				var image2draw = charAlg(dialog[i][2]);
 				if (i < 10){
 					image2draw.push(5+(12*i), 98, 8, 8);
 					ctx.drawImage.apply(ctx, image2draw);
-					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*i), 108);} else {ctx.fillText("+", 10+(12*i), 108);} }
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 12+(12*i), 107);} else {ctx.fillText("+", 12+(12*i), 107);} }
 				} else{
 					image2draw.push(5+(12*(i-10)), 114, 8, 8);
 					ctx.drawImage.apply(ctx, image2draw);
-					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 10+(12*(i-10)), 124);} else {ctx.fillText("+", 10+(12*(i-10)), 124);} }
+					if (dialog[i][1] > 1 ){if (dialog[i][1] < 10){ctx.fillText(dialog[i][1], 12+(12*(i-10)), 123);} else {ctx.fillText("+", 12+(12*(i-10)), 123);} }
 
 				}
 			}
+			ctx.font='8px tiny';
+			ctx.globalCompositeOperation = "soft-light";
+			style = "rgba(220,220,170,0.100)"
+			ctx.fillStyle=style;
+			ctx.fillRect(6,98,8,8);
+			ctx.fillRect(18,98,8,8);
+			ctx.fillRect(30,98,8,8);
+			ctx.fillRect(42,98,8,8);
+			ctx.globalCompositeOperation = "source-over";
+
 			if (lootSpot1 !== null){
 				ctx.beginPath();
 				ctx.strokeStyle= "red"

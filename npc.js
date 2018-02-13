@@ -83,8 +83,8 @@ function npccontroller() {
                         cdn[npc].dir = dirToFace[0];
                     };
                 } else if (cdn[npc].pos !== cdn[npc].origin){
+                    cdn[npc].alerted = false;
                     headhome(npc, chunk);
-                    var none="none";
                 };
             };
         };
@@ -318,6 +318,9 @@ function getSurroundings(npc, chunk, dist) {
     };
     if (surroundings[0] == "none") {
         surroundings = [];
+    } else if ( coredata.chunks[chunk].npcs[npc].hasOwnProperty("alerted") == false || coredata.chunks[chunk].npcs[npc].alerted != true ) {
+      coredata.chunks[chunk].npcs[npc].alerted = true;
+      activeAttacksQueue[npc] = {"inputtype": "alert", "attacktype": "alert", "chunk": chunk, "keydown": 0};
     };
     return surroundings;
 };

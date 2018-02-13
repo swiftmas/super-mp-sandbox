@@ -79,6 +79,14 @@ function processActiveAttacks(){
         case "attack3":
           for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
           break;
+        default:
+          if (globals.weaponData.hasOwnProperty(attackData.attacktype) > -1){
+            for (var k in globals.weaponData[attackData.attacktype]) attackData[k] = globals.weaponData[attackData.attacktype][k];
+          } else {
+            delete activeAttacksQueue[inst];
+            continue;
+          }
+          break;
       };
       if (attackData.hasOwnProperty("release") == false){
         delete activeAttacksQueue[inst];
@@ -266,7 +274,6 @@ function processActiveAttacks(){
           situationalData.state =  attackData.chargeFaileState
           situationalData.pushback = 0
           coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
-
           continue;
         }
         //ACTUAL EXPORT OF ATTACK
@@ -358,8 +365,11 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       if (db[nameType][name].hasOwnProperty("team")){ if ( damage < 0){console.log("healing spell")} else if (db[nameType][name].team == ownerTeam) {continue;}};
 
       // Do damage
-
-      if (owner[0] == "p" && coredata.players[owner].alerttimer == 0 && damage > 0){ damage = damage * 2 }
+      console.log(owner, damage)
+      if (owner[0] == "p" && coredata.players[owner].alerttimer <= 0 && damage > 0){
+         damage = damage * 2
+         activeAttacksQueue[name] = {"inputtype": "crit", "attacktype": "crit", "chunk": chunk, "keydown": 0};
+       }
       if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth) {
         db[nameType][name].health = db[nameType][name].health - damage
       }

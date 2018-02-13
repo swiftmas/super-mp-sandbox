@@ -60,10 +60,11 @@ function getDialog(interacter, path){
     if (item1 == item2 && item1 !== "-"){
       if (path[3] == path[7] && path[4] == path[8]){
         var consumable = db1[path[2]][path[3]].inventory[path[4]].name
-        if ( ["mana","gold","health"].indexOf(consumable) > -1 ){
-          switch (consumable) {
+        if ( ["mana","gold","health"].indexOf(consumable.split(" ")[0]) > -1 ){
+          switch (consumable.split(" ")[0]) {
             case "mana":
-              coredata["players"][interacter][consumable] += 25
+              coredata["players"][interacter]["mana"] += globals.weaponData[consumable].releaseDamage
+              if (coredata["players"][interacter]["mana"] >= coredata["players"][interacter]["maxMana"]){ coredata["players"][interacter]["mana"] = coredata["players"][interacter]["maxMana"]}
               if (db1[path[2]][path[3]].inventory[path[4]].quantity > 1){
                 db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
               } else {
@@ -72,7 +73,8 @@ function getDialog(interacter, path){
               }
               break;
             case "health":
-              coredata["players"][interacter][consumable] += 25
+              coredata["players"][interacter]["health"] += globals.weaponData[consumable].releaseDamage
+              if (coredata["players"][interacter]["health"] >= coredata["players"][interacter]["maxHealth"]){ coredata["players"][interacter]["health"] = coredata["players"][interacter]["maxHealth"]}
               if (db1[path[2]][path[3]].inventory[path[4]].quantity > 1){
                 db1[path[2]][path[3]].inventory[path[4]].quantity -= 1
               } else {
@@ -80,7 +82,7 @@ function getDialog(interacter, path){
                 db1[path[2]][path[3]].inventory[path[4]].name = "-"
               }              break;
             case "gold":
-              coredata["players"][interacter][consumable] += db1[path[2]][path[3]].inventory[path[4]].quantity
+              coredata["players"][interacter]["gold"] += db1[path[2]][path[3]].inventory[path[4]].quantity
               db1[path[2]][path[3]].inventory[path[4]].quantity = 1
               db1[path[2]][path[3]].inventory[path[4]].name = "-"
               break;
@@ -148,10 +150,11 @@ function getDialog(interacter, path){
       if (db1[path[4]].name == db2[path[9]].name && db1[path[4]].name !== "-"){
         if (path[3] == path[8] && path[4] == path[9]){
           var consumable = db1[path[4]].name
-          if ( ["mana","gold","health"].indexOf(consumable) > -1 ){
-            switch (consumable) {
+          if ( ["mana","gold","health"].indexOf(consumable.split(" ")[0]) > -1 ){
+            switch (consumable.split(" ")[0]) {
               case "mana":
-                coredata[path[2]][path[3]][consumable] += 25
+                coredata["players"][interacter]["mana"] += globals.weaponData[consumable].releaseDamage
+                if (coredata["players"][interacter]["mana"] >= coredata["players"][interacter]["maxMana"]){ coredata["players"][interacter]["mana"] = coredata["players"][interacter]["maxMana"]}
                 if (db1[path[4]].quantity > 1){
                   db1[path[4]].quantity -= 1
                 } else {
@@ -160,7 +163,8 @@ function getDialog(interacter, path){
                 }
                 break;
               case "health":
-                coredata[path[2]][path[3]][consumable] += 25
+                coredata["players"][interacter]["health"] += globals.weaponData[consumable].releaseDamage
+                if (coredata["players"][interacter]["mana"] >= coredata["players"][interacter]["maxMana"]){ coredata["players"][interacter]["mana"] = coredata["players"][interacter]["maxMana"]}
                 if (db1[path[4]].quantity > 1){
                   db1[path[4]].quantity -= 1
                 } else {
@@ -169,7 +173,7 @@ function getDialog(interacter, path){
                 }
                 break;
               case "gold":
-                coredata[path[2]][path[3]][consumable] += db1[path[4]].quantity
+                coredata[path[2]][path[3]]["gold"] += db1[path[4]].quantity
                 db1[path[4]].quantity = 1
                 db1[path[4]].name = "-"
                 break;

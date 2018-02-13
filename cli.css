@@ -8,6 +8,11 @@ p{
 }
 
 @font-face {
+    font-family: "tinyest";
+    src: url("static/tinyest.woff") format('woff');
+}
+
+@font-face {
     font-family: "small";
     src: url("static/small.woff") format('woff');
 }
