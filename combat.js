@@ -203,6 +203,9 @@ function processActiveAttacks(){
       situationalData.velocity = attackData.projectileVelocity
       situationalData.pushback = attackData.projectilePushback
       situationalData.projectileEndAnim = attackData.projectileEndAnim
+      if (attackData.hasOwnProperty("projectileEndOnHit") && attackData.projectileEndOnHit == false){
+        situationalData.projectileEndOnHit = attackData.projectileEndOnHit
+      }
       coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
       delete activeAttacksQueue[inst];
       at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
@@ -382,7 +385,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
       }
 
       // PROJECTIlE ending anim math
-      if (attack.hasOwnProperty("projectileEndAnim") && !(attack.hasOwnProperty("done"))){
+      if (attack.hasOwnProperty("projectileEndAnim") && !(attack.hasOwnProperty("done")) && !(attack.hasOwnProperty("projectileEndOnHit"))){
       attack.distance = 3;
       attack.state = attack.projectileEndAnim;
       attack.velocity = attack.pushback;
