@@ -1,5 +1,6 @@
 {
   "sword1": {
+    "type": "mle",
     "cooldown": 0,
     "description": "Weapon",
     "sprite": "10.4.1.0.0",
@@ -59,6 +60,7 @@
     "pw": 0
   },
   "alert": {
+    "type": "",
     "cooldown": 0,
     "description": "Weapon",
     "sprite": "10.4.1.0.0",
@@ -118,6 +120,7 @@
     "pw": 0
   },
   "crit": {
+    "type": "",
     "cooldown": 0,
     "description": "Weapon",
     "sprite": "10.4.1.0.0",
@@ -177,6 +180,7 @@
     "pw": 0
   },
   "Vanish": {
+    "type": "aux",
     "cooldown": 40,
     "description": "Ability",
     "sprite": "10.6.1.0.0",
@@ -238,6 +242,7 @@
     "pw": 0
   },
   "Giant's Greatsword": {
+    "type": "cpx",
     "cooldown": 0,
     "description": "Sword",
     "sprite": "10.4.1.0.0",
@@ -297,6 +302,7 @@
     "pw": 4
   },
   "bow1": {
+    "type": "rng",
     "cooldown": 0,
     "description": "Basic Long Bow",
     "sprite": "10.4.2.0.0",
@@ -356,6 +362,7 @@
     "pw": 3
   },
   "bow2": {
+    "type": "rng",
     "cooldown": 0,
     "description": "Better Long Bow",
     "sprite": "10.4.2.0.0",
@@ -415,25 +422,35 @@
     "pw": 3
   },
   "-": {
+    "type": "",
+    "cooldown": "",
     "sprite": "10.8.1.0.0",
-    "description": "Empty"
+    "description": "Empty",
+    "releaseDamage": 0
   },
   "mana": {
+    "type": "csm",
+    "cooldown": "",
     "sprite": "10.8.2.0.0",
     "description": "Recover 25 mana",
     "releaseDamage": 25
   },
   "health": {
+    "type": "csm",
+    "cooldown": "",
     "sprite": "10.8.3.0.0",
     "description": "Recover 25 health",
     "releaseDamage": 25
   },
   "gold": {
+    "type": "csm",
+    "cooldown": "",
     "sprite": "10.2.2.0.0",
     "description": "Gold Gold Lovely Gold",
     "releaseDamage": 0
   },
   "Orb Of Healing": {
+    "type": "orb",
     "description": "Healing Spell",
     "cooldown": 0,
     "sprite": "10.6.2.0.0",
@@ -493,6 +510,7 @@
     "pw": 4
   },
   "Fire Trap": {
+    "type": "trp",
     "cooldown": 3,
     "description": "Fire Spell",
     "sprite": "10.6.3.0.0",
@@ -552,6 +570,7 @@
     "pw": 8
   },
   "Fire Sword": {
+  "type": "dot",
   "cooldown": 3,
   "description": "Fire Spell",
   "sprite": "10.6.3.0.0",
@@ -612,6 +631,7 @@
   "pw": 8
 },
   "spell1": {
+    "type": "rng",
     "cooldown": 0,
     "description": "Long Range Mana Spell",
     "sprite": "10.4.3.0.0",

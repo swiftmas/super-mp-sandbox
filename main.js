@@ -191,6 +191,10 @@ function draw(){
 			}
 			ctx.fillStyle= "#c1c1c1";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
+			ctx.fillStyle= "#7B7B7B";
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 70, 76);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 85, 76);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 105, 76);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 86);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
@@ -234,6 +238,10 @@ function draw(){
 			}
 			ctx.fillStyle= "#c1c1c1";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 72);
+			ctx.fillStyle= "#7B7B7B";
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 70, 72);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 85, 72);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 105, 72);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 82);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"

@@ -238,20 +238,22 @@ function showLoot(interacter, name, chunk, nameType){
   //console.log(thing,Object.keys(thing.inventory).length)
   for (var i = 0; i < thing.inventory.length; i++){
     var weapon =  globals.weaponData[thing.inventory[i].name]
-    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, weapon.sprite, weapon.description])
+    if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
+    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
     pointers.push([chunk,nameType,name,i])
   }
   for (var i = verbage.length; i < 10; i++){
-    verbage.push(["-","1","10.8.1.0.0","Empty"])
+    verbage.push(["-","1","10.8.1.0.0","Empty","","",""])
     pointers.push([chunk,nameType,name,i])
   }
   for (var i = 0; i < person.inventory.length; i++){
     var weapon =  globals.weaponData[person.inventory[i].name]
-    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
+    if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i])
   }
   for (var i = verbage.length; i < 20; i++){
-    verbage.push(["-","1","10.8.1.0.0","Empty"])
+    verbage.push(["-","1","10.8.1.0.0","Empty","","",""])
     pointers.push(["none","players",interacter,i - 10])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["loot", verbage, pointers]);
@@ -266,27 +268,30 @@ function showCharacter(interacter){
   // List Equipped
   for (var i = 0; i < slots.length; i++){
     var weapon =  globals.weaponData[person[slots[i]]]
-    verbage.push([person[slots[i]], 1, weapon.sprite, weapon.description])
+    if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
+    verbage.push([person[slots[i]], 1, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i,"slot"])
   }
   // List Available abilities
   for (var i = 0; i < person.abilities.length; i++){
     var weapon =  globals.weaponData[person.abilities[i].name]
-    verbage.push([person.abilities[i].name, 1, weapon.sprite, weapon.description])
+    if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
+    verbage.push([person.abilities[i].name, 1, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i,"abilities"])
   }
   // Fill in blank space
   for (var i = verbage.length; i < 10; i++){
-    verbage.push(["-","1","10.8.1.0.0","Empty"])
+    verbage.push(["-","1","10.8.1.0.0","Empty","","",""])
     pointers.push(["none","players",interacter,i,"abilities"])
   }
   for (var i = 0; i < person.inventory.length; i++){
     var weapon =  globals.weaponData[person.inventory[i].name]
-    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description])
+    if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i,"inventory"])
   }
   for (var i = verbage.length; i < 20; i++){
-    verbage.push(["-","1","10.8.1.0.0","Empty"])
+    verbage.push(["-","1","10.8.1.0.0","Empty","","",""])
     pointers.push(["none","players",interacter,i - 10, "inventory"])
   }
   listener.sockets.connected[interacter.slice(1)].emit('dialog', ["character", verbage, pointers]);
