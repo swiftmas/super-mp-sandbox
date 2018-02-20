@@ -572,7 +572,7 @@
   "Fire Sword": {
   "type": "dot",
   "cooldown": 3,
-  "description": "Fire Spell",
+  "description": "Fire dmg over time.",
   "sprite": "10.6.3.0.0",
   "npcCooldown": 5,
   "interruptible": false,

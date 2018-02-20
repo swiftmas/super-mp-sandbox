@@ -47,7 +47,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"935.812","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"alert","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"alert","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -166,7 +166,7 @@ function draw(){
 		}
 		//loot
 		if (dialog != null && dialogType == "loot"){
-			ctx.drawImage.apply(ctx, [charsprites,656,576,128,64,0,64,128,64])
+			ctx.drawImage.apply(ctx, [charsprites,656,560,128,80,0,48,128,80])
 			ctx.fillStyle= "#c1c1c1";
 			ctx.font='6px tinyest';
 			for (var i = 0; i < dialog.length; i++){
@@ -190,12 +190,12 @@ function draw(){
 				ctx.stroke();
 			}
 			ctx.fillStyle= "#c1c1c1";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 76);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 77);
 			ctx.fillStyle= "#7B7B7B";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 70, 76);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 85, 76);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 105, 76);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 86);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 51, 63);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 103, 62);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 87);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
 			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
@@ -236,13 +236,19 @@ function draw(){
 				ctx.rect(5 + (12*lootSpot1[1]), 97 + (16*lootSpot1[0]), 10, 10);
 				ctx.stroke();
 			}
-			ctx.fillStyle= "#c1c1c1";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 72);
 			ctx.fillStyle= "#7B7B7B";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 70, 72);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 85, 72);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 105, 72);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 82);
+			ctx.font='6px tinyest';
+			ctx.fillText("Health: "+playerHealth+"/"+playerMaxHealth, 7, 28);
+			ctx.fillText("Mana: "+playerMana+"/"+playerMaxMana, 69, 28);
+			ctx.fillText("Corruption: "+playerCor+"/"+playerMaxCor, 7, 34);
+			ctx.font='8px tiny';
+			ctx.fillStyle= "#c1c1c1";
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 75);
+			ctx.fillStyle= "#7B7B7B";
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 51, 63);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 103, 62);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 84);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
 			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
