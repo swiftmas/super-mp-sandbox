@@ -248,7 +248,7 @@ function draw(){
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 51, 63);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 103, 62);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 84);
+			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 85);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
 			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
@@ -415,7 +415,7 @@ function control(action){
 
 ///// GET PLAYER TEAM AND STUFF ////
 document.getElementById("selBlue").addEventListener("click", function(event) { add_player(1); });
-document.getElementById("selGreen").addEventListener("click", function(event) { add_player(2); });
+document.getElementById("selGreen").addEventListener("click", function(event) { add_player(8); });
 document.getElementById("selRed").addEventListener("click", function(event) { add_player(3); });
 document.getElementById("selGold").addEventListener("click", function(event) { add_player(4); });
 
