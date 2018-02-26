@@ -53,7 +53,7 @@ function ticBegin(){
     var dir = dp[player].dir
     //We export the players camera location, this is a semi non priority as the players will update as needed. This also holds mana data health and cooldowns for now
     listener.sockets.connected[player.slice(1)].emit('camera', [dp[player].pos, dp[player].health, dp[player].maxHealth, dp[player].mana, dp[player].maxMana, dp[player].cor, dp[player].maxCor, globals.weaponData[dp[player].slot0].sprite, globals.weaponData[dp[player].slot1].sprite, globals.weaponData[dp[player].slot2].sprite, globals.weaponData[dp[player].slot3].sprite])
-    playerDatas.push(code + "." + dir + "." + state + "." + pos);
+    playerDatas.push(code + "." + dir + "." + state + "." + pos + "." + 1);
   }
 
   for (var player in coredata.players){
@@ -66,7 +66,7 @@ function ticBegin(){
         var pos = dp[npc].pos;
         var state = dp[npc].state;
         var dir = dp[npc].dir
-        datas.push(code + "." + dir + "." + state + "." + pos);
+        datas.push(code + "." + dir + "." + state + "." + pos + "." + 1);
       }
       //Attacks
       var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].attacks;
@@ -75,7 +75,8 @@ function ticBegin(){
         var pos = db[attack].pos
         var dir = db[attack].dir
         var state = db[attack].state
-        datas.push(code + "." + dir + "." + state + "." + pos);
+        var z = db[attack].zIndex
+        datas.push(code + "." + dir + "." + state + "." + pos + "." + z);
       }
       //entities
       var db = coredata.chunks[coredata.players[player].closeChunks[chunk]].entities;
@@ -84,7 +85,7 @@ function ticBegin(){
         var pos = db[attack].pos
         var dir = db[attack].dir
         var state = db[attack].state
-        datas.push(code + "." + dir + "." + state + "." + pos);
+        datas.push(code + "." + dir + "." + state + "." + pos + "." + 1);
       }
     }
     playerspecificData = datas.concat(playerDatas)

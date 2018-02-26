@@ -164,6 +164,7 @@ function processActiveAttacks(){
       situationalData.dir = atdir
       situationalData.owner = inst
       situationalData.chunk = attackData.chunk
+      situationalData.zIndex = attackData.zIndex
       situationalData.damage = damage
       situationalData.state =  attackData.releaseState
       situationalData.startState = attackData.releaseState
@@ -254,6 +255,7 @@ function processActiveAttacks(){
         situationalData.pos = atpos
         situationalData.dir = atdir
         situationalData.owner = inst
+        situationalData.zIndex = attackData.zIndex
         situationalData.chunk = attackData.chunk
         situationalData.damage = attackData.chargeDamage
         situationalData.startState = attackData.chargeState

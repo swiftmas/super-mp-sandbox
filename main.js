@@ -22,6 +22,8 @@ var dialogType = null;
 var lootSpot1 = null;
 var loot1 = null;
 var loot2 = null;
+var playerHealth;
+var damagechange = false;
 
 
 ///// METHODS ///////////////////////////
@@ -47,7 +49,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"alert","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -66,6 +68,10 @@ function charAlg(code){
 		prts=block[2].split("")
 		xvalue = anims[prts[0]] + (prts[1] * 16);
 	}
+	if (block[2] < 1000 && block[2] > 99 ){
+		prts=block[2].split("")
+		xvalue = anims[prts[0]+prts[1]] + (prts[2] * 16);
+	}
 	return [charsprites,xvalue,yvalue,16,16];
 }
 
@@ -82,6 +88,7 @@ function draw(){
 		db = coredata;
 		db.reverse();
 		db.sort(function(a,b){return a.split(".")[4] - b.split(".")[4]})
+		db.sort(function(a,b){return a.split(".")[5] - b.split(".")[5]})
 		for (var code in db){
 			blk = db[code].split(".");
 			//Draw each sprite
@@ -89,6 +96,11 @@ function draw(){
 				image2draw = charAlg(db[code]);
 				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
+				if ((blk[3] - campos[0] + 28)*2 == 56 && (blk[4] - campos[1] + 28)*2 == 56 && damagechange == true){
+					ctx.globalCompositeOperation = "exclusion";
+					ctx.drawImage.apply(ctx, image2draw);
+					ctx.globalCompositeOperation = "source-over";
+				}
 			};
 		};
 		// Draw the top layer of the map
@@ -504,6 +516,11 @@ socket.on('serverMessage', function(data) {
 
 socket.on('camera', function(data) {
 		campos = data[0].split(".");
+		if (playerHealth > data[1]){
+			damagechange = true;
+		} else {
+			damagechange = false;
+		}
 		playerHealth = data[1]
 		playerMaxHealth = data[2]
 		playerMana = data[3]

@@ -1,5 +1,6 @@
 {
   "sword1": {
+        "zIndex": 1,
     "type": "mle",
     "cooldown": 0,
     "description": "Weapon",
@@ -60,6 +61,7 @@
     "pw": 0
   },
   "alert": {
+        "zIndex": 3,
     "type": "",
     "cooldown": 0,
     "description": "Weapon",
@@ -120,6 +122,7 @@
     "pw": 0
   },
   "crit": {
+        "zIndex": 3,
     "type": "",
     "cooldown": 0,
     "description": "Weapon",
@@ -180,6 +183,7 @@
     "pw": 0
   },
   "Vanish": {
+        "zIndex": 1,
     "type": "aux",
     "cooldown": 40,
     "description": "Ability",
@@ -242,6 +246,7 @@
     "pw": 0
   },
   "Giant's Greatsword": {
+        "zIndex": 1,
     "type": "cpx",
     "cooldown": 0,
     "description": "Sword",
@@ -302,6 +307,7 @@
     "pw": 4
   },
   "bow1": {
+    "zIndex": 1,
     "type": "rng",
     "cooldown": 0,
     "description": "Basic Long Bow",
@@ -362,6 +368,7 @@
     "pw": 3
   },
   "bow2": {
+    "zIndex": 1,
     "type": "rng",
     "cooldown": 0,
     "description": "Better Long Bow",
@@ -450,6 +457,7 @@
     "releaseDamage": 0
   },
   "Orb Of Healing": {
+        "zIndex": 1,
     "type": "orb",
     "description": "Healing Spell",
     "cooldown": 0,
@@ -510,6 +518,7 @@
     "pw": 4
   },
   "Fire Trap": {
+        "zIndex": 1,
     "type": "trp",
     "cooldown": 3,
     "description": "Fire Spell",
@@ -570,6 +579,7 @@
     "pw": 8
   },
   "Fire Sword": {
+    "zIndex": 1,
   "type": "dot",
   "cooldown": 3,
   "description": "Fire dmg over time.",
@@ -630,7 +640,70 @@
   "ph": 5,
   "pw": 8
 },
+"PoinsonShot": {
+  "zIndex": 0,
+"type": "dot",
+"cooldown": 3,
+"description": "Psn dmg over time.",
+"sprite": "10.6.1.0.0",
+"npcCooldown": 5,
+"interruptible": false,
+"effectsSelf": false,
+"omnidirectional:": false,
+"charged": false,
+"chargeState": 73,
+"chargeType": 18,
+"chargeMaximumType": 18,
+"chargeMaximumState": 73,
+"chargeFaileState": 0,
+"chargeFailType": 0,
+"chargeHitState": -1,
+"chargeOwnerState": 43,
+"chargeOwnerAnimOnce": false,
+"chargeOwnerAnimEnd": 0,
+"chargeAnimLength": 3,
+"chargeMinimum": 3,
+"chargeMaximum": 9,
+"chargeHardMaximum": -10,
+"chargeDamageMultiplier": 0,
+"chargeDistanceMultiplier": 0,
+"chargeOffset": 4,
+"chargeDamage": 0,
+"chargeAggroPerTic": 0,
+"chargeDamageAtState": 0,
+"chargeEffects": {},
+"chargeManaPerTic": 4,
+"chargePushback": 0,
+"ch": 5,
+"cw": 8,
+"release": true,
+"releaseState": 3,
+"releaseType": 18,
+"releaseHitState": -1,
+"releaseOwnerState": 13,
+"releaseOffset": 4,
+"releaseDamage": 20,
+"releaseAggro": 0,
+"releaseDamageAtState": 3,
+"releaseEffects": [],
+"releaseManaCost": 0,
+"releasePushback": 6,
+"rh": 6,
+"rw": 4,
+"projectile": true,
+"projectileState": 103,
+"projectileType": 18,
+"projectileDistance": 75,
+"projectileDamage": 1,
+"projectileVelocity": 0,
+"projectilePushback": 0,
+"projectileEndAnim": 103,
+"projectileEndOnHit": false,
+"ph": 5,
+"pw": 8
+},
   "spell1": {
+    "zIndex": 1,
     "type": "rng",
     "cooldown": 0,
     "description": "Long Range Mana Spell",
