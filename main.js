@@ -416,8 +416,8 @@ function control(action){
 ///// GET PLAYER TEAM AND STUFF ////
 document.getElementById("selBlue").addEventListener("click", function(event) { add_player(1); });
 document.getElementById("selGreen").addEventListener("click", function(event) { add_player(8); });
-document.getElementById("selRed").addEventListener("click", function(event) { add_player(3); });
-document.getElementById("selGold").addEventListener("click", function(event) { add_player(4); });
+document.getElementById("selRed").addEventListener("click", function(event) { add_player(9); });
+document.getElementById("selGold").addEventListener("click", function(event) { add_player(6); });
 
 
 window.addEventListener("resize", function() {
