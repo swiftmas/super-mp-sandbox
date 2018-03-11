@@ -23,7 +23,7 @@ var lootSpot1 = null;
 var loot1 = null;
 var loot2 = null;
 var playerHealth;
-var damagechange = false;
+var damagechange = 0;
 
 
 ///// METHODS ///////////////////////////
