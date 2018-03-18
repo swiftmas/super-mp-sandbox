@@ -269,9 +269,9 @@ function processActiveAttacks(){
         situationalData.h = attackData.ch
         situationalData.w = attackData.cw
         situationalData.pushback = attackData.releasePushback
-        if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic){
-          console.log("OOM")
-          at[inst].mana += attackData.chargeManaPerTic * parseInt(attackData.keydown/attackData.chargeAnimLength)
+        if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic || attackData.interacted == true){
+          console.log("OOM or Cancelled")
+          at[inst].mana += attackData.chargeManaPerTic * (parseInt(attackData.keydown/attackData.chargeAnimLength) + 1)
           delete activeAttacksQueue[inst];
           situationalData.damage = 0
           situationalData.stateWdamage = 0

@@ -269,7 +269,11 @@ function getDist(origin, destination, callback) {
 
 function ProcessMovements(){
   for (var inst in moveQueue){
-    if (coredata.players.hasOwnProperty(moveQueue[inst][0]) && coredata.players[moveQueue[inst][0]].state < 10){
+    if (coredata.players.hasOwnProperty(moveQueue[inst][0]) && activeAttacksQueue.hasOwnProperty(moveQueue[inst][0]) && activeAttacksQueue[moveQueue[inst][0]].charged == true){
+      if(moveQueue[inst][1] != null){
+        DoMovement(moveQueue[inst][0], "none",moveQueue[inst][1], 1, false, false);
+      };
+    } else if (coredata.players.hasOwnProperty(moveQueue[inst][0]) && coredata.players[moveQueue[inst][0]].state < 10){
       if(moveQueue[inst][1] != null){
         DoMovement(moveQueue[inst][0], "none",moveQueue[inst][1], 2);
       };
@@ -300,7 +304,10 @@ function DoMovement(name, chunk, dir, rate, ignoreCollision, maintainFacingDirec
   // Chunk with none is a player, all other moveable objects belong to a chunk.
   if (chunk == "none"){ db = coredata } else { db = coredata.chunks[chunk]}
 
+  // State specific flags
   if (db[nameType][name].state == 0){db[nameType][name].state = 3}
+
+
   if (dir == "2"){
     var x = parseInt(db[nameType][name].pos.split(".")[0])
     var y = parseInt(db[nameType][name].pos.split(".")[1]) - rate

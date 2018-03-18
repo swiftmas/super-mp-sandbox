@@ -49,7 +49,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"sword1","slot1":"-","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"sword1","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -96,8 +96,12 @@ function draw(){
 				image2draw = charAlg(db[code]);
 				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
+				// Next three lines are for watching the center of sprites
+				style = "rgba(0,21,211," + 1 + ")"
+				ctx.fillStyle=style;
+				ctx.fillRect(((blk[3] - campos[0] + 32)*2)-1, ((blk[4] - campos[1] + 32)*2)-1, 2, 2);
 				if ((blk[3] - campos[0] + 28)*2 == 56 && (blk[4] - campos[1] + 28)*2 == 56 && damagechange == true){
-					ctx.globalCompositeOperation = "exclusion";
+					ctx.globalCompositeOperation = "lighter";
 					ctx.drawImage.apply(ctx, image2draw);
 					ctx.globalCompositeOperation = "source-over";
 				}
@@ -440,7 +444,7 @@ resize();
 
 document.onkeydown= function(event) {
 		var key= (event || window.event).keyCode;
-		if (key == 72){ control("attack0"); return };
+		if (key == 72){ control("interact"); return };
 		if (key == 74){ control("attack1"); return };
 		if (key == 75){ control("attack2"); return };
 		if (key == 76){ control("attack3"); return };
@@ -469,7 +473,7 @@ document.onkeyup= function(event) {
 			currentDirKey = null;
 			currentDir = null;
 			control("movenull");
-		} else if ([72, 74, 75, 76].indexOf(key) > -1){
+		} else if ([74, 75, 76].indexOf(key) > -1){
 			control("attacknull");
 		};
 };

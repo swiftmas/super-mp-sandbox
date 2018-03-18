@@ -199,6 +199,9 @@ listener.sockets.on('connection', function(socket){
           } else {
             interact.startDialog(data[0]);
           };
+          if (activeAttacksQueue.hasOwnProperty(data[0])){
+            activeAttacksQueue[data[0]].interacted = true;
+          }
           break;
         case "character":
           moveQueue[data[0]] = [data[0], null];
