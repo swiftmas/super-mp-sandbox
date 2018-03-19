@@ -214,6 +214,11 @@ listener.sockets.on('connection', function(socket){
           data[1] = null
           moveQueue[data[0]] = data;
           break;
+        case "superMove":
+          data[1] = 0
+          console.log("Did it")
+          general.DoMovement(data[0], "none", data[2], 4)
+          break;
         default:
           moveQueue[data[0]] = data;
           break;

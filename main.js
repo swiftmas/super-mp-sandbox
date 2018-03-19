@@ -17,6 +17,8 @@ var dialogPointers = [null, null, null, null, null];
 var selector = [0,0];
 var currentDirKey = null;
 var currentDir = null;
+var lastDir = null;
+var timeOfDir = 0;
 var controlState = "character";
 var dialogType = null;
 var lootSpot1 = null;
@@ -426,7 +428,15 @@ function control(action){
 			controlState = "character";
 			break;
 	}
-	if (["2", "4", "6", "8", "null"].indexOf(action) !== -1) {currentDir = action;}
+	if (["2", "4", "6", "8", "null"].indexOf(action) !== -1) {
+		console.log(action, currentDir)
+		if ( (new Date).getTime() < timeOfDir + 500 && lastDir == action){
+			socket.emit('action', [userplayer, "superMove", action]);
+		}
+		timeOfDir=(new Date).getTime();
+		currentDir = action;
+		if (action !== "null"){ lastDir = action }
+	}
 }
 
 ///// GET PLAYER TEAM AND STUFF ////
