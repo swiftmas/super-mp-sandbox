@@ -271,7 +271,7 @@ function ProcessMovements(){
   for (var inst in moveQueue){
     if (coredata.players.hasOwnProperty(moveQueue[inst][0]) && activeAttacksQueue.hasOwnProperty(moveQueue[inst][0]) && activeAttacksQueue[moveQueue[inst][0]].charged == true){
       if(moveQueue[inst][1] != null){
-        DoMovement(moveQueue[inst][0], "none",moveQueue[inst][1], 1, false, false);
+        DoMovement(moveQueue[inst][0], "none",moveQueue[inst][1], 1, false, true);
       };
     } else if (coredata.players.hasOwnProperty(moveQueue[inst][0]) && coredata.players[moveQueue[inst][0]].state < 10){
       if(moveQueue[inst][1] != null){
