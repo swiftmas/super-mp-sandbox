@@ -15,7 +15,7 @@ drawbool.showNpcs = true;
 drawbool.showColliders = true;
 drawbool.showChunks = true;
 var sizemultiplier = 4;
-
+var shifting = false;
 var div = document.createElement("div");
 div.style.width = sizemultiplier + "px";
 div.style.height = sizemultiplier + "px";
@@ -116,27 +116,31 @@ function move(dir){
   var chunkID = itemPath[1];
   var type = itemPath[0];
   var name = itemPath[2];
+  var rate = 1;
+  if (shifting == true){
+    rate = 8;
+  }
 
   var newpos = chunks[chunkID][type][name].pos
   switch (dir){
     case "left":
       var item = chunks[chunkID][type][name].pos.split(".")
-      var x = (parseInt(item[0])-1)
+      var x = (parseInt(item[0])-rate)
       newpos = x+"."+item[1];
       break;
     case "right":
       var item = chunks[chunkID][type][name].pos.split(".")
-      var x = (parseInt(item[0])+1)
+      var x = (parseInt(item[0])+rate)
       newpos = x+"."+item[1];
       break;
     case "up":
       var item = chunks[chunkID][type][name].pos.split(".")
-      var y = (parseInt(item[1])-1)
+      var y = (parseInt(item[1])-rate)
       newpos = item[0]+"."+y;
       break;
     case "down":
       var item = chunks[chunkID][type][name].pos.split(".")
-      var y = (parseInt(item[1])+1)
+      var y = (parseInt(item[1])+rate)
       newpos = item[0]+"."+y;
       break;
   }
@@ -203,6 +207,18 @@ document.getElementById("input_open").addEventListener('input', function (e) {
 document.getElementById("sizemultiplier").addEventListener("keyup", function(event) {
 	sizemultiplier = document.getElementById("sizemultiplier").value
 });
+
+document.addEventListener("keydown", function(event) {
+  if (event.keyCode == 16){
+    shifting = true;
+  }
+});
+document.addEventListener("keyup", function(event) {
+  if (event.keyCode == 16){
+    shifting = false;
+  }
+});
+
 //#### MOUSE Events #####
 document.getElementById("map").addEventListener("mousemove", function(event) {
   var x = Math.ceil((event.pageX - 15 - document.getElementById("map").offsetLeft) / sizemultiplier);
