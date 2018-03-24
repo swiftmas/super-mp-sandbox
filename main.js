@@ -430,7 +430,7 @@ function control(action){
 	}
 	if (["2", "4", "6", "8", "null"].indexOf(action) !== -1) {
 		console.log(action, currentDir)
-		if ( (new Date).getTime() < timeOfDir + 500 && lastDir == action){
+		if ( (new Date).getTime() < timeOfDir + 500 && lastDir == action && controlState == "character"){
 			socket.emit('action', [userplayer, "superMove", action]);
 		}
 		timeOfDir=(new Date).getTime();
