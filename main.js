@@ -99,9 +99,9 @@ function draw(){
 				image2draw.push((blk[3] - campos[0] + 28)*2, (blk[4] - campos[1] + 28)*2, 16, 16);
 				ctx.drawImage.apply(ctx, image2draw);
 				// Next three lines are for watching the center of sprites
-				style = "rgba(0,21,211," + 1 + ")"
-				ctx.fillStyle=style;
-				ctx.fillRect(((blk[3] - campos[0] + 32)*2)-1, ((blk[4] - campos[1] + 32)*2)-1, 2, 2);
+				//style = "rgba(0,21,211," + 1 + ")"
+				//ctx.fillStyle=style;
+				//ctx.fillRect(((blk[3] - campos[0] + 32)*2)-1, ((blk[4] - campos[1] + 32)*2)-1, 2, 2);
 				if ((blk[3] - campos[0] + 28)*2 == 56 && (blk[4] - campos[1] + 28)*2 == 56 && damagechange == true){
 					ctx.globalCompositeOperation = "lighter";
 					ctx.drawImage.apply(ctx, image2draw);
