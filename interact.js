@@ -88,12 +88,12 @@ function getUI(interacter, path){
               break;
           }
         } else {console.log("cannot swap same item")}
-      } else {
+      } else if (db1[path[2]][path[3]].inventory[path[4]].name ){
         db1[path[2]][path[3]].inventory[path[4]].name = "-"
         db1[path[2]][path[3]].inventory[path[4]].quantity = 1
         db2[path[6]][path[7]].inventory[path[8]].quantity += item1Quant
       }
-    } else if (item1 == "-" && item2Quant > 1){
+    } else if ( ["mana","gold","health"].indexOf(item1 == "-" && item2Quant > 1) > -1 ){
       db1[path[2]][path[3]].inventory[path[4]].name = item2
       db1[path[2]][path[3]].inventory[path[4]].quantity = 1
       db2[path[6]][path[7]].inventory[path[8]].quantity -= 1
