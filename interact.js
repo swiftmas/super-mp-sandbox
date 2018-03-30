@@ -6,6 +6,9 @@ module.exports = {
   getDialog: function (interacter, path) {
     getDialog(interacter, path);
   },
+  getUI: function (interacter, path) {
+    getUI(interacter, path);
+  },
   showCharacter: function (interacter) {
     showCharacter(interacter);
   }
@@ -16,16 +19,13 @@ module.exports = {
 // Client toggles the user inventory character pane. This is a special deal i may revise. it got its own function cause its a differnt keypress but it complicates things so this may change.
 
 function getDialog(interacter, path){
-  if (path[0] == "consumable"){
-    console.log("consumable path: " + path)
-    var verbage = ["","","Consumed" + coredata.chunks[path[1]][path[2]][path[3]][path[4]],"",""]
-    consumable = coredata.chunks[path[1]][path[2]][path[3]][path[4]].split(" ")
-    coredata.players[interacter][consumable[1]] += parseInt(consumable[0])
-    coredata.chunks[path[1]][path[2]][path[3]][path[4]] = "-";
-    var pointers = [null,null,null,null,null]
-    listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
-    return;
-  }
+  var verbageOptions = globals.dialogdb[path[0]][path[1]].textVariations.length - 1;
+  var verbage = globals.dialogdb[path[0]][path[1]].textVariations[Math.round(Math.random() * verbageOptions)];
+  var pointers = globals.dialogdb[path[0]][path[1]].pointers;
+  listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
+}
+
+function getUI(interacter, path){
   if (path[0] == "swap"){
     console.log("swapping path: " + path)
     //item1
@@ -223,10 +223,6 @@ function getDialog(interacter, path){
     showCharacter(interacter)
     return;
   }
-  var verbageOptions = globals.dialogdb[path[0]][path[1]].textVariations.length - 1;
-  var verbage = globals.dialogdb[path[0]][path[1]].textVariations[Math.round(Math.random() * verbageOptions)];
-  var pointers = globals.dialogdb[path[0]][path[1]].pointers;
-  listener.sockets.connected[interacter.slice(1)].emit('dialog', ["speech", verbage, pointers]);
 }
 
 function showLoot(interacter, name, chunk, nameType){
