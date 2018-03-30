@@ -195,6 +195,9 @@ listener.sockets.on('connection', function(socket){
         case "interact":
           moveQueue[data[0]] = [data[0], null];
           if (data[2] !== null){
+            if (data[2][0] !== "speech"){
+              interact.interact(data[0], data[2])
+            }
             interact.getDialog(data[0], data[2]);
           } else {
             interact.startDialog(data[0]);
