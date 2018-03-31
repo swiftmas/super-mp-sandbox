@@ -208,7 +208,11 @@ function draw(){
 				ctx.stroke();
 			}
 			ctx.fillStyle= "#c1c1c1";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 77);
+			if (dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][1] > 1){
+				ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0] + "  x" + dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][1], 7, 77);
+			} else {
+				ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 77);
+			};
 			ctx.fillStyle= "#7B7B7B";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 51, 63);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
