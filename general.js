@@ -307,7 +307,7 @@ function DoMovement(name, chunk, dir, rate, ignoreCollision, maintainFacingDirec
   // State specific flags
   if (db[nameType][name].state == 0){db[nameType][name].state = 3}
 
-
+  var cellname
   if (dir == "2"){
     var x = parseInt(db[nameType][name].pos.split(".")[0])
     var y = parseInt(db[nameType][name].pos.split(".")[1]) - rate
@@ -336,7 +336,46 @@ function DoMovement(name, chunk, dir, rate, ignoreCollision, maintainFacingDirec
     db[nameType][name].pos = cellname;
     db[nameType][name].dir = dir;
   }
+  var collidedAtRate = false;
   if (db[nameType][name].state !== "dead" && ignoreCollision == false ){
+    Collission(cellname, db[nameType][name].w, db[nameType][name].h, function(result){
+      if (result[0] == false){
+        db[nameType][name].pos = cellname;
+        db[nameType][name].dir = dir;
+      } else {
+        //if collider is self. ignore collission
+        if (result[1].length == 1 && result[1][0][0] == name){
+          db[nameType][name].pos = cellname;
+          db[nameType][name].dir = dir;
+        } else {
+          db[nameType][name].dir = dir;
+          collidedAtRate = true;
+        }
+      }
+    });
+  };
+  if (collidedAtRate == true ){
+    rate = 1
+    if (dir == "2"){
+      var x = parseInt(db[nameType][name].pos.split(".")[0])
+      var y = parseInt(db[nameType][name].pos.split(".")[1]) - rate
+      cellname = ''+x+'.'+y+''
+    };
+    if (dir == "6"){
+      var x = parseInt(db[nameType][name].pos.split(".")[0])
+      var y = parseInt(db[nameType][name].pos.split(".")[1]) + rate
+      cellname = ''+x+'.'+y+''
+    };
+    if (dir == "8"){
+      var x = parseInt(db[nameType][name].pos.split(".")[0]) - rate
+      var y = parseInt(db[nameType][name].pos.split(".")[1])
+      cellname = ''+x+'.'+y+''
+    };
+    if (dir == "4"){
+      var x = parseInt(db[nameType][name].pos.split(".")[0]) + rate
+      var y = parseInt(db[nameType][name].pos.split(".")[1])
+      cellname = ''+x+'.'+y+''
+    };
     Collission(cellname, db[nameType][name].w, db[nameType][name].h, function(result){
       if (result[0] == false){
         db[nameType][name].pos = cellname;
