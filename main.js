@@ -51,7 +51,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"sword1","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"818.782","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"sword1","slot2":"-","slot3":"-","inventory":[{"name":"sword1","quantity":1},{"name":"Small Sword","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"818.782","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
