@@ -382,6 +382,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
        }
       if (damage > 0 || db[nameType][name].health < db[nameType][name].maxHealth) {
         db[nameType][name].health = db[nameType][name].health - damage
+	db[nameType][name].state = 81;
       }
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
         delete activeAttacksQueue[name];
