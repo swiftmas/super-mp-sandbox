@@ -235,7 +235,7 @@ function showLoot(interacter, name, chunk, nameType){
   for (var i = 0; i < thing.inventory.length; i++){
     var weapon =  globals.weaponData[thing.inventory[i].name]
     if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
-    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
+    verbage.push([thing.inventory[i].name, thing.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown + weapon.chargeMinimum, weapon.type, wpndmg])
     pointers.push([chunk,nameType,name,i])
   }
   for (var i = verbage.length; i < 10; i++){
@@ -245,7 +245,7 @@ function showLoot(interacter, name, chunk, nameType){
   for (var i = 0; i < person.inventory.length; i++){
     var weapon =  globals.weaponData[person.inventory[i].name]
     if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
-    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown + weapon.chargeMinimum, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i])
   }
   for (var i = verbage.length; i < 20; i++){
@@ -265,14 +265,14 @@ function showCharacter(interacter){
   for (var i = 0; i < slots.length; i++){
     var weapon =  globals.weaponData[person[slots[i]]]
     if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
-    verbage.push([person[slots[i]], 1, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
+    verbage.push([person[slots[i]], 1, weapon.sprite, weapon.description, weapon.cooldown + weapon.chargeMinimum, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i,"slot"])
   }
   // List Available abilities
   for (var i = 0; i < person.abilities.length; i++){
     var weapon =  globals.weaponData[person.abilities[i].name]
     if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
-    verbage.push([person.abilities[i].name, 1, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
+    verbage.push([person.abilities[i].name, 1, weapon.sprite, weapon.description, weapon.cooldown + weapon.chargeMinimum, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i,"abilities"])
   }
   // Fill in blank space
@@ -283,7 +283,7 @@ function showCharacter(interacter){
   for (var i = 0; i < person.inventory.length; i++){
     var weapon =  globals.weaponData[person.inventory[i].name]
     if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage)}
-    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown, weapon.type, wpndmg])
+    verbage.push([person.inventory[i].name, person.inventory[i].quantity, weapon.sprite, weapon.description, weapon.cooldown + weapon.chargeMinimum, weapon.type, wpndmg])
     pointers.push(["none","players",interacter,i,"inventory"])
   }
   for (var i = verbage.length; i < 20; i++){
