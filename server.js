@@ -194,7 +194,7 @@ listener.sockets.on('connection', function(socket){
           break;
         case "interact":
           if (data[2] !== null){
-            console.log("FFFFFFF", data[2][0])
+            console.log("Interacting: ", data[2][0])
             if (["characterInteract", "swap"].indexOf(data[2][0]) == -1){
               interact.getDialog(data[0], data[2]);
             } else {

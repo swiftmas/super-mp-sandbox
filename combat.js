@@ -21,7 +21,7 @@ function processAttackQueue(){
     } else if (attackQueue[inst] != null && coredata.players[inst].state < 10){
       activeAttacksQueue[inst] = {"inputtype": attackQueue[inst], "attacktype": attackQueue[inst], "chunk": "none", "keydown": 0};
     } else if (coredata.players[inst].state > 60){coredata.players[inst].pos = coredata.players[inst].origin; coredata.players[inst].state = 0; coredata.players[inst].health = 100; coredata.players[inst].mana = 100; return; };
-    delete attackQueue[inst];
+    //delete attackQueue[inst];
   }
   processActiveAttacks();
   //console.warn("Attacks")
@@ -52,7 +52,6 @@ function processActiveAttacks(){
         nameType = "players"
         db = coredata
         attackData.chunk = db[nameType][inst].closeChunks[0]
-        console.log(attackData.inputtype)
         break;
       case "e":
         nameType = "entities"
