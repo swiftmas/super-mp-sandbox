@@ -52,6 +52,7 @@ function processActiveAttacks(){
         nameType = "players"
         db = coredata
         attackData.chunk = db[nameType][inst].closeChunks[0]
+        console.log(attackData.inputtype)
         break;
       case "e":
         nameType = "entities"
