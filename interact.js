@@ -340,11 +340,13 @@ function startDialog(interacter){
       if (db[nameType][name].hasOwnProperty("singleMessage")){ getDialog(interacter, [db[nameType][name].properName, db[nameType][name].singleMessage]) };
       if (nameType == "entities" && db[nameType][name].hasOwnProperty("grave")){
         showGrave(interacter, name, chunk, nameType)
+        moveQueue[interacter] = [interacter, null];
         break;
       }
       if (nameType == "entities" && db[nameType][name].slot1 != null){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
         showLoot(interacter, name, chunk, nameType)
+        moveQueue[interacter] = [interacter, null];
         break;
       } else if (nameType == "entities"){ console.log("nothing to interact with");continue;};
       if (db[nameType][name].state >= 60 ){

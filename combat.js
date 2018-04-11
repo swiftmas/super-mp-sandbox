@@ -28,10 +28,6 @@ function processAttackQueue(){
 };
 
 /// Gets attacks from queue (players only) and makes them happen
-function superMove(){
-  console.log("placeholder")
-};
-
 function processActiveAttacks(){
   for (var inst in activeAttacksQueue){
     var attackData = activeAttacksQueue[inst]
