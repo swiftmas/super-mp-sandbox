@@ -118,8 +118,12 @@ function processActiveAttacks(){
     } else if (attackData.charged && attackData.chargeMinimum == attackData.chargeHardMaximum && attackData.chargeMinimum <= attackData.keydown) {
       ChargeSufficientForRelease = true
     } else if (attackData.charged && attackData.chargeMinimum > attackData.keydown && attackData.attacktype != attackData.inputtype){
-      console.log("charge hadnt sufficient chill points")
-      delete activeAttacksQueue[inst];
+      if (attackData.hasOwnProperty("chargeHardMinimum") && attackData.chargeHardMinimum == true){
+        console.log("Charge is being forced to wrack up chill points until it reaches minimum Chill.")
+      } else {
+        console.log("charge hadnt sufficient chill points")
+        delete activeAttacksQueue[inst];
+      }
     }
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
       //GET ATTaCK DIRECTION
