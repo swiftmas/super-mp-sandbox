@@ -216,7 +216,9 @@ function draw(){
 			};
 			ctx.fillStyle= "#7B7B7B";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 51, 63);
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
+			if (dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4] !== 'undefined'){
+			        ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
+			}
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 103, 62);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 87);
 			ctx.beginPath();
@@ -266,17 +268,22 @@ function draw(){
 			ctx.fillText("Corruption: "+playerCor+"/"+playerMaxCor, 7, 34);
 			ctx.font='8px tiny';
 			ctx.fillStyle= "#c1c1c1";
-			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 75);
+			if (dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][1] > 1){
+				ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0] + "  x" + dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][1], 7, 75);
+			} else {
+				ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][0], 7, 75);
+			};
 			ctx.fillStyle= "#7B7B7B";
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][6], 51, 63);
+			if (dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4] !== 'undefined'){
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][4], 75, 63);
+			}
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][5], 103, 62);
 			ctx.fillText(dialog[selector[1]+ (selector[0]*(selectorXlimit+1))][3], 7, 85);
 			ctx.beginPath();
 			ctx.strokeStyle= "orange"
 			ctx.rect(5 + (12*selector[1]), 97 + (16*selector[0]), 10, 10);
 			ctx.stroke();
-			//ctx.fillText(">", 2 + (12*selector[1]), 102 + (16*selector[0]));
 		}
 
 

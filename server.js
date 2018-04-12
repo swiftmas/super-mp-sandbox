@@ -239,6 +239,8 @@ listener.sockets.on('connection', function(socket){
         //for(var k in coredata.players["p"+cleanid]) {newnpc["p"+cleanid][k]=coredata.players["p"+cleanid][k]};
         //newnpc["p"+cleanid].state = 63
         //newnpc["p"+cleanid].chunk = coredata.players["p"+cleanid].closeChunks[0]
+        delete attackQueue["p" + cleanid]
+        delete activeAttacksQueue["p" + cleanid]
         delete coredata.players["p" + cleanid];
         console.log("cleaned up " + cleanid)
     };
