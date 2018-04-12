@@ -16,6 +16,7 @@ module.exports = {
 function processAttackQueue(){
   for (var inst in attackQueue){
     if (activeAttacksQueue.hasOwnProperty(inst)){
+      console.log(attackQueue[inst])
       var data = activeAttacksQueue[inst];
       data.inputtype = attackQueue[inst];
     } else if (attackQueue[inst] != null && coredata.players[inst].state < 10){
@@ -31,6 +32,7 @@ function processAttackQueue(){
 function processActiveAttacks(){
   for (var inst in activeAttacksQueue){
     var attackData = activeAttacksQueue[inst]
+
     // Cleanup Data Model
     var db, nameType;
     switch(inst[0]){
@@ -275,6 +277,7 @@ function processActiveAttacks(){
         situationalData.w = attackData.cw
         situationalData.pushback = attackData.releasePushback
         if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic || attackData.interacted == true){
+          attackData.inputType = "null"
           console.log("OOM or Cancelled")
           at[inst].mana += attackData.chargeManaPerTic * (parseInt(attackData.keydown/attackData.chargeAnimLength) + 1)
           delete activeAttacksQueue[inst];
