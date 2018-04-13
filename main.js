@@ -62,7 +62,7 @@ function add_player(team){
 function charAlg(code){
 	block = code.split(".");
 	yvalue = ((block[0] -1) * 64) + (((block[1]/2) - 1) * 16);
-	anims = [0, 48, 96, 144, 192, 240, 288, 336, 384, 432, 480, 546, 594]
+	anims = [0, 48, 96, 144, 192, 240, 288, 336, 384, 432, 480, 546, 592]
 	if (block[2] < 10){
 		xvalue = anims[0] + (block[2] * 16);
 	}
