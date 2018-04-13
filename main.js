@@ -51,7 +51,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"576.64","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"Dull Dagger","slot2":"Small Sword","slot3":"-","inventory":[{"name":"Dull Dagger","quantity":1},{"name":"Small Sword","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"-","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"576.64","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"576.64","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"Dull Dagger","slot2":"Small Sword","slot3":"-","inventory":[{"name":"Dull Dagger","quantity":1},{"name":"Small Sword","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"Shield","quantity":1},{"name":"Vanish","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"576.64","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -62,7 +62,7 @@ function add_player(team){
 function charAlg(code){
 	block = code.split(".");
 	yvalue = ((block[0] -1) * 64) + (((block[1]/2) - 1) * 16);
-	anims = [0, 48, 96, 144, 192, 240, 288, 336, 384, 432, 480, 546, 592]
+	anims = [0, 48, 96, 144, 192, 240, 288, 336, 384, 432, 480, 544, 592]
 	if (block[2] < 10){
 		xvalue = anims[0] + (block[2] * 16);
 	}
@@ -103,11 +103,6 @@ function draw(){
 				//style = "rgba(0,21,211," + 1 + ")"
 				//ctx.fillStyle=style;
 				//ctx.fillRect(((blk[3] - campos[0] + 32)*2)-1, ((blk[4] - campos[1] + 32)*2)-1, 2, 2);
-				if ((blk[3] - campos[0] + 28)*2 == 56 && (blk[4] - campos[1] + 28)*2 == 56 && damagechange == true){
-					ctx.globalCompositeOperation = "lighter";
-					ctx.drawImage.apply(ctx, image2draw);
-					ctx.globalCompositeOperation = "source-over";
-				}
 			};
 		};
 		// Draw the top layer of the map
