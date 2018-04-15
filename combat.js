@@ -383,7 +383,7 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
          damage = damage * 2
          activeAttacksQueue[name] = {"inputtype": "crit", "attacktype": "crit", "chunk": chunk, "keydown": 0};
        }
-      if (damage > 0 && db[nameType][name].effects.hasOwnProperty('block') == false || db[nameType][name].health < db[nameType][name].maxHealth) {
+      if ( db[nameType][name].effects.hasOwnProperty('block') == false) {
         db[nameType][name].health = db[nameType][name].health - damage
 	db[nameType][name].state = 81;
       }
