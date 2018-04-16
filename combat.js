@@ -277,6 +277,9 @@ function processActiveAttacks(){
         situationalData.w = attackData.cw
         situationalData.pushback = attackData.releasePushback
         if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic || attackData.interacted == true){
+          if (at[inst].effects.hasOwnProperty("block")){
+            at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
+          }
           attackData.inputType = "null"
           console.log("OOM or Cancelled")
           at[inst].mana += attackData.chargeManaPerTic * (parseInt(attackData.keydown/attackData.chargeAnimLength) + 1)
@@ -385,10 +388,10 @@ function dodamage(attack, atpos, owner, chunk, direction, damage, h, w, friendly
        }
       if ( db[nameType][name].effects.hasOwnProperty('block') == false) {
         db[nameType][name].health = db[nameType][name].health - damage
-	db[nameType][name].state = 81;
+	      db[nameType][name].state = 81;
       }
       if (activeAttacksQueue.hasOwnProperty(name) && activeAttacksQueue[name].interruptible){
-        delete activeAttacksQueue[name];
+        activeAttacksQueue[name].interacted = true;
       }
       // Add aggro!
       if (db[nameType][name].health > 0 && owner[0] == "p"){
