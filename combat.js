@@ -68,28 +68,18 @@ function processActiveAttacks(){
     if (Object.keys(activeAttacksQueue[inst]).length == 4 ){
       //console.log(inst, "Attacks with: ", attackData)
       // Get weapon attack data based on slot.
-      switch(attackData.attacktype){
+      if (attackData.attacktype.indexOf("attack") > -1){
         //merges attack data from weapon to attack data object
-        case "attack0":
-          for (var k in globals.weaponData[at[inst].slot0]) attackData[k] = globals.weaponData[at[inst].slot0][k];
-          break;
-        case "attack1":
-          for (var k in globals.weaponData[at[inst].slot1]) attackData[k] = globals.weaponData[at[inst].slot1][k];
-          break;
-        case "attack2":
-          for (var k in globals.weaponData[at[inst].slot2]) attackData[k] = globals.weaponData[at[inst].slot2][k];
-          break;
-        case "attack3":
-          for (var k in globals.weaponData[at[inst].slot3]) attackData[k] = globals.weaponData[at[inst].slot3][k];
-          break;
-        default:
-          if (globals.weaponData.hasOwnProperty(attackData.attacktype) > -1){
-            for (var k in globals.weaponData[attackData.attacktype]) attackData[k] = globals.weaponData[attackData.attacktype][k];
-          } else {
-            delete activeAttacksQueue[inst];
-            continue;
-          }
-          break;
+        var inventoryNumber = parseInt(attackData.attacktype[6]) - 1;
+        console.log(inventoryNumber)
+        for (var k in globals.weaponData[at[inst].inventory[inventoryNumber].name]) attackData[k] = globals.weaponData[at[inst].inventory[inventoryNumber].name][k]
+      } else {
+        if (globals.weaponData.hasOwnProperty(attackData.attacktype) > -1){
+          for (var k in globals.weaponData[attackData.attacktype]) attackData[k] = globals.weaponData[attackData.attacktype][k]
+        } else {
+          delete activeAttacksQueue[inst];
+          continue;
+        }
       };
       if (attackData.hasOwnProperty("release") == false){
         delete activeAttacksQueue[inst];
@@ -99,7 +89,7 @@ function processActiveAttacks(){
         attackData.chargeHardMaximum = attackData.chargeMaximum
         attackData.cooldown = attackData.npcCooldown
       };
-      var cooldown = at[inst]["slot" + attackData.attacktype[-1]+"cooldown" ]
+      var cooldown = at[inst][attackData.attacktype+"cooldown" ]
       if ( typeof cooldown !== "undefined"){
         if (cooldown[0] < globals.dayint || cooldown[1] - attackData.cooldown >= globals.time){
           var nothing = undefined;
@@ -216,12 +206,12 @@ function processActiveAttacks(){
       }
       coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
       delete activeAttacksQueue[inst];
-      at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
+      at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
       continue;
 
       } else {
       delete activeAttacksQueue[inst];
-      at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
+      at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
       continue;
       };
 
@@ -278,7 +268,7 @@ function processActiveAttacks(){
         situationalData.pushback = attackData.releasePushback
         if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic || attackData.interacted == true){
           if (at[inst].effects.hasOwnProperty("block")){
-            at[inst]["slot" + attackData.attacktype[-1]+"cooldown"] = [globals.dayint, globals.time];
+            at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
           }
           attackData.inputType = "null"
           console.log("OOM or Cancelled")
