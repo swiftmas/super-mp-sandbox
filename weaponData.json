@@ -628,6 +628,13 @@
     "description": "Recover 25 mana",
     "releaseDamage": 25
   },
+  "skl1": {
+    "type": "skl",
+    "cooldown": "",
+    "sprite": "10.6.2.0.0",
+    "description": "Test Skill",
+    "releaseDamage": 25
+  },
   "health": {
     "type": "csm",
     "cooldown": "",

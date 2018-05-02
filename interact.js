@@ -34,7 +34,7 @@ function getUI(interacter, path){
       var item1 = db1[path[2]][path[3]].inventory[path[4]].name;
       var item1Quant = db1[path[2]][path[3]].inventory[path[4]].quantity;
     } else {
-      //Create actual record for any empty slots
+      //Create actual record for any empty spaces
       var item1 = "-"
       var item1Quant = 1
       for (var newi = db1[path[2]][path[3]].inventory.length; newi < 10; newi++){
@@ -48,7 +48,7 @@ function getUI(interacter, path){
       var item2 = db2[path[6]][path[7]].inventory[path[8]].name;
       var item2Quant = db2[path[6]][path[7]].inventory[path[8]].quantity;
     } else {
-      //Create actual record for empty slots
+      //Create actual record for empty spaces
       var item2 = "-"
       var item2Quant = 1
       for (var newi = db2[path[6]][path[7]].inventory.length; newi < 10; newi++){
@@ -112,40 +112,33 @@ function getUI(interacter, path){
   }
   if (path[0] == "characterInteract"){
     console.log("swapping path: " + path)
-    //item1
 
+/// Create empty spaces for anything thats not there in the full inventory space
+    //item1 --------------------------------------------------------------------------
     var db1
-    if (path[5] == "slot"){
-      db1 = coredata[path[2]][path[3]];
-    } else if (coredata[path[2]][path[3]][path[5]][path[4]] !== void 0){
+    if (coredata[path[2]][path[3]][path[5]][path[4]] !== void 0){
       db1 = coredata[path[2]][path[3]][path[5]];
       console.log(db1[path[4]])
     } else {
       //Create actual record for any empty slots
       db1 = coredata[path[2]][path[3]][path[5]];
-      if (path[5] == "inventory"){
-        for (var newi = db1.length; newi < 10; newi++){
-          db1.push({"name": "-", "quantity": 1})
-        }
+      for (var newi = db1.length; newi < 10; newi++){
+        db1.push({"name": "-", "quantity": 1})
       }
     }
-    //item2
+    //item2 -------------------------------------------------------------------------
     var db2
-    if (path[10] == "slot"){
-      db2 = coredata[path[7]][path[8]];
-    } else if (coredata[path[7]][path[8]][path[10]][path[9]] !== void 0){
+    if (coredata[path[7]][path[8]][path[10]][path[9]] !== void 0){
       db2 = coredata[path[7]][path[8]][path[10]];
       console.log(db2[path[9]])
     } else {
       //Create actual record for any empty slots
-      db2 = coredata[path[2]][path[3]][path[5]];
-      if (path[5] == "inventory"){
-        for (var newi = db2.length; newi < 10; newi++){
-          db2.push({"name": "-", "quantity": 1})
-        }
+      db2 = coredata[path[7]][path[8]][path[10]];
+      for (var newi = db2.length; newi < 10; newi++){
+        db2.push({"name": "-", "quantity": 1})
       }
     }
-
+    //---------------------------------------------------
     if (path[5] == "inventory" && path[10] == "inventory"){
       if (db1[path[4]].name == db2[path[9]].name && db1[path[4]].name !== "-"){
         if (path[3] == path[8] && path[4] == path[9]){
@@ -199,25 +192,21 @@ function getUI(interacter, path){
         db2[path[9]].name = item1
         db2[path[9]].quantity = item1Quant
       }
-    } else if(path[5] == "slot" && path[10] == "slot"){
-     {
-        //SwapItems
-        var item1 = db1[path[5]+(path[4])]
-        var item2 = db2[path[10]+(path[9])]
-        db1[path[5]+(path[4])] = item2
-        db2[path[10]+(path[9])] = item1
-      }
-    } else if(path[5] == "inventory" && path[10] == "slot"){
-     {
-        var item1 = db1[path[4]].name
-        db2[path[10]+(path[9])] = item1
-      }
-    }
-    else if(path[5] == "abilities" && path[10] == "slot"){
-     {
-        var item1 = db1[path[4]].name
-        db2[path[10]+(path[9])] = item1
-      }
+    } else if (path[5] == "abilities" && path[10] == "abilities") {
+       var item1 = db1[path[4]].name
+       var item2 = db2[path[9]].name
+       db1[path[4]].name = item2
+       db2[path[9]].name = item1
+    }  else if (path[5] == "abilities" && path[10] == "inventory") {
+       var item1 = db1[path[4]].name
+       var item2 = db2[path[9]].name
+       db1[path[4]].name = item2
+       db2[path[9]].name = item1
+    } else if (path[5] == "inventory" && path[10] == "abilities" && globals.weaponData[db1[path[4]].name].type == "skl") {
+       var item1 = db1[path[4]].name
+       var item2 = db2[path[9]].name
+       db1[path[4]].name = item2
+       db2[path[9]].name = item1
     }
     //Go to start
     showCharacter(interacter)
@@ -260,14 +249,6 @@ function showCharacter(interacter){
   var verbage = []
   var person = coredata.players[interacter];
   var pointers = []
-  var slots = ["slot0", "slot1", "slot2", "slot3"]
-  // List Equipped
-  for (var i = 0; i < slots.length; i++){
-    var weapon =  globals.weaponData[person[slots[i]]]
-    if (weapon.hasOwnProperty("chargeDamage") == false){ wpndmg = "" } else {wpndmg = Math.abs(weapon.chargeDamage + weapon.releaseDamage + weapon.projectileDamage + (weapon.chargeDamageMultiplier*weapon.chargeMinimum))}
-    verbage.push([person[slots[i]], 1, weapon.sprite, weapon.description, weapon.cooldown + weapon.chargeMinimum, weapon.type, wpndmg])
-    pointers.push(["none","players",interacter,i,"slot"])
-  }
   // List Available abilities
   for (var i = 0; i < person.abilities.length; i++){
     var weapon =  globals.weaponData[person.abilities[i].name]
@@ -343,7 +324,7 @@ function startDialog(interacter){
         moveQueue[interacter] = [interacter, null];
         break;
       }
-      if (nameType == "entities" && db[nameType][name].slot1 != null){
+      if (nameType == "entities" && db[nameType][name].hasOwnProperty("inventory")){
         if (db[nameType][name].state < 60){db[nameType][name].state = 67}
         showLoot(interacter, name, chunk, nameType)
         moveQueue[interacter] = [interacter, null];

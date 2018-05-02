@@ -51,7 +51,7 @@ function resize(){
 function add_player(team){
 	var playername = "p" + socket.io.engine.id;
 	var newplayerdata = {};
-	newplayerdata[playername] = {"pos":"576.64","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"Dull Dagger","slot2":"Small Sword","slot3":"-","inventory":[{"name":"Dull Dagger","quantity":1},{"name":"Small Sword","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"Shield","quantity":1},{"name":"Vanish","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"576.64","closeChunks":[],"h":4,"w":4};
+	newplayerdata[playername] = {"pos":"576.64","dir":"2","state":"0","effects":{},"health":140,"maxHealth":140,"gold":0,"mana":100,"maxMana":100,"cor":0,"maxCor":200,"alerttimer":0,"team":team,"slot0":"-","slot1":"Dull Dagger","slot2":"Small Sword","slot3":"-","inventory":[{"name":"Dull Dagger","quantity":1},{"name":"Small Sword","quantity":1},{"name":"skl1","quantity":1},{"name":"Fire Sword","quantity":1},{"name":"mana","quantity":5},{"name":"health","quantity":5},{"name":"gold","quantity":5},{"name":"Shield","quantity":1},{"name":"Vanish","quantity":1}],"abilities":[{"name":"Orb Of Healing","quantity":1},{"name":"PoinsonShot","quantity":1}],"origin":"576.64","closeChunks":[],"h":4,"w":4};
 	console.log(newplayerdata);
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
@@ -394,16 +394,6 @@ function control(action){
 				socket.emit('action', [userplayer, "interact", dialogPointers[selector[1]+ (selector[0]*(selectorXlimit+1))]]);
 			}
 			break;
-		case "attack0":
-			if (controlState == "character"){socket.emit('action', [userplayer, "attack0"]);}
-			loot1 = null
-			loot2 = null
-			lootSpot1 = null
-			selector = [0,0];
-			dialogPointers = [null, null, null, null, null];
-			dialog = null;
-			controlState = "character";
-			break;
 		case "attack1":
 			if (controlState == "character"){socket.emit('action', [userplayer, "attack1"]);}
 			loot1 = null
@@ -572,7 +562,7 @@ socket.on('getdata', function(data){
 var tc = new Hammer(map);
 tc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-tc.on("tap", function(ev){control("attack0"); return });
+tc.on("tap", function(ev){control("attack1"); return });
 
 tc.on("press", function(ev){control("interact"); return });
 
