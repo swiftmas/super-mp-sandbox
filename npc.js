@@ -52,7 +52,7 @@ function npccontroller() {
               cdn[npc].respawn -= 1;
             };
             /////////////////////////////IF NORMAL///////////////
-            if (cdn[npc].state == "000") {
+            if (cdn[npc].state < 3) {
                 alertrange(npc, chunk, 40);
                 var closetarget = getSurroundings(npc, chunk, 35);
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData.hasOwnProperty(cdn[npc].inventory[1].name) && globals.weaponData[cdn[npc].inventory[1].name].projectile){
@@ -62,14 +62,11 @@ function npccontroller() {
                         activeAttacksQueue[npc] = {"inputtype": "attack2", "attacktype": "attack2", "chunk": chunk, "keydown": 0};
                       }
                     }
-                    else if(dirToFace[2] < 6) {
-                      cdn[npc].dir = dirToFace[0];
-                    }
   	                else {
   		                general.DoMovement(npc, chunk, dirToFace[1], 2)
   	                };
 		            }
-                else if (closetarget.length > 1 && closetarget[1] > 5) {
+                else if (closetarget.length > 1 && closetarget[1] > 6) {
                     moveNpcTo(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                 }
                 else if (closetarget[1] <= 6) {
@@ -79,9 +76,6 @@ function npccontroller() {
                         activeAttacksQueue[npc] = {"inputtype": "attack1", "attacktype": "attack1", "chunk": chunk, "keydown": 0};
                       }
                     }
-                    else {
-                        cdn[npc].dir = dirToFace[0];
-                    };
                 } else if (cdn[npc].pos !== cdn[npc].origin){
                     cdn[npc].alerted = false;
                     headhome(npc, chunk);
@@ -90,7 +84,7 @@ function npccontroller() {
         };
     };
   }
-  //console.warn("npcs")
+  // console.warn("npcs are being controlled")
 };
 
 
@@ -323,6 +317,7 @@ function getSurroundings(npc, chunk, dist) {
       activeAttacksQueue[npc] = {"inputtype": "alert", "attacktype": "alert", "chunk": chunk, "keydown": 0};
     };
     return surroundings;
+    // console.warn("GOT SURROUNDINGS")
 };
 
 function isspaceclear(coord) {
@@ -340,7 +335,7 @@ function isspaceclear(coord) {
 };
 
 function moveNpcTo(npc, chunk, tarx, tary) {
-    var rate = 2;
+    var rate = 1;
     var npcpos = coredata.chunks[chunk].npcs[npc].pos.split(".");
     var npcx = npcpos[0];
     var npcy = npcpos[1];
@@ -373,6 +368,7 @@ function moveNpcTo(npc, chunk, tarx, tary) {
         var tar = newcoords[Math.floor(Math.random() * newcoords.length)];
         //coredata.npcs[npc].pos = tar[0];
         general.DoMovement(npc, chunk, tar[1], rate);
+        // console.warn("MOVE NPC!!!!!!")
     };
 };
 
