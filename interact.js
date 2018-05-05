@@ -197,12 +197,26 @@ function getUI(interacter, path){
        var item2 = db2[path[9]].name
        db1[path[4]].name = item2
        db2[path[9]].name = item1
-    }  else if (path[5] == "abilities" && path[10] == "inventory") {
+    }  else if (path[5] == "abilities" && path[10] == "inventory" && ["-"].indexOf(globals.weaponData[db2[path[9]].name].type) > -1) {
+       for (var item in globals.weaponData[db1[path[4]].name]) {
+         if (["health", "mana", "cor"].indexOf(item) > -1) {
+           console.log("max" + item.charAt(0).toUpperCase() + item.slice(1), globals.weaponData[db1[path[4]].name][item])
+           coredata["players"][interacter][item] -= globals.weaponData[db1[path[4]].name][item]
+           if (item !== "cor") coredata["players"][interacter]["max" + item.charAt(0).toUpperCase() + item.slice(1)] -= globals.weaponData[db1[path[4]].name][item]
+         }
+       }
        var item1 = db1[path[4]].name
        var item2 = db2[path[9]].name
        db1[path[4]].name = item2
        db2[path[9]].name = item1
     } else if (path[5] == "inventory" && path[10] == "abilities" && globals.weaponData[db1[path[4]].name].type == "skl") {
+       for (var item in globals.weaponData[db1[path[4]].name]) {
+         if (["health", "mana", "cor"].indexOf(item) > -1) {
+           console.log("max" + item.charAt(0).toUpperCase() + item.slice(1), globals.weaponData[db1[path[4]].name][item])
+           coredata["players"][interacter][item] += globals.weaponData[db1[path[4]].name][item]
+          if (item !== "cor") coredata["players"][interacter]["max" + item.charAt(0).toUpperCase() + item.slice(1)] += globals.weaponData[db1[path[4]].name][item]
+         }
+       }
        var item1 = db1[path[4]].name
        var item2 = db2[path[9]].name
        db1[path[4]].name = item2

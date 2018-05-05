@@ -86,7 +86,9 @@ function processActiveAttacks(){
         continue;
       }
       if (inst[0] == "n" ){
-        attackData.chargeHardMaximum = attackData.chargeMaximum
+        attackData.chargeHardMinimum = true
+        attackData.chargeMinimum = attackData.npcCharge
+        attackData.chargeHardMaximum = attackData.npcCharge
         attackData.cooldown = attackData.npcCooldown
       };
       var cooldown = at[inst][attackData.attacktype+"cooldown" ]
