@@ -119,8 +119,9 @@ function processActiveAttacks(){
         delete activeAttacksQueue[inst];
       }
     }
+    ////////////////////// RELEASE / Projectile ////////////////////////////////////
     if (attackData.keydown == attackData.chargeHardMaximum || ChargeSufficientForRelease || attackData.charged == false){
-      //GET ATTaCK DIRECTION
+      ///GET ATTaCK DIRECTION
       if (attackData.charged && attackData.keydown > attackData.chargeMaximum){
         var damage = attackData.releaseDamage + attackData.chargeDamageMultiplier * attackData.chargeMaximum
         var projectileDamage = attackData.projectileDamage + attackData.chargeDamageMultiplier * attackData.chargeMaximum
@@ -194,27 +195,29 @@ function processActiveAttacks(){
       }
 
       if (attackData.projectile){
-      situationalData.projectile = attackData.projectile
-      situationalData.state = attackData.projectileState
-      situationalData.startState = attackData.projectileState
-      situationalData.damage = projectileDamage
-      situationalData.distance = projectileDistance
-      situationalData.type = attackData.projectileType
-      situationalData.velocity = attackData.projectileVelocity
-      situationalData.pushback = attackData.projectilePushback
-      situationalData.projectileEndAnim = attackData.projectileEndAnim
-      if (attackData.hasOwnProperty("projectileEndOnHit") && attackData.projectileEndOnHit == false){
-        situationalData.projectileEndOnHit = attackData.projectileEndOnHit
-      }
-      coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
-      delete activeAttacksQueue[inst];
-      at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
-      continue;
-
+        situationalData.projectile = attackData.projectile
+        situationalData.state = attackData.projectileState
+        situationalData.startState = attackData.projectileState
+        situationalData.damage = projectileDamage
+        situationalData.distance = projectileDistance
+        situationalData.type = attackData.projectileType
+        situationalData.velocity = attackData.projectileVelocity
+        situationalData.pushback = attackData.projectilePushback
+        situationalData.projectileEndAnim = attackData.projectileEndAnim
+        if (attackData.hasOwnProperty("projectileEndOnHit") && attackData.projectileEndOnHit == false){
+          situationalData.projectileEndOnHit = attackData.projectileEndOnHit
+        }
+        coredata.chunks[attackData.chunk].attacks.push(JSON.parse(JSON.stringify(situationalData)));
+        delete activeAttacksQueue[inst];
+        at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
+        continue;
+      } else if (attackData.release !== false) {
+        delete activeAttacksQueue[inst];
+        at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
+        continue;
       } else {
-      delete activeAttacksQueue[inst];
-      at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
-      continue;
+        delete activeAttacksQueue[inst];
+        continue;
       };
 
     } else { // if charge is still ongoing
@@ -269,7 +272,7 @@ function processActiveAttacks(){
         situationalData.w = attackData.cw
         situationalData.pushback = attackData.releasePushback
         if (at[inst].hasOwnProperty("mana") && at[inst].mana < attackData.chargeManaPerTic || attackData.interacted == true){
-          if (at[inst].effects.hasOwnProperty("block")){
+          if (attackData.release == false){
             at[inst][attackData.attacktype+"cooldown"] = [globals.dayint, globals.time];
           }
           attackData.inputType = "null"
