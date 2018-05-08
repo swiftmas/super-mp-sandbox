@@ -379,7 +379,7 @@
     "type": "aux",
     "cooldown": 10,
     "description": "Blocks Attacks",
-    "sprite": "10.6.1.0.0",
+    "sprite": "10.2.3.0.0",
     "npcCooldown": 10,
     "npcCharge": 4,
     "interruptible": true,

@@ -16,7 +16,6 @@ module.exports = {
 function processAttackQueue(){
   for (var inst in attackQueue){
     if (activeAttacksQueue.hasOwnProperty(inst)){
-      console.log(attackQueue[inst])
       var data = activeAttacksQueue[inst];
       data.inputtype = attackQueue[inst];
     } else if (attackQueue[inst] != null && coredata.players[inst].state < 10){
@@ -71,7 +70,6 @@ function processActiveAttacks(){
       if (attackData.attacktype.indexOf("attack") > -1){
         //merges attack data from weapon to attack data object
         var inventoryNumber = parseInt(attackData.attacktype[6]) - 1;
-        console.log(inventoryNumber)
         for (var k in globals.weaponData[at[inst].inventory[inventoryNumber].name]) attackData[k] = globals.weaponData[at[inst].inventory[inventoryNumber].name][k]
       } else {
         if (globals.weaponData.hasOwnProperty(attackData.attacktype) > -1){
