@@ -53,8 +53,9 @@ function npccontroller() {
             };
             /////////////////////////////IF NORMAL///////////////
             if (cdn[npc].state < 3) {
-                alertrange(npc, chunk, 40);
+                alertrange(npc, chunk, 20);
                 var closetarget = getSurroundings(npc, chunk, 35);
+
                 if(closetarget.length > 1 && closetarget[1] < 30 && closetarget[1] > 11 && globals.weaponData.hasOwnProperty(cdn[npc].inventory[1].name) && globals.weaponData[cdn[npc].inventory[1].name].projectile){
   	                dirToFace = dirToTarget(npc, chunk, parseInt(closetarget[2]), parseInt(closetarget[3]));
                     if (cdn[npc].dir == dirToFace[0] && dirToFace[2] < 4) {
@@ -409,3 +410,33 @@ function dirToTarget(npc, chunk, tarx, tary) {
 	return ["2", "2", 2]
     };
 };
+
+
+function setProfile(npc) {
+    if(npc.profile == h1) {
+        var types = [],
+            type = "",
+            cooldown = "",
+            preference = "melee",
+            alternative = "ranged",
+            primary = "",
+            secondary = "";
+
+        for(var item in inventory) {
+            type = weapondata.item.type;
+            cooldown = weapondata.item.cooldown;
+            types.push([type,item,cooldown])
+        }
+
+        if (types.indexOf("complex" > -1)) {
+            complex = types.complex.name;
+        }
+        if(types.indexOf(preference) > -1) {
+            primary = types.preference.name;
+            secondary = types.alternative.name;
+        }
+        if(types.indexOf(melee) == -1 && types.indexOf(ranged) > -1) {
+            primary = types.alternative.name
+            secondary = "default"
+        }
+}
