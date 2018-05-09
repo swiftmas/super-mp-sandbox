@@ -412,8 +412,10 @@ function dirToTarget(npc, chunk, tarx, tary) {
 };
 
 
-function setProfile(npc) {
-    if(npc.profile == h1) {
+function setWeaponPreference(npc,profile) {
+
+    var type
+
         var types = [],
             type = "",
             cooldown = "",
