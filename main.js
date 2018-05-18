@@ -56,7 +56,7 @@ function add_player(team){
 	userplayer = playername;
 	var elem = document.getElementById("chooseteam");
 	elem.parentNode.removeChild(elem);
-        socket.emit('add_player', newplayerdata);
+  socket.emit('add_player', newplayerdata);
 };
 
 function charAlg(code){
@@ -94,6 +94,8 @@ function draw(){
 		db.sort(function(a,b){return a.split(".")[5] - b.split(".")[5]})
 		for (var code in db){
 			blk = db[code].split(".");
+			if (blk[0] == "18" && blk[2] == "113"){ console.log("play"); snd.play()}
+			if (blk[0] == "18" && blk[2] == "3"){ console.log("play"); snd.play()}
 			//Draw each sprite
 			if (db[code].length > 0){
 				image2draw = charAlg(db[code]);

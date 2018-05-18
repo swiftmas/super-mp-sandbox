@@ -7,3 +7,4 @@ map2.src = '/static/top.png';
 charsprites = new Image();
 charsprites.src = '/static/pixels.png';
 ////////////////////////////////////////////////////////////////////////////
+var snd = new Audio("static/sisch.mp3"); // buffers automatically when created
